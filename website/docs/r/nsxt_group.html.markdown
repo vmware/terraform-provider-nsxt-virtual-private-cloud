@@ -11,6 +11,8 @@ description: |-
     SPDX-License-Identifier: Mozilla Public License 2.0
 -->
 
+<!-- Auto generated code. DO NOT EDIT. -->
+
 # nsxt_vpc_group
 
 The Group resource allows the creation and management of Nsxt Group

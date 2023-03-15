@@ -1,6 +1,9 @@
-/* Copyright © 2017 VMware, Inc. All Rights Reserved.
-SPDX-License-Identifier: BSD-2-Clause
-*/
+/***************************************************************************
+ * ========================================================================
+ * Copyright 2022-2023 VMware, Inc.  All rights reserved. VMware Confidential
+ * SPDX-License-Identifier: MPL-2.0
+ * ========================================================================
+ */
 
 package clients
 

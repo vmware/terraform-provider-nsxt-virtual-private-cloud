@@ -1,6 +1,7 @@
 /***************************************************************************
  * ========================================================================
- * Copyright 2022 VMware, Inc.  All rights reserved. VMware Confidential
+ * Copyright 2022-2023 VMware, Inc.  All rights reserved. VMware Confidential
+ * SPDX-License-Identifier: MPL-2.0
  * ========================================================================
  */
 

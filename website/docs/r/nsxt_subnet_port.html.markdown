@@ -11,6 +11,8 @@ description: |-
     SPDX-License-Identifier: Mozilla Public License 2.0
 -->
 
+<!-- Auto generated code. DO NOT EDIT. -->
+
 # nsxt_vpc_subnet_port
 
 The SubnetPort resource allows the creation and management of Nsxt SubnetPort

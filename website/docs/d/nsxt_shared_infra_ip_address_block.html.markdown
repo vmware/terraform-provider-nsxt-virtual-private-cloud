@@ -11,6 +11,8 @@ description: |-
     SPDX-License-Identifier: Mozilla Public License 2.0
 -->
 
+<!-- Auto generated code. DO NOT EDIT. -->
+
 # nsxt_shared_infra_ip_address_block
 
 This data source is used to to get nsxt_shared_infra_ip_address_block objects.
