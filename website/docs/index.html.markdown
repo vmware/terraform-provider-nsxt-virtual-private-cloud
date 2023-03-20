@@ -188,9 +188,9 @@ VpcSubnetPort, SecurityPolicy, SecurityPolicyRule, GatewayPolicy, GatewayPolicyR
 VpcGroup, PolicyNAT, PolicyNATRule, VpcIpAddressAllocation, VpcSubnetIpAllocation,
 VpcSubnetDhcpStaticBinding, VpcStaticRoutes, VpcSubnetBridgeProfile, Tag-operations.
 This typically allows VPC admin to create and manage VPC topologies. The resources
-and data sources have _policy_ in their name. All these resources
+and data sources have _vpc_ in their name. All these resources
 and data sources are fully documented on the NSX-T Terraform Provider
-page:•https://www.terraform.io/docs/providers/nsxt/index.html For more details on the
+page:•https://registry.terraform.io/providers/vmware/nsxt-vpc/latest/docs For more details on the
 NSX-T Policy API usage, please look at NSX-T documentation.
 
 ### Logical Networking and Security Example Usage
