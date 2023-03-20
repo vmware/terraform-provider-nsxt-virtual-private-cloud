@@ -1,5 +1,9 @@
-// Copyright 2022 VMware, Inc.
-// SPDX-License-Identifier: Mozilla Public License 2.0
+/***************************************************************************
+ * ========================================================================
+ * Copyright 2022-2023 VMware, Inc.  All rights reserved. VMware Confidential
+ * SPDX-License-Identifier: MPL-2.0
+ * ========================================================================
+ */
 
 package nsxt
 

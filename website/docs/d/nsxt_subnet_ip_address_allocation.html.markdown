@@ -11,6 +11,8 @@ description: |-
     SPDX-License-Identifier: Mozilla Public License 2.0
 -->
 
+<!-- Auto generated code. DO NOT EDIT. -->
+
 # nsxt_vpc_subnet_ip_address_allocation
 
 This data source is used to to get nsxt_vpc_subnet_ip_address_allocation objects.
