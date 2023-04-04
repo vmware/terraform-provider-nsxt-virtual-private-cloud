@@ -14,27 +14,10 @@ import (
 func resourceExpressionsCustomSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"_revision": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"display_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
 			"exclude": {
 				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     resourceExcludedMembersListSchema(),
-			},
-			"nsx_id": {
-				Type:     schema.TypeString,
-				Computed: true,
 			},
 			"key": {
 				Type:     schema.TypeString,
@@ -76,38 +59,10 @@ func resourceExpressionsCustomSchema() *schema.Resource {
 				Optional: true,
 				Elem:     resourceTagSchema(),
 			},
-			"relative_path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"remote_path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"_protection": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"marked_for_delete": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
-			},
-			"parent_path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"overridden": {
-				Type:     schema.TypeBool,
-				Computed: true,
-			},
-			"path": {
-				Type:     schema.TypeString,
-				Computed: true,
 			},
 		},
 	}
@@ -116,32 +71,11 @@ func resourceExpressionsCustomSchema() *schema.Resource {
 func resourceExpressionCustomSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"_revision": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"display_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"nsx_id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"tags": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     resourceTagSchema(),
 				MaxItems: 30,
-			},
-			"path": {
-				Type:     schema.TypeString,
-				Computed: true,
 			},
 			"resource_type": {
 				Type:     schema.TypeString,
@@ -200,34 +134,10 @@ func resourceExpressionCustomSchema() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"relative_path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"remote_path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"_protection": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"marked_for_delete": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
-			},
-			"parent_path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"overridden": {
-				Type:     schema.TypeBool,
-				Computed: true,
 			},
 		},
 	}

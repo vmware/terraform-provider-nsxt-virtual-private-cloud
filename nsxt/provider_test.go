@@ -74,9 +74,9 @@ func testAccEnvDefined(t *testing.T, envVar string) {
 
 func testAccPreCheck(t *testing.T) {
 	log.Printf("start of testAccPreCheck")
-	os.Setenv("NSXT_MANAGER_HOST", "10.92.104.56")
+	os.Setenv("NSXT_MANAGER_HOST", "10.191.153.238")
 	os.Setenv("NSXT_USERNAME", "admin")
-	os.Setenv("NSXT_PASSWORD", "u2.OpqZc0Ptd")
+	os.Setenv("NSXT_PASSWORD", "e6+DgNzYA5D*")
 	os.Setenv("NSXT_ORG", "default")
 	os.Setenv("NSXT_PROJECT", "Dev_project")
 	os.Setenv("NSXT_VPC", "dev_vpc")

@@ -84,9 +84,9 @@ func testNsxtSession(t *testing.T, nsxtsess *NsxtSession) {
 func TestNsxtSession(t *testing.T) {
 	var err error
 	var session *NsxtSession
-	var NsxtManager = "10.92.104.56"
+	var NsxtManager = "10.191.153.238"
 	var NsxtUsername = "admin"
-	var NsxtPassword = "u2.OpqZc0Ptd"
+	var NsxtPassword = "e6+DgNzYA5D*"
 	session, err = NewNsxtSession(NsxtManager, NsxtUsername, nil, true, SetPassword(NsxtPassword), SetInsecure(true))
 
 	if err != nil {

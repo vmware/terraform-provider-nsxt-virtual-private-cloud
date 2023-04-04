@@ -419,26 +419,6 @@ func (nsxtsess *NsxtSession) newNsxtRequest(verb string, url string, payload io.
 	return req, errorResult
 }
 
-// Helper routines for REST calls.
-
-func (nsxtsess *NsxtSession) collectCookiesFromResp(resp *http.Response) {
-	// collect cookies from the resp
-	var csrfToken string
-	var sessionID string
-	for _, cookie := range resp.Cookies() {
-		if cookie.Name == "csrftoken" {
-			csrfToken = cookie.Value
-		}
-		if cookie.Name == "sessionid" || cookie.Name == "nsxt-sessionid" {
-			sessionID = cookie.Value
-		}
-	}
-	if csrfToken != "" && sessionID != "" {
-		nsxtsess.csrfToken = csrfToken
-		nsxtsess.sessionid = sessionID
-	}
-}
-
 // RestRequest exports restRequest from the SDK
 // Returns http.Response for accessing the whole http Response struct including headers and response body
 func (nsxtsess *NsxtSession) RestRequest(verb string, uri string, payload interface{}, lastError error,
@@ -454,10 +434,7 @@ func (nsxtsess *NsxtSession) restRequest(verb string, uri string, payload interf
 	url := nsxtsess.prefix + uri
 
 	// If optional retryNum arg is provided, then count which retry number this is
-	retry := 0
-	if len(retryNum) > 0 {
-		retry = retryNum[0]
-	}
+	maxAPIRetries := nsxtsess.maxAPIRetries
 
 	var payloadIO io.Reader
 	if payload != nil {
@@ -487,23 +464,18 @@ func (nsxtsess *NsxtSession) restRequest(verb string, uri string, payload interf
 		retryReq = true
 	}
 
-	if !retryReq {
-		glog.Infof("Req for %s uri %v  RespCode %v", verb, url, resp.StatusCode)
-		errorResult.HTTPStatusCode = resp.StatusCode
-
-		if uri == "login" {
-			nsxtsess.collectCookiesFromResp(resp)
-		}
-		if resp.StatusCode == 401 && uri != "login" {
-			resp.Body.Close()
-			glog.Infof("Retrying url %s; retry %d due to Status Code %d", url, retry, resp.StatusCode)
-			err := nsxtsess.initiateSession()
-			if err != nil {
-				return nil, err
+	if retryReq {
+		for i := 0; i < maxAPIRetries; i++ {
+			glog.Infof("Retrying url %s; retry %d due to Status Code %d", url, i, resp.StatusCode)
+			glog.Infof("Req for %s uri %v  RespCode %v", verb, url, resp.StatusCode)
+			errorResult.HTTPStatusCode = resp.StatusCode
+			if resp.StatusCode != 200 {
+				resp, err := nsxtsess.client.Do(req)
+				if err == nil && resp != nil {
+					break
+				}
 			}
-		} else if resp.StatusCode == 419 || (resp.StatusCode >= 500 && resp.StatusCode < 599) {
-			resp.Body.Close()
-			glog.Infof("Retrying url: %s; retry: %d due to Status Code %d", url, retry, resp.StatusCode)
+			time.Sleep(time.Duration(nsxtsess.apiRetryInterval) * time.Millisecond)
 		}
 	}
 	return resp, nil
