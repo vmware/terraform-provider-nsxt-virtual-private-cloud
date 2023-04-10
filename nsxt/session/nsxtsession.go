@@ -479,7 +479,7 @@ func (nsxtsess *NsxtSession) restRequest(verb string, uri string, payload interf
 		retryReq = true
 	}
 
-	if retryReq {
+	if resp != nil && resp.StatusCode != 0 && retryReq {
 		for i := 0; i < maxAPIRetries; i++ {
 			glog.Infof("Retrying url %s; retry %d due to Status Code %d", url, i, resp.StatusCode)
 			glog.Infof("Req for %s uri %v  RespCode %v", verb, url, resp.StatusCode)
