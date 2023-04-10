@@ -11,10 +11,9 @@
 package nsxt
 
 import (
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 	"log"
 	"strings"
-
-	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -22,16 +21,7 @@ import (
 
 func resourceVpcIpAddressAllocationSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"_revision": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"allocation_ip": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
-		"description": {
+		"resource_type": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
@@ -41,11 +31,24 @@ func resourceVpcIpAddressAllocationSchema() map[string]*schema.Schema {
 			Optional: true,
 			Computed: true,
 		},
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"allocation_ip": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"_revision": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
 		"ip_address_block_visibility": {
 			Type:         schema.TypeString,
 			Optional:     true,
-			ValidateFunc: validation.StringInSlice([]string{"PUBLIC", "PRIVATE"}, false),
-			Default:      "PUBLIC",
+			ValidateFunc: validation.StringInSlice([]string{"EXTERNAL", "PRIVATE"}, false),
+			Default:      "EXTERNAL",
 		},
 		"ip_address_type": {
 			Type:         schema.TypeString,
@@ -53,14 +56,10 @@ func resourceVpcIpAddressAllocationSchema() map[string]*schema.Schema {
 			ValidateFunc: validation.StringInSlice([]string{"IPV4", "IPV6"}, false),
 			Default:      "IPV4",
 		},
-		"resource_type": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
 		"tags": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 30,
 			Elem:     resourceTagSchema(),
 		},
 		"nsx_id": {
@@ -129,5 +128,3 @@ func resourceNsxtVpcIpAddressAllocationDelete(d *schema.ResourceData, meta inter
 	}
 	return nil
 }
-
-//nolint

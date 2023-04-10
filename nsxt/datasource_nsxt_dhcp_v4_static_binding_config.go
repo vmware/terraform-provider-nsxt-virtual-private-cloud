@@ -11,9 +11,8 @@
 package nsxt
 
 import (
-	"log"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"log"
 )
 
 func dataSourceNsxtVpcDhcpV4StaticBindingConfig() *schema.Resource {

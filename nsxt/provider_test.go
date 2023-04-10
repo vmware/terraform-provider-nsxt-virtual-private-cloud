@@ -74,12 +74,7 @@ func testAccEnvDefined(t *testing.T, envVar string) {
 
 func testAccPreCheck(t *testing.T) {
 	log.Printf("start of testAccPreCheck")
-	os.Setenv("NSXT_MANAGER_HOST", "10.191.153.238")
-	os.Setenv("NSXT_USERNAME", "admin")
-	os.Setenv("NSXT_PASSWORD", "e6+DgNzYA5D*")
-	os.Setenv("NSXT_ORG", "default")
-	os.Setenv("NSXT_PROJECT", "Dev_project")
-	os.Setenv("NSXT_VPC", "dev_vpc")
+	// Get below environment variables as set by user
 	config := Configuration{
 		NsxManagerHost: os.Getenv("NSXT_MANAGER_HOST"),
 		Username:       os.Getenv("NSXT_USERNAME"),
@@ -90,7 +85,7 @@ func testAccPreCheck(t *testing.T) {
 	}
 
 	if config.NsxManagerHost == "" {
-		t.Fatalf("NSXT_MANAGER must be set for acceptance test")
+		t.Fatalf("NSXT_MANAGER_HOST must be set for acceptance test")
 	}
 
 	if config.Username == "" {

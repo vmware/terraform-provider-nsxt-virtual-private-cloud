@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_group"
+page_title: "NSXT: nsxt_vpc_group"
 sidebar_current: "docs-nsxt-vpc-group"
 description: |-
   Creates and manages Group.
@@ -20,50 +20,50 @@ The Group resource allows the creation and management of Nsxt Group
 ## Example Usage
 ```hcl
 resource "nsxt_vpc_group" "test-group" {
-    	display_name = "test-group-abc"
-	description = "Group description"
-	expression {
-	resource_type = "NestedExpression"
+    	expression {
 	expressions {
-	member_type = "VirtualMachine"
-	value = "vm_1"
 	key = "Name"
 	operator = "CONTAINS"
 	resource_type = "Condition"
-}
-expressions {
-	resource_type = "ConjunctionOperator"
-	conjunction_operator = "AND"
-}
-expressions {
+	value = "vm_1"
 	member_type = "VirtualMachine"
-	value = "London"
+}
+expressions {
+	conjunction_operator = "AND"
+	resource_type = "ConjunctionOperator"
+}
+expressions {
 	key = "Tag"
 	operator = "EQUALS"
 	resource_type = "Condition"
+	value = "London"
+	member_type = "VirtualMachine"
 }
+	resource_type = "NestedExpression"
 	tags {
 	scope = "scope1"
 	tag = "webvm"
 }
 }
 expression {
-	resource_type = "ConjunctionOperator"
 	conjunction_operator = "OR"
+	resource_type = "ConjunctionOperator"
 }
 expression {
-	resource_type = "IPAddressExpression"
 	ip_addresses = ["10.112.10.1"]
+	resource_type = "IPAddressExpression"
 }
 expression {
-	resource_type = "ConjunctionOperator"
 	conjunction_operator = "OR"
+	resource_type = "ConjunctionOperator"
 }
 expression {
-	resource_type = "PathExpression"
 	paths = ["/orgs/default/projects/project-1/vpcs/vpc-1/groups/default"]
+	resource_type = "PathExpression"
 }
 	nsx_id = "test-Group-abc"
+	display_name = "test-group-abc"
+	description = "Group description"
 
   }
 ```
@@ -73,8 +73,10 @@ expression {
 The following arguments are supported:
 
 * `nsx_id` - (Required) The NSX ID of this resource. This ID will be used to create the resource.
-* `description` - (Optional) Description of this resource
+* `resource_type` - (Optional) The type of this resource.
 * `display_name` - (Optional) Defaults to ID if not set
+* `description` - (Optional) Description of this resource
+* `state` - (Optional) Realization state of this group
 * `expression` - (Optional) The expression list must follow below criteria:
   1. A non-empty expression list, must be of odd size. In a list, with
   indices starting from 0, all non-conjunction expressions must be at
@@ -88,18 +90,16 @@ The following arguments are supported:
   4. Each expression must be a valid Expression. See the definition of
   the Expression type for more information.
 
-  * `description` - (Optional) Description of this resource
   * `display_name` - (Optional) Defaults to ID if not set
-  * `resource_type` - (Required) 
+  * `description` - (Optional) Description of this resource
   * `tags` - (Optional) Opaque identifiers meaningful to the API user
     * `scope` - (Optional) Tag searches may optionally be restricted by scope
     * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters
+  * `resource_type` - (Required) 
 * `group_type` - (Optional) Group type can be specified during create and update of a group.
 Empty group type indicates a 'generic' group, ie group can
 include any entity from the valid GroupMemberType.
 
-* `resource_type` - (Optional) The type of this resource.
-* `state` - (Optional) Realization state of this group
 * `tags` - (Optional) Opaque identifiers meaningful to the API user
   * `scope` - (Optional) Tag searches may optionally be restricted by scope
   * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters

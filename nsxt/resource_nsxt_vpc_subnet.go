@@ -11,10 +11,9 @@
 package nsxt
 
 import (
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 	"log"
 	"strings"
-
-	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -22,6 +21,26 @@ import (
 
 func resourceVpcSubnetSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"resource_type": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"dhcp_config": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Computed: true,
+			Elem:     resourceVpcSubnetDhcpConfigSchema(),
+		},
+		"display_name": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
 		"_revision": {
 			Type:     schema.TypeInt,
 			Computed: true,
@@ -32,25 +51,8 @@ func resourceVpcSubnetSchema() map[string]*schema.Schema {
 			ValidateFunc: validation.StringInSlice([]string{"Private", "Public", "Isolated"}, false),
 			Default:      "Private",
 		},
-		"advanced_config": {
-			Type:     schema.TypeSet,
-			Optional: true,
-			Computed: true,
-			Elem:     resourceSubnetAdvancedConfigSchema(),
-		},
-		"description": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
-		"dhcp_config": {
-			Type:     schema.TypeSet,
-			Optional: true,
-			Computed: true,
-			Elem:     resourceDhcpConfigSchema(),
-		},
-		"display_name": {
-			Type:     schema.TypeString,
+		"ipv4_subnet_size": {
+			Type:     schema.TypeInt,
 			Optional: true,
 			Computed: true,
 		},
@@ -58,26 +60,13 @@ func resourceVpcSubnetSchema() map[string]*schema.Schema {
 			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
+			MaxItems: 2,
 			Elem:     &schema.Schema{Type: schema.TypeString},
-		},
-		"ipv4_subnet_size": {
-			Type:     schema.TypeInt,
-			Optional: true,
-			Computed: true,
-		},
-		"resource_type": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
-		"skip_ipam": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  false,
 		},
 		"tags": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 30,
 			Elem:     resourceTagSchema(),
 		},
 		"nsx_id": {
@@ -152,5 +141,3 @@ func resourceNsxtVpcSubnetDelete(d *schema.ResourceData, meta interface{}) error
 	}
 	return nil
 }
-
-//nolint

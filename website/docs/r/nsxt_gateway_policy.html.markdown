@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_gateway_policy"
+page_title: "NSXT: nsxt_vpc_gateway_policy"
 sidebar_current: "docs-nsxt-vpc-gatewaypolicy"
 description: |-
   Creates and manages GatewayPolicy.

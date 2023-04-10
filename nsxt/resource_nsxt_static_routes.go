@@ -11,21 +11,16 @@
 package nsxt
 
 import (
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 	"log"
 	"strings"
-
-	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceStaticRoutesSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"_revision": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"description": {
+		"resource_type": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
@@ -35,24 +30,29 @@ func resourceStaticRoutesSchema() map[string]*schema.Schema {
 			Optional: true,
 			Computed: true,
 		},
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"_revision": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
 		"network": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"next_hops": {
-			Type:     schema.TypeList,
-			Required: true,
-			Elem:     resourceRouterNexthopSchema(),
-		},
-		"resource_type": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
 		"tags": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 30,
 			Elem:     resourceTagSchema(),
+		},
+		"next_hops": {
+			Type:     schema.TypeList,
+			Required: true,
+			MinItems: 1,
+			Elem:     resourceRouterNexthopSchema(),
 		},
 		"nsx_id": {
 			Type:     schema.TypeString,
@@ -126,5 +126,3 @@ func resourceNsxtVpcStaticRoutesDelete(d *schema.ResourceData, meta interface{})
 	}
 	return nil
 }
-
-//nolint

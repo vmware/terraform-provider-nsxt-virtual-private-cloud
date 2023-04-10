@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_dhcp_v4_static_binding_config"
+page_title: "NSXT: nsxt_vpc_dhcp_v4_static_binding_config"
 sidebar_current: "docs-nsxt-vpc-dhcpv4staticbindingconfig"
 description: |-
   Creates and manages DhcpV4StaticBindingConfig.
@@ -20,25 +20,25 @@ The DhcpV4StaticBindingConfig resource allows the creation and management of Nsx
 ## Example Usage
 ```hcl
 resource "nsxt_vpc_dhcp_v4_static_binding_config" "test-dhcpv4staticbindingconfig" {
-    	resource_type = "DhcpV4StaticBindingConfig"
-	gateway_address = "10.1.1.1"
-	mac_address = "11:22:33:44:55:67"
+    	gateway_address = "10.1.1.1"
+	parent_path = nsxt_vpc_parentResource.resource_name.path
+	nsx_id = "test-DhcpStaticBindingConfig-abc"
 	host_name = "vm1.vmware.com"
+	mac_address = "11:22:33:44:55:67"
 	ip_address = "30.30.30.175"
 	options {
 		option121 {
 			static_routes {
-	network = "10.22.12.1/23"
 	next_hop = "2.2.2.2"
+	network = "10.22.12.1/23"
 }
 static_routes {
-	network = "129.0.0.1/32"
 	next_hop = "0.0.0.0"
+	network = "129.0.0.1/32"
 }
 		}
 	}
-	parent_path = nsxt_vpc_parentResource.resource_name.path
-	nsx_id = "test-DhcpStaticBindingConfig-abc"
+	resource_type = "DhcpV4StaticBindingConfig"
 
   }
 ```
@@ -49,20 +49,6 @@ The following arguments are supported:
 
 * `nsx_id` - (Required) The NSX ID of this resource. This ID will be used to create the resource.
 * `parent_path` - (Required) The policy path of immediate parent resource. This path will be used to create the resource.
-* `description` - (Optional) Description of this resource
-* `display_name` - (Optional) Defaults to ID if not set
-* `gateway_address` - (Optional) When not specified, gateway address is auto-assigned from segment
-configuration.
-
-* `host_name` - (Optional) Hostname to assign to the host.
-
-* `ip_address` - (Required) IP assigned to host. The IP address must belong to the subnet, if any,
-configured on Segment.
-
-* `lease_time` - (Optional) DHCP lease time in seconds.
-
-* `mac_address` - (Required) MAC address of the host.
-
 * `options` - (Optional) DHCP options for IPv4 server.
   * `option121` - (Optional) 
     * `static_routes` - (Required) Classless static route of DHCP option 121.
@@ -102,10 +88,25 @@ but will not take effect.
 
     * `code` - (Required) Code of the dhcp option.
     * `values` - (Required) Value of the option.
-* `resource_type` - (Required) 
+* `display_name` - (Optional) Defaults to ID if not set
+* `description` - (Optional) Description of this resource
+* `host_name` - (Optional) Hostname to assign to the host.
+
+* `gateway_address` - (Optional) When not specified, gateway address is auto-assigned from segment
+configuration.
+
+* `ip_address` - (Required) IP assigned to host. The IP address must belong to the subnet, if any,
+configured on Segment.
+
+* `mac_address` - (Required) MAC address of the host.
+
+* `resource_type` - (Required) Resource type of the DhcpStaticBindingConfig
+
 * `tags` - (Optional) Opaque identifiers meaningful to the API user
   * `scope` - (Optional) Tag searches may optionally be restricted by scope
   * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters
+* `lease_time` - (Optional) DHCP lease time in seconds.
+
 
 ## Attributes Reference
 

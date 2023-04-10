@@ -98,8 +98,6 @@ func testAccCheckNSXTSecurityPolicyDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint
-
 const testAccNSXTSecurityPolicyConfig = `
     resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
       	nsx_id = "test-securitypolicy-abc"

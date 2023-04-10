@@ -20,6 +20,8 @@ import (
 	nsxtsession "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/session"
 )
 
+var defaultRetryOnStatusCodes = []int{400, 409, 429, 500, 503, 504, 603}
+
 // Provider for VMWare NSX-T
 func Provider() *schema.Provider {
 	return &schema.Provider{
@@ -68,7 +70,21 @@ func Provider() *schema.Provider {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Description: "Maximum number of HTTP client retries",
-				DefaultFunc: schema.EnvDefaultFunc("NSXT_MAX_RETRIES", 4),
+				DefaultFunc: schema.EnvDefaultFunc("NSXT_MAX_RETRIES", 3),
+			},
+			"retry_interval": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Delay interval in milliseconds between retries of a request",
+				DefaultFunc: schema.EnvDefaultFunc("NSXT_RETRY_INTERVAL", 500),
+			},
+			"retry_on_status_codes": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "HTTP replies status codes to retry on",
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
 			},
 			"connection_timeout": {
 				Type:        schema.TypeInt,
@@ -123,47 +139,47 @@ func Provider() *schema.Provider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"nsxt_shared_infra_policy_context_profile":         dataSourceNsxtSharedInfraPolicyContextProfile(),
-			"nsxt_shared_infra_group":                          dataSourceNsxtSharedInfraGroup(),
-			"nsxt_shared_infra_ip_address_block":               dataSourceNsxtSharedInfraIpAddressBlock(),
-			"nsxt_shared_infra_ip_address_pool":                dataSourceNsxtSharedInfraIpAddressPool(),
-			"nsxt_shared_infra_service":                        dataSourceNsxtSharedInfraService(),
-			"nsxt_shared_infra_l2_bridge_endpoint_profile":     dataSourceNsxtSharedInfraL2BridgeEndpointProfile(),
-			"nsxt_shared_project_infra_policy_context_profile": dataSourceNsxtSharedProjectInfraPolicyContextProfile(),
-			"nsxt_shared_project_infra_group":                  dataSourceNsxtSharedProjectInfraGroup(),
 			"nsxt_shared_project_infra_ip_address_block":       dataSourceNsxtSharedProjectInfraIpAddressBlock(),
-			"nsxt_shared_project_infra_ip_address_pool":        dataSourceNsxtSharedProjectInfraIpAddressPool(),
-			"nsxt_shared_project_infra_service":                dataSourceNsxtSharedProjectInfraService(),
+			"nsxt_shared_infra_ip_address_block":               dataSourceNsxtSharedInfraIpAddressBlock(),
 			"nsxt_vpc_gateway_policy":                          dataSourceNsxtVpcGatewayPolicy(),
-			"nsxt_vpc_gateway_policy_rule":                     dataSourceNsxtVpcGatewayPolicyRule(),
-			"nsxt_vpc_group":                                   dataSourceNsxtVpcGroup(),
-			"nsxt_vpc_ip_address_allocation":                   dataSourceNsxtVpcIpAddressAllocation(),
-			"nsxt_vpc_policy_nat_rule":                         dataSourceNsxtVpcPolicyNatRule(),
-			"nsxt_vpc_security_policy":                         dataSourceNsxtVpcSecurityPolicy(),
-			"nsxt_vpc_security_policy_rule":                    dataSourceNsxtVpcSecurityPolicyRule(),
 			"nsxt_vpc_static_routes":                           dataSourceNsxtVpcStaticRoutes(),
+			"nsxt_vpc_policy_nat_rule":                         dataSourceNsxtVpcPolicyNatRule(),
+			"nsxt_vpc_security_policy_rule":                    dataSourceNsxtVpcSecurityPolicyRule(),
+			"nsxt_shared_infra_l2_bridge_endpoint_profile":     dataSourceNsxtSharedInfraL2BridgeEndpointProfile(),
+			"nsxt_vpc_security_policy":                         dataSourceNsxtVpcSecurityPolicy(),
+			"nsxt_shared_project_infra_service":                dataSourceNsxtSharedProjectInfraService(),
+			"nsxt_shared_project_infra_ip_address_pool":        dataSourceNsxtSharedProjectInfraIpAddressPool(),
 			"nsxt_vpc_subnet":                                  dataSourceNsxtVpcSubnet(),
 			"nsxt_vpc_subnet_ip_address_allocation":            dataSourceNsxtVpcSubnetIpAddressAllocation(),
+			"nsxt_shared_project_infra_group":                  dataSourceNsxtSharedProjectInfraGroup(),
+			"nsxt_vpc_gateway_policy_rule":                     dataSourceNsxtVpcGatewayPolicyRule(),
+			"nsxt_shared_project_infra_policy_context_profile": dataSourceNsxtSharedProjectInfraPolicyContextProfile(),
 			"nsxt_vpc_subnet_port":                             dataSourceNsxtVpcSubnetPort(),
+			"nsxt_shared_infra_service":                        dataSourceNsxtSharedInfraService(),
+			"nsxt_shared_infra_group":                          dataSourceNsxtSharedInfraGroup(),
+			"nsxt_vpc_group":                                   dataSourceNsxtVpcGroup(),
+			"nsxt_shared_infra_policy_context_profile":         dataSourceNsxtSharedInfraPolicyContextProfile(),
+			"nsxt_vpc_ip_address_allocation":                   dataSourceNsxtVpcIpAddressAllocation(),
+			"nsxt_shared_infra_ip_address_pool":                dataSourceNsxtSharedInfraIpAddressPool(),
 			"nsxt_vpc_dhcp_v4_static_binding_config":           dataSourceNsxtVpcDhcpV4StaticBindingConfig(),
 			"nsxt_vpc_dhcp_v6_static_binding_config":           dataSourceNsxtVpcDhcpV6StaticBindingConfig(),
 			"nsxt_vpc_vm":                                      dataSourceNsxtVpcVM(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"nsxt_vpc_subnet":                        resourceNsxtVpcSubnet(),
-			"nsxt_vpc_subnet_port":                   resourceNsxtVpcSubnetPort(),
-			"nsxt_vpc_security_policy":               resourceNsxtVpcSecurityPolicy(),
-			"nsxt_vpc_security_policy_rule":          resourceNsxtVpcSecurityPolicyRule(),
 			"nsxt_vpc_gateway_policy":                resourceNsxtVpcGatewayPolicy(),
-			"nsxt_vpc_gateway_policy_rule":           resourceNsxtVpcGatewayPolicyRule(),
-			"nsxt_vpc_group":                         resourceNsxtVpcGroup(),
+			"nsxt_vpc_static_routes":                 resourceNsxtVpcStaticRoutes(),
 			"nsxt_vpc_policy_nat_rule":               resourceNsxtVpcPolicyNatRule(),
-			"nsxt_vpc_ip_address_allocation":         resourceNsxtVpcIpAddressAllocation(),
+			"nsxt_vpc_security_policy_rule":          resourceNsxtVpcSecurityPolicyRule(),
+			"nsxt_vpc_security_policy":               resourceNsxtVpcSecurityPolicy(),
+			"nsxt_vpc_subnet":                        resourceNsxtVpcSubnet(),
 			"nsxt_vpc_subnet_ip_address_allocation":  resourceNsxtVpcSubnetIpAddressAllocation(),
+			"nsxt_vpc_gateway_policy_rule":           resourceNsxtVpcGatewayPolicyRule(),
+			"nsxt_vpc_subnet_port":                   resourceNsxtVpcSubnetPort(),
+			"nsxt_vpc_group":                         resourceNsxtVpcGroup(),
+			"nsxt_vpc_ip_address_allocation":         resourceNsxtVpcIpAddressAllocation(),
 			"nsxt_vpc_dhcp_v4_static_binding_config": resourceNsxtVpcDhcpV4StaticBindingConfig(),
 			"nsxt_vpc_dhcp_v6_static_binding_config": resourceNsxtVpcDhcpV6StaticBindingConfig(),
-			"nsxt_vpc_static_routes":                 resourceNsxtVpcStaticRoutes(),
 			"nsxt_vpc_vm_tags":                       resourceNsxtVpcVmTags(),
 		},
 
@@ -172,7 +188,7 @@ func Provider() *schema.Provider {
 }
 
 func isNSXTManagerAccessible(nsxtClient interface{}) error {
-	// Do GET on https://{{NSX-manager-IP}}/api/v1/node and check for response status code whether server is accessible or not
+	// Do GET on /api/v1/node API and check for response status code whether server is accessible or not
 	var response interface{}
 	uri := "api/v1/node"
 	err := nsxtClient.(*nsxtclient.NsxtClient).NsxtSession.Get(uri, &response)
@@ -193,6 +209,8 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		VpcId:                d.Get("vpc").(string),
 		Insecure:             d.Get("allow_unverified_ssl").(bool),
 		MaxRetries:           d.Get("max_retries").(int),
+		RetryInterval:        d.Get("retry_interval").(int),
+		RetryStausCodes:      d.Get("retry_on_status_codes").([]interface{}),
 		ConnectionTimeOut:    d.Get("connection_timeout").(int),
 		EnforcementPoint:     d.Get("enforcement_point").(string),
 		RemoteAuth:           d.Get("remote_auth").(bool),
@@ -212,6 +230,16 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		securityContextNeeded = false
 	}
 
+	retryStatuses := make([]int, 0, len(config.RetryStausCodes))
+	for _, s := range config.RetryStausCodes {
+		retryStatuses = append(retryStatuses, s.(int))
+	}
+
+	if len(retryStatuses) == 0 {
+		// Set to the defaults if empty
+		retryStatuses = append(retryStatuses, defaultRetryOnStatusCodes...)
+	}
+
 	nsxtClient, err = nsxtclient.NewNsxtClient(config.NsxManagerHost, config.Username, config.OrgId, config.ProjectId,
 		config.VpcId,
 		config.ClientAuthCertFile, config.ClientAuthCertString,
@@ -220,7 +248,10 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		securityContextNeeded,
 		nsxtsession.SetPassword(config.Password), nsxtsession.SetInsecure(config.Insecure),
 		nsxtsession.SetEnforcementPoint(config.EnforcementPoint),
-		nsxtsession.SetMaxAPIRetries(config.MaxRetries), nsxtsession.SetTimeout(time.Duration(config.ConnectionTimeOut*int(time.Second))))
+		nsxtsession.SetMaxAPIRetries(config.MaxRetries),
+		nsxtsession.SetAPIRetryInterval(config.RetryInterval),
+		nsxtsession.SetRetryStatusCodes(retryStatuses),
+		nsxtsession.SetTimeout(time.Duration(config.ConnectionTimeOut*int(time.Second))))
 	log.Printf("Nsxt client and session created")
 
 	err = isNSXTManagerAccessible(nsxtClient)
@@ -236,6 +267,8 @@ type Configuration struct {
 	VpcId                string
 	Insecure             bool
 	MaxRetries           int
+	RetryInterval        int
+	RetryStausCodes      []interface{}
 	ConnectionTimeOut    int
 	EnforcementPoint     string
 	ClientAuthCertFile   string

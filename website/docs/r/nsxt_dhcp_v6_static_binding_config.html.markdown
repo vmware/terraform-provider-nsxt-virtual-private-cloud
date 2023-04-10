@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_dhcp_v6_static_binding_config"
+page_title: "NSXT: nsxt_vpc_dhcp_v6_static_binding_config"
 sidebar_current: "docs-nsxt-vpc-dhcpv6staticbindingconfig"
 description: |-
   Creates and manages DhcpV6StaticBindingConfig.
@@ -32,26 +32,27 @@ The following arguments are supported:
 
 * `nsx_id` - (Required) The NSX ID of this resource. This ID will be used to create the resource.
 * `parent_path` - (Required) The policy path of immediate parent resource. This path will be used to create the resource.
-* `description` - (Optional) Description of this resource
 * `display_name` - (Optional) Defaults to ID if not set
-* `dns_nameservers` - (Optional) When not specified, no DNS nameserver will be set to client host.
+* `description` - (Optional) Description of this resource
+* `resource_type` - (Required) Resource type of the DhcpStaticBindingConfig
 
-* `domain_names` - (Optional) When not specified, no domain name will be assigned to client host.
-
-* `ip_addresses` - (Optional) When not specified, no ip address will be assigned to client host.
-
-* `lease_time` - (Optional) Lease time, in seconds.
 * `mac_address` - (Required) The MAC address of the client host. Either client-duid or mac-address,
 but not both.
 
-* `preferred_time` - (Optional) Preferred time, in seconds. If this value is not provided, the value
-of lease_time*0.8 will be used.
+* `domain_names` - (Optional) When not specified, no domain name will be assigned to client host.
 
-* `resource_type` - (Required) 
-* `sntp_servers` - (Optional) SNTP server IP addresses.
 * `tags` - (Optional) Opaque identifiers meaningful to the API user
   * `scope` - (Optional) Tag searches may optionally be restricted by scope
   * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters
+* `preferred_time` - (Optional) Preferred time, in seconds. If this value is not provided, the value
+of lease_time*0.8 will be used.
+
+* `lease_time` - (Optional) Lease time, in seconds.
+* `sntp_servers` - (Optional) SNTP server IP addresses.
+* `dns_nameservers` - (Optional) When not specified, no DNS nameserver will be set to client host.
+
+* `ip_addresses` - (Optional) When not specified, no ip address will be assigned to client host.
+
 
 ## Attributes Reference
 

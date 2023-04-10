@@ -352,6 +352,6 @@ resource "nsxt_vpc_group" "testGroup" {
 
 For more information how how to submit feature requests, bug reports, or
 details on how to make your own contributions to the provider, see the [NSX-T
-provider project page][nsxt-vpc-provider-project-page].
+provider project page][nsxt-provider-project-page].
 
-[nsxt-vpc-provider-project-page]: https://github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud
+[nsxt-provider-project-page]: https://github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud

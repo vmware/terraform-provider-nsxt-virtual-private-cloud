@@ -19,6 +19,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httputil"
+	"reflect"
 	"strings"
 	"time"
 
@@ -122,6 +123,9 @@ type NsxtSession struct {
 
 	// optional api retry interval in milliseconds
 	apiRetryInterval int
+
+	// retry status codes on which user wants to perform retry in case of failure
+	retryStausCodes []int
 
 	// TLS config for session
 	tlsConfig *tls.Config
@@ -403,6 +407,17 @@ func (nsxtsess *NsxtSession) setAPIRetryInterval(apiRetryInterval int) error {
 	return nil
 }
 
+func SetRetryStatusCodes(retryStatusCodes []int) func(*NsxtSession) error {
+	return func(sess *NsxtSession) error {
+		return sess.setRetryStatusCodes(retryStatusCodes)
+	}
+}
+
+func (nsxtsess *NsxtSession) setRetryStatusCodes(retryStatusCodes []int) error {
+	nsxtsess.retryStausCodes = retryStatusCodes
+	return nil
+}
+
 func (nsxtsess *NsxtSession) newNsxtRequest(verb string, url string, payload io.Reader) (*http.Request, Error) {
 	req, err := http.NewRequest(verb, url, payload)
 	errorResult := Error{Verb: verb, URL: url}
@@ -469,7 +484,8 @@ func (nsxtsess *NsxtSession) restRequest(verb string, uri string, payload interf
 			glog.Infof("Retrying url %s; retry %d due to Status Code %d", url, i, resp.StatusCode)
 			glog.Infof("Req for %s uri %v  RespCode %v", verb, url, resp.StatusCode)
 			errorResult.HTTPStatusCode = resp.StatusCode
-			if resp.StatusCode != 200 {
+			// If response status code is failure code among user given codes, retry.
+			if inSlice(resp.StatusCode, nsxtsess.retryStausCodes) {
 				resp, err := nsxtsess.client.Do(req)
 				if err == nil && resp != nil {
 					break
@@ -706,4 +722,20 @@ func (nsxtsess *NsxtSession) GetCollectionRaw(uri string, result interface{}) (C
 	err = json.Unmarshal(res, &result)
 
 	return resultObj, err
+}
+
+func inSlice(val interface{}, slice interface{}) bool {
+	sliceValue := reflect.ValueOf(slice)
+
+	if sliceValue.Kind() != reflect.Slice {
+		panic("inSlice() given a non-slice type")
+	}
+
+	for i := 0; i < sliceValue.Len(); i++ {
+		item := sliceValue.Index(i).Interface()
+		if reflect.DeepEqual(val, item) {
+			return true
+		}
+	}
+	return false
 }

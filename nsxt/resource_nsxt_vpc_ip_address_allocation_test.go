@@ -88,8 +88,6 @@ func testAccCheckNSXTVpcIpAddressAllocationDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint
-
 const testAccNSXTVpcIpAddressAllocationConfig = `
     resource "nsxt_vpc_ip_address_allocation" "testVpcIpAddressAllocation" {
       	nsx_id = "test-vpcipaddressallocation-abc"

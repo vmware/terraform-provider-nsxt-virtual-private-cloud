@@ -11,20 +11,15 @@
 package nsxt
 
 import (
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 	"log"
 	"strings"
-
-	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceGatewayPolicySchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"_revision": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
 		"category": {
 			Type:     schema.TypeString,
 			Optional: true,
@@ -35,12 +30,22 @@ func resourceGatewayPolicySchema() map[string]*schema.Schema {
 			Optional: true,
 			Computed: true,
 		},
-		"description": {
+		"tcp_strict": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Computed: true,
+		},
+		"scheduler_path": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"display_name": {
+		"stateful": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Computed: true,
+		},
+		"resource_type": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
@@ -50,34 +55,28 @@ func resourceGatewayPolicySchema() map[string]*schema.Schema {
 			Optional: true,
 			Default:  false,
 		},
-		"resource_type": {
+		"display_name": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"scheduler_path": {
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
+		},
+		"_revision": {
+			Type:     schema.TypeInt,
 			Computed: true,
 		},
 		"sequence_number": {
 			Type:     schema.TypeInt,
 			Required: true,
 		},
-		"stateful": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Computed: true,
-		},
 		"tags": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 30,
 			Elem:     resourceTagSchema(),
-		},
-		"tcp_strict": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Computed: true,
 		},
 		"nsx_id": {
 			Type:     schema.TypeString,
@@ -151,5 +150,3 @@ func resourceNsxtVpcGatewayPolicyDelete(d *schema.ResourceData, meta interface{}
 	}
 	return nil
 }
-
-//nolint

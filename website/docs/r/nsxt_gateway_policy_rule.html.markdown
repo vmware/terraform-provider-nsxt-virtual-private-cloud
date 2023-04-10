@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_gateway_policy_rule"
+page_title: "NSXT: nsxt_vpc_gateway_policy_rule"
 sidebar_current: "docs-nsxt-vpc-gatewaypolicyrule"
 description: |-
   Creates and manages GatewayPolicyRule.
@@ -20,14 +20,14 @@ The GatewayPolicyRule resource allows the creation and management of Nsxt Gatewa
 ## Example Usage
 ```hcl
 resource "nsxt_vpc_gateway_policy_rule" "test-gatewaypolicyrule" {
-  action = "DROP"
-	source_groups = ["ANY"]
-	destination_groups = ["ANY"]
-	services = ["ANY"]
+    	parent_path = nsxt_vpc_parentResource.resource_name.path
 	profiles = ["ANY"]
-	parent_path = nsxt_vpc_parentResource.resource_name.path
+	services = ["ANY"]
 	nsx_id = "test-Rule-abc"
-  sequence_number = 1
+	destination_groups = ["ANY"]
+	action = "DROP"
+	sequence_number = 1
+	source_groups = ["ANY"]
 
   }
 ```

@@ -101,8 +101,6 @@ func testAccCheckNSXTIpAddressAllocationDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint
-
 const testAccNSXTIpAddressAllocationConfig = `
     resource "nsxt_vpc_subnet_ip_address_allocation" "testSubnetIpAddressAllocation" {
       	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/static-ipv4-default"

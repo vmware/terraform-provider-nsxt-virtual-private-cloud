@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_static_routes"
+page_title: "NSXT: nsxt_vpc_static_routes"
 sidebar_current: "docs-nsxt-vpc-staticroutes"
 description: |-
   Creates and manages StaticRoutes.
@@ -20,7 +20,7 @@ The StaticRoutes resource allows the creation and management of Nsxt StaticRoute
 ## Example Usage
 ```hcl
 resource "nsxt_vpc_static_routes" "test-staticroutes" {
-    	network = "45.1.1.0/24"
+    	nsx_id = "test-StaticRoutes-abc"
 	next_hops {
 	ip_address = "41.1.1.1"
 	admin_distance = 1
@@ -33,7 +33,7 @@ next_hops {
 	ip_address = "43.1.2.3"
 	admin_distance = 3
 }
-	nsx_id = "test-StaticRoutes-abc"
+	network = "45.1.1.0/24"
 
   }
 ```
@@ -43,22 +43,24 @@ next_hops {
 The following arguments are supported:
 
 * `nsx_id` - (Required) The NSX ID of this resource. This ID will be used to create the resource.
-* `description` - (Optional) Description of this resource
+* `resource_type` - (Optional) The type of this resource.
 * `display_name` - (Optional) Defaults to ID if not set
+* `description` - (Optional) Description of this resource
 * `network` - (Required) Specify network address in CIDR format.
+In case of VPC, user can optionally use allocated IP from one of the external blocks associated with VPC.
+Only /32 CIDR is allowed in case IP overlaps with external blocks.
 
+* `tags` - (Optional) Opaque identifiers meaningful to the API user
+  * `scope` - (Optional) Tag searches may optionally be restricted by scope
+  * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters
 * `next_hops` - (Required) Specify next hop routes for network.
 
-  * `admin_distance` - (Optional) Cost associated with next hop route
-  * `ip_address` - (Optional) Next hop gateway IP address
   * `scope` - (Optional) Interface path associated with current route.
 For example: specify a policy path referencing the IPSec VPN Session.
 Should not be provided while creating routes under VPC.
 
-* `resource_type` - (Optional) The type of this resource.
-* `tags` - (Optional) Opaque identifiers meaningful to the API user
-  * `scope` - (Optional) Tag searches may optionally be restricted by scope
-  * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters
+  * `ip_address` - (Optional) Next hop gateway IP address
+  * `admin_distance` - (Optional) Cost associated with next hop route
 
 ## Attributes Reference
 

@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_subnet_ip_address_allocation"
+page_title: "NSXT: nsxt_vpc_subnet_ip_address_allocation"
 sidebar_current: "docs-nsxt-vpc-subnet-ipaddressallocation"
 description: |-
   Creates and manages IpAddressAllocation.
@@ -20,9 +20,9 @@ The IpAddressAllocation resource allows the creation and management of Nsxt IpAd
 ## Example Usage
 ```hcl
 resource "nsxt_vpc_subnet_ip_address_allocation" "test-ipaddressallocation" {
-    	allocation_ip = "192.168.0.6"
-	parent_path = nsxt_vpc_parentResource.resource_name.path
+    	parent_path = nsxt_vpc_parentResource.resource_name.path
 	nsx_id = "test-IpAddressAllocation-abc"
+	allocation_ip = "192.168.0.6"
 
   }
 ```
@@ -33,10 +33,12 @@ The following arguments are supported:
 
 * `nsx_id` - (Required) The NSX ID of this resource. This ID will be used to create the resource.
 * `parent_path` - (Required) The policy path of immediate parent resource. This path will be used to create the resource.
-* `allocation_ip` - (Optional) Address that is allocated from pool
-* `description` - (Optional) Description of this resource
-* `display_name` - (Optional) Defaults to ID if not set
 * `resource_type` - (Optional) The type of this resource.
+* `sync_realization` - (Optional) Realization of intent will be called synchronously
+
+* `allocation_ip` - (Optional) Address that is allocated from pool
+* `display_name` - (Optional) Defaults to ID if not set
+* `description` - (Optional) Description of this resource
 * `tags` - (Optional) Opaque identifiers meaningful to the API user
   * `scope` - (Optional) Tag searches may optionally be restricted by scope
   * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters

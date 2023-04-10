@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_subnet"
+page_title: "NSXT: nsxt_vpc_subnet"
 sidebar_current: "docs-nsxt-vpcsubnet"
 description: |-
   Creates and manages VpcSubnet.
@@ -45,15 +45,13 @@ If not specified, then the local DHCP server will be configured for all connecte
     * `dns_server_ips` - (Optional) IPs of the DNS servers which need to be configured on teh workload VMs
 
   * `static_pool_config` - (Optional) 
-    * `ipv4_pool_size` - (Optional) Number of IPs to be reserved in static ip pool.
-By default, if dhcp is enabled then static ipv4 pool size will be zero and all available IPs will be reserved in
+    * `ipv4_pool_size` - (Optional) Number of IPs to be reserved in static ip pool. Maximum allowed value is 'subnet size - 4'.
+If dhcp is enabled then by default static ipv4 pool size will be zero and all available IPs will be reserved in
 local dhcp pool.
-Maximum allowed value is 'subnet size - 4'. Configure maximum value if dhcp pool is not required.
+If dhcp is disabled then by default all IPs will be reserved in static ip pool.
 
   * `enable_dhcp` - (Optional) If enabled, the DHCP server will be configured based on IP address type.
 If disabled then neither DHCP server nor relay shall be configured.
-
-* `skip_ipam` - (Optional) Temperory workaround, will be removed once ipam integration is merged.
 
 * `display_name` - (Optional) Defaults to ID if not set
 * `description` - (Optional) Description of this resource

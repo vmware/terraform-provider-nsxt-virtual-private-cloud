@@ -11,9 +11,8 @@
 package nsxt
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestNSXTDataSourceGatewayPolicyBasic(t *testing.T) {

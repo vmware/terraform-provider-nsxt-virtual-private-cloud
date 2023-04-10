@@ -30,22 +30,22 @@ func TestNSXTDhcpV6StaticBindingConfigBasic(t *testing.T) {
 				Config: testAccNSXTDhcpV6StaticBindingConfigConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTDhcpV6StaticBindingConfigExists("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig"),
-					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "nsx_id", "test-dhcpv6staticbinding-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "display_name", "test-dhcpv6staticbindingconfig-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "description", "DHCP v6 static binding config description"),
-					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "resource_type", "DhcpV6StaticBindingConfig"),
+					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "nsx_id", "test-dhcpv6staticbinding-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "mac_address", "11:22:33:44:55:67"),
+					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "resource_type", "DhcpV6StaticBindingConfig"),
 				),
 			},
 			{
 				Config: testAccNSXTDhcpV6StaticBindingConfigupdatedConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTDhcpV6StaticBindingConfigExists("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig"),
-					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "nsx_id", "test-dhcpv6staticbinding-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "display_name", "test-dhcpv6staticbindingconfig-abc-updated"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "description", "DHCP v6 static binding config description"),
-					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "resource_type", "DhcpV6StaticBindingConfig"),
+					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "nsx_id", "test-dhcpv6staticbinding-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "mac_address", "11:22:33:44:55:67"),
+					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v6_static_binding_config.testDhcpV6StaticBindingConfig", "resource_type", "DhcpV6StaticBindingConfig"),
 				),
 			},
 			{
@@ -100,40 +100,38 @@ func testAccCheckNSXTDhcpV6StaticBindingConfigDestroy(s *terraform.State) error 
 	return nil
 }
 
-//nolint
-
 const testAccNSXTDhcpV6StaticBindingConfigConfig = `
-    resource "nsxt_vpc_dhcp_v6_static_binding_config" "testDhcpV6StaticBindingConfig" {
-      	parent_path = nsxt_vpc_subnet.testVpcSubnet.path
-	nsx_id = "test-dhcpv6staticbinding-abc"
-	display_name = "test-dhcpv6staticbindingconfig-abc"
-	description = "DHCP v6 static binding config description"
-	resource_type = "DhcpV6StaticBindingConfig"
-	mac_address = "11:22:33:44:55:67"
-}
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
-      	nsx_id = "test-vpcsubnet-abc"
+      	ipv4_subnet_size = 16
+	nsx_id = "test-vpcsubnet-abc"
 	display_name = "test-vpcsubnet-abc"
 	description = "VpcSubnet description"
-	ipv4_subnet_size = 16
 	access_mode = "Public"
+}
+    resource "nsxt_vpc_dhcp_v6_static_binding_config" "testDhcpV6StaticBindingConfig" {
+      	display_name = "test-dhcpv6staticbindingconfig-abc"
+	description = "DHCP v6 static binding config description"
+	parent_path = nsxt_vpc_subnet.testVpcSubnet.path
+	nsx_id = "test-dhcpv6staticbinding-abc"
+	mac_address = "11:22:33:44:55:67"
+	resource_type = "DhcpV6StaticBindingConfig"
 }
 `
 
 const testAccNSXTDhcpV6StaticBindingConfigupdatedConfig = `
-    resource "nsxt_vpc_dhcp_v6_static_binding_config" "testDhcpV6StaticBindingConfig" {
-      	parent_path = nsxt_vpc_subnet.testVpcSubnet.path
-	nsx_id = "test-dhcpv6staticbinding-abc"
-	display_name = "test-dhcpv6staticbindingconfig-abc-updated"
-	description = "DHCP v6 static binding config description"
-	resource_type = "DhcpV6StaticBindingConfig"
-	mac_address = "11:22:33:44:55:67"
-}
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
-      	nsx_id = "test-vpcsubnet-abc"
+      	ipv4_subnet_size = 16
+	nsx_id = "test-vpcsubnet-abc"
 	display_name = "test-vpcsubnet-abc-updated"
 	description = "updated VpcSubnet description"
-	ipv4_subnet_size = 16
 	access_mode = "Public"
+}
+    resource "nsxt_vpc_dhcp_v6_static_binding_config" "testDhcpV6StaticBindingConfig" {
+      	display_name = "test-dhcpv6staticbindingconfig-abc-updated"
+	description = "DHCP v6 static binding config description"
+	parent_path = nsxt_vpc_subnet.testVpcSubnet.path
+	nsx_id = "test-dhcpv6staticbinding-abc"
+	mac_address = "11:22:33:44:55:67"
+	resource_type = "DhcpV6StaticBindingConfig"
 }
 `

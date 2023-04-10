@@ -30,10 +30,10 @@ func TestNSXTVpcSubnetBasic(t *testing.T) {
 				Config: testAccNSXTVpcSubnetConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTVpcSubnetExists("nsxt_vpc_subnet.testVpcSubnet"),
+					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "ipv4_subnet_size", "16"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "nsx_id", "test-vpcsubnet-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "display_name", "test-vpcsubnet-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "description", "VpcSubnet description"),
-					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "ipv4_subnet_size", "16"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "access_mode", "Public"),
 				),
 			},
@@ -41,10 +41,10 @@ func TestNSXTVpcSubnetBasic(t *testing.T) {
 				Config: testAccNSXTVpcSubnetupdatedConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTVpcSubnetExists("nsxt_vpc_subnet.testVpcSubnet"),
+					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "ipv4_subnet_size", "16"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "nsx_id", "test-vpcsubnet-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "display_name", "test-vpcsubnet-abc-updated"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "description", "updated VpcSubnet description"),
-					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "ipv4_subnet_size", "16"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet.testVpcSubnet", "access_mode", "Public"),
 				),
 			},
@@ -100,24 +100,22 @@ func testAccCheckNSXTVpcSubnetDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint
-
 const testAccNSXTVpcSubnetConfig = `
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
-      	nsx_id = "test-vpcsubnet-abc"
+      	ipv4_subnet_size = 16
+	nsx_id = "test-vpcsubnet-abc"
 	display_name = "test-vpcsubnet-abc"
 	description = "VpcSubnet description"
-	ipv4_subnet_size = 16
 	access_mode = "Public"
 }
 `
 
 const testAccNSXTVpcSubnetupdatedConfig = `
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
-      	nsx_id = "test-vpcsubnet-abc"
+      	ipv4_subnet_size = 16
+	nsx_id = "test-vpcsubnet-abc"
 	display_name = "test-vpcsubnet-abc-updated"
 	description = "updated VpcSubnet description"
-	ipv4_subnet_size = 16
 	access_mode = "Public"
 }
 `

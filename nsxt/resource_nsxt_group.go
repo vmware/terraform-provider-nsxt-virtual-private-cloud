@@ -11,10 +11,9 @@
 package nsxt
 
 import (
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 	"log"
 	"strings"
-
-	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -22,11 +21,7 @@ import (
 
 func resourceGroupSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"_revision": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"description": {
+		"resource_type": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
@@ -36,15 +31,9 @@ func resourceGroupSchema() map[string]*schema.Schema {
 			Optional: true,
 			Computed: true,
 		},
-		"expression": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem:     resourceExpressionCustomSchema(),
-		},
-		"resource_type": {
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
-			Computed: true,
 		},
 		"state": {
 			Type:         schema.TypeString,
@@ -52,9 +41,19 @@ func resourceGroupSchema() map[string]*schema.Schema {
 			ValidateFunc: validation.StringInSlice([]string{"IN_PROGRESS", "SUCCESS", "FAILURE"}, false),
 			Computed:     true,
 		},
+		"_revision": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"expression": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     resourceExpressionCustomSchema(),
+		},
 		"tags": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 30,
 			Elem:     resourceTagSchema(),
 		},
 		"nsx_id": {
@@ -129,5 +128,3 @@ func resourceNsxtVpcGroupDelete(d *schema.ResourceData, meta interface{}) error 
 	}
 	return nil
 }
-
-//nolint

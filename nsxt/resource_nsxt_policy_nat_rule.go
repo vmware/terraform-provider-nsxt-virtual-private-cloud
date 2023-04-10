@@ -11,10 +11,9 @@
 package nsxt
 
 import (
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 	"log"
 	"strings"
-
-	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -22,15 +21,51 @@ import (
 
 func resourcePolicyNatRuleSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"service": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"resource_type": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"logging": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  false,
+		},
+		"enabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  true,
+		},
+		"display_name": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"policy_based_vpn_mode": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.StringInSlice([]string{"BYPASS", "MATCH"}, false),
+			Computed:     true,
+		},
+		"translated_ports": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
 		"_revision": {
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
-		"action": {
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"description": {
+		"translated_network": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
@@ -40,15 +75,14 @@ func resourcePolicyNatRuleSchema() map[string]*schema.Schema {
 			Optional: true,
 			Computed: true,
 		},
-		"display_name": {
+		"source_network": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"enabled": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  true,
+		"sequence_number": {
+			Type:     schema.TypeInt,
+			Required: true,
 		},
 		"firewall_match": {
 			Type:         schema.TypeString,
@@ -56,57 +90,21 @@ func resourcePolicyNatRuleSchema() map[string]*schema.Schema {
 			ValidateFunc: validation.StringInSlice([]string{"MATCH_EXTERNAL_ADDRESS", "MATCH_INTERNAL_ADDRESS", "BYPASS"}, false),
 			Default:      "MATCH_INTERNAL_ADDRESS",
 		},
-		"logging": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  false,
-		},
-		"policy_based_vpn_mode": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.StringInSlice([]string{"BYPASS", "MATCH"}, false),
-			Computed:     true,
-		},
-		"resource_type": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
 		"scope": {
 			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
-		"sequence_number": {
-			Type:     schema.TypeInt,
+		"action": {
+			Type:     schema.TypeString,
 			Required: true,
-		},
-		"service": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
-		"source_network": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
 		},
 		"tags": {
 			Type:     schema.TypeList,
 			Optional: true,
-			Computed: true,
+			MaxItems: 30,
 			Elem:     resourceTagSchema(),
-		},
-		"translated_network": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
-		"translated_ports": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
 		},
 		"parent_path": {
 			Type:     schema.TypeString,
@@ -185,5 +183,3 @@ func resourceNsxtVpcPolicyNatRuleDelete(d *schema.ResourceData, meta interface{}
 	}
 	return nil
 }
-
-//nolint

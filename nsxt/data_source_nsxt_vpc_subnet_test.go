@@ -11,9 +11,8 @@
 package nsxt
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestNSXTDataSourceVpcSubnetBasic(t *testing.T) {
@@ -25,13 +24,13 @@ func TestNSXTDataSourceVpcSubnetBasic(t *testing.T) {
 				Config: testAccNSXTDSVpcSubnetConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
+						"nsxt_vpc_subnet.testVpcSubnet", "ipv4_subnet_size", "16"),
+					resource.TestCheckResourceAttr(
 						"nsxt_vpc_subnet.testVpcSubnet", "nsx_id", "test-vpcsubnet-abc"),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_subnet.testVpcSubnet", "display_name", "test-vpcsubnet-abc"),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_subnet.testVpcSubnet", "description", "VpcSubnet description"),
-					resource.TestCheckResourceAttr(
-						"nsxt_vpc_subnet.testVpcSubnet", "ipv4_subnet_size", "16"),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_subnet.testVpcSubnet", "access_mode", "Public"),
 				),
@@ -43,10 +42,10 @@ func TestNSXTDataSourceVpcSubnetBasic(t *testing.T) {
 const testAccNSXTDSVpcSubnetConfig = `
 
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
-      	nsx_id = "test-vpcsubnet-abc"
+      	ipv4_subnet_size = 16
+	nsx_id = "test-vpcsubnet-abc"
 	display_name = "test-vpcsubnet-abc"
 	description = "VpcSubnet description"
-	ipv4_subnet_size = 16
 	access_mode = "Public"
 }
 

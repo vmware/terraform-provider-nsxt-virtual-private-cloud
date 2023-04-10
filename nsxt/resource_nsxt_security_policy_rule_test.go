@@ -30,9 +30,9 @@ func TestNSXTSecurityPolicyRuleBasic(t *testing.T) {
 				Config: testAccNSXTSecurityPolicyRuleConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTSecurityPolicyRuleExists("nsxt_vpc_security_policy_rule.testSecurityPolicyRule"),
-					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "nsx_id", "test-rule-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "display_name", "test-rule-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "description", "Rule description"),
+					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "nsx_id", "test-rule-abc"),
 					resource.TestCheckTypeSetElemAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "services.*", "ANY"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "action", "ALLOW"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "sequence_number", "0"),
@@ -42,9 +42,9 @@ func TestNSXTSecurityPolicyRuleBasic(t *testing.T) {
 				Config: testAccNSXTSecurityPolicyRuleupdatedConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTSecurityPolicyRuleExists("nsxt_vpc_security_policy_rule.testSecurityPolicyRule"),
-					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "nsx_id", "test-rule-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "display_name", "test-rule-abc-updated"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "description", "updated Rule description"),
+					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "nsx_id", "test-rule-abc"),
 					resource.TestCheckTypeSetElemAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "services.*", "ANY"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "action", "ALLOW"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy_rule.testSecurityPolicyRule", "sequence_number", "0"),
@@ -102,19 +102,63 @@ func testAccCheckNSXTSecurityPolicyRuleDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint
-
 const testAccNSXTSecurityPolicyRuleConfig = `
     resource "nsxt_vpc_security_policy_rule" "testSecurityPolicyRule" {
-      	parent_path = nsxt_vpc_security_policy.testSecurityPolicy.path
-	nsx_id = "test-rule-abc"
-	display_name = "test-rule-abc"
+      	display_name = "test-rule-abc"
 	description = "Rule description"
-	source_groups = [nsxt_vpc_group.testGroup.path]
+	parent_path = nsxt_vpc_security_policy.testSecurityPolicy.path
+	nsx_id = "test-rule-abc"
 	destination_groups = [nsxt_vpc_group.testGroup.path]
 	services = ["ANY"]
 	action = "ALLOW"
 	sequence_number = 0
+	source_groups = [nsxt_vpc_group.testGroup.path]
+}
+    resource "nsxt_vpc_group" "testGroup" {
+      	expression {
+	expressions {
+	key = "Name"
+	operator = "CONTAINS"
+	resource_type = "Condition"
+	value = "vm_1"
+	member_type = "VirtualMachine"
+}
+expressions {
+	conjunction_operator = "AND"
+	resource_type = "ConjunctionOperator"
+}
+expressions {
+	key = "Tag"
+	operator = "EQUALS"
+	resource_type = "Condition"
+	value = "London"
+	member_type = "VirtualMachine"
+}
+	resource_type = "NestedExpression"
+	tags {
+	scope = "scope1"
+	tag = "webvm"
+}
+}
+expression {
+	conjunction_operator = "OR"
+	resource_type = "ConjunctionOperator"
+}
+expression {
+	ip_addresses = ["10.112.10.1"]
+	resource_type = "IPAddressExpression"
+}
+expression {
+	conjunction_operator = "OR"
+	resource_type = "ConjunctionOperator"
+}
+expression {
+	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
+	resource_type = "PathExpression"
+}
+	nsx_id = "test-group-abc"
+	display_name = "test-group-abc"
+	description = "Group description"
 }
     resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
       	nsx_id = "test-securitypolicy-abc"
@@ -122,75 +166,29 @@ const testAccNSXTSecurityPolicyRuleConfig = `
 	description = "SecurityPolicy description"
 	sequence_number = 0
 }
-    resource "nsxt_vpc_group" "testGroup" {
-      	nsx_id = "test-group-abc"
-	display_name = "test-group-abc"
-	description = "Group description"
-	expression {
-	resource_type = "NestedExpression"
-	expressions {
-	member_type = "VirtualMachine"
-	value = "vm_1"
-	key = "Name"
-	operator = "CONTAINS"
-	resource_type = "Condition"
-}
-expressions {
-	resource_type = "ConjunctionOperator"
-	conjunction_operator = "AND"
-}
-expressions {
-	member_type = "VirtualMachine"
-	value = "London"
-	key = "Tag"
-	operator = "EQUALS"
-	resource_type = "Condition"
-}
-	tags {
-	scope = "scope1"
-	tag = "webvm"
-}
-}
-expression {
-	resource_type = "ConjunctionOperator"
-	conjunction_operator = "OR"
-}
-expression {
-	resource_type = "IPAddressExpression"
-	ip_addresses = ["10.112.10.1"]
-}
-expression {
-	resource_type = "ConjunctionOperator"
-	conjunction_operator = "OR"
-}
-expression {
-	resource_type = "PathExpression"
-	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
-}
-}
 `
 
 const testAccNSXTSecurityPolicyRuleupdatedConfig = `
     resource "nsxt_vpc_security_policy_rule" "testSecurityPolicyRule" {
-      	parent_path = nsxt_vpc_security_policy.testSecurityPolicy.path
-	nsx_id = "test-rule-abc"
-	display_name = "test-rule-abc-updated"
+      	display_name = "test-rule-abc-updated"
 	description = "updated Rule description"
-	source_groups = [nsxt_vpc_group.testGroup.path]
+	parent_path = nsxt_vpc_security_policy.testSecurityPolicy.path
+	nsx_id = "test-rule-abc"
 	destination_groups = [nsxt_vpc_group.testGroup.path]
 	services = ["ANY"]
 	action = "ALLOW"
 	sequence_number = 0
+	source_groups = [nsxt_vpc_group.testGroup.path]
+}
+    resource "nsxt_vpc_group" "testGroup" {
+      	nsx_id = "test-group-abc"
+	display_name = "test-group-abc-updated"
+	description = "updated Group description"
 }
     resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
       	nsx_id = "test-securitypolicy-abc"
 	display_name = "test-secutitypolicy-abc-updated"
 	description = "updated SecurityPolicy description"
 	sequence_number = 0
-}
-    resource "nsxt_vpc_group" "testGroup" {
-      	nsx_id = "test-group-abc"
-	display_name = "test-group-abc-updated"
-	description = "updated Group description"
 }
 `

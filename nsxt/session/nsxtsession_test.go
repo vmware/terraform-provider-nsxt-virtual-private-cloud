@@ -8,6 +8,7 @@
 package nsxt
 
 import (
+	"os"
 	"testing"
 
 	"github.com/golang/glog"
@@ -84,9 +85,21 @@ func testNsxtSession(t *testing.T, nsxtsess *NsxtSession) {
 func TestNsxtSession(t *testing.T) {
 	var err error
 	var session *NsxtSession
-	var NsxtManager = "10.191.153.238"
-	var NsxtUsername = "admin"
-	var NsxtPassword = "e6+DgNzYA5D*"
+	// Get below details from user environment variables
+	var NsxtManager = os.Getenv("NSXT_MANAGER_HOST")
+	var NsxtUsername = os.Getenv("NSXT_USERNAME")
+	var NsxtPassword = os.Getenv("NSXT_PASSWORD")
+	if NsxtManager == "" {
+		t.Fatalf("NSXT_MANAGER_HOST env variable must be set for this test")
+	}
+
+	if NsxtUsername == "" {
+		t.Fatalf("NSXT_USERNAME env variable must be set for this test")
+	}
+
+	if NsxtPassword == "" {
+		t.Fatalf("NSXT_PASSWORD env variable must be set for this test")
+	}
 	session, err = NewNsxtSession(NsxtManager, NsxtUsername, nil, true, SetPassword(NsxtPassword), SetInsecure(true))
 
 	if err != nil {

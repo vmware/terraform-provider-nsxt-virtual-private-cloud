@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_policy_nat_rule"
+page_title: "NSXT: nsxt_vpc_policy_nat_rule"
 sidebar_current: "docs-nsxt-vpc-policynatrule"
 description: |-
   Creates and manages PolicyNatRule.
@@ -79,6 +79,8 @@ This does not support IP range or IP sets.
 For SNAT, DNAT, NAT64 and REFLEXIVE rules, this ia a mandatory field, which
 represents the translated network address.
 For NO_SNAT and NO_DNAT this should be empty.
+For VPC SNAT and Refelexive NATRule, translated network address should be
+IPv4 address allocated from External Block associated with VPC.
 
 * `destination_network` - (Optional) This supports single IP address or comma separated list of single IP
 addresses or CIDR. This does not support IP range or IP sets.
@@ -87,6 +89,8 @@ the destination network for the incoming packets.
 For other type of rules, optionally it can contain destination network
 of outgoing packets.
 NULL value for this field represents ANY network.
+For VPC DNAT NATRule, destination network address should be IPv4 address
+allocated from External Block associated with VPC.
 
 * `source_network` - (Optional) This supports single IP address or comma separated list of single IP
 addresses or CIDR. This does not support IP range or IP sets.

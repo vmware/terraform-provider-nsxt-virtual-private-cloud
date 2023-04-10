@@ -11,10 +11,9 @@
 package nsxt
 
 import (
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 	"log"
 	"strings"
-
-	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
@@ -22,6 +21,50 @@ import (
 
 func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"resource_type": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"tag": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"disabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  false,
+		},
+		"logged": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  false,
+		},
+		"destinations_excluded": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  false,
+		},
+		"sources_excluded": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  false,
+		},
+		"display_name": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"notes": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
 		"_revision": {
 			Type:     schema.TypeInt,
 			Computed: true,
@@ -32,21 +75,11 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 			ValidateFunc: validation.StringInSlice([]string{"ALLOW", "DROP", "REJECT", "JUMP_TO_APPLICATION"}, false),
 			Computed:     true,
 		},
-		"description": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
-		"destination_groups": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Computed: true,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-		},
-		"destinations_excluded": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  false,
+		"ip_protocol": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.StringInSlice([]string{"IPV4", "IPV6", "IPV4_IPV6"}, false),
+			Computed:     true,
 		},
 		"direction": {
 			Type:         schema.TypeString,
@@ -54,85 +87,57 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 			ValidateFunc: validation.StringInSlice([]string{"IN", "OUT", "IN_OUT"}, false),
 			Default:      "IN_OUT",
 		},
-		"disabled": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  false,
-		},
-		"display_name": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
-		"ip_protocol": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.StringInSlice([]string{"IPV4", "IPV6", "IPV4_IPV6"}, false),
-			Computed:     true,
-		},
-		"logged": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  false,
-		},
-		"notes": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
+		"sequence_number": {
+			Type:     schema.TypeInt,
+			Required: true,
 		},
 		"profiles": {
 			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
+			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
-		},
-		"resource_type": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
-		"scope": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Computed: true,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-		},
-		"sequence_number": {
-			Type:     schema.TypeInt,
-			Required: true,
-		},
-		"service_entries": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Computed: true,
-			Elem:     resourceServiceEntryCustomSchema(),
 		},
 		"services": {
 			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
+			MaxItems: 128,
+			Elem:     &schema.Schema{Type: schema.TypeString},
+		},
+		"service_entries": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			MaxItems: 128,
+			Elem:     resourceServiceEntryCustomSchema(),
+		},
+		"tags": {
+			Type:     schema.TypeList,
+			Optional: true,
+			MaxItems: 30,
+			Elem:     resourceTagSchema(),
+		},
+		"scope": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			MaxItems: 128,
+			Elem:     &schema.Schema{Type: schema.TypeString},
+		},
+		"destination_groups": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"source_groups": {
 			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
+			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
-		},
-		"sources_excluded": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  false,
-		},
-		"tag": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
-		"tags": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem:     resourceTagSchema(),
 		},
 		"parent_path": {
 			Type:     schema.TypeString,
@@ -211,5 +216,3 @@ func resourceNsxtVpcSecurityPolicyRuleDelete(d *schema.ResourceData, meta interf
 	}
 	return nil
 }
-
-//nolint

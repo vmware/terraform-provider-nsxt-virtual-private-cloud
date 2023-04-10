@@ -20,57 +20,28 @@ import (
 
 func resourceDhcpV6StaticBindingConfigSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"_revision": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"description": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
 		"display_name": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"dns_nameservers": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Computed: true,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-		},
-		"domain_names": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Computed: true,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-		},
-		"ip_addresses": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Computed: true,
-			Elem:     &schema.Schema{Type: schema.TypeString},
-		},
-		"lease_time": {
-			Type:     schema.TypeInt,
-			Optional: true,
-			Default:  86400,
-		},
-		"mac_address": {
+		"description": {
 			Type:     schema.TypeString,
-			Required: true,
-		},
-		"preferred_time": {
-			Type:     schema.TypeInt,
 			Optional: true,
+		},
+		"_revision": {
+			Type:     schema.TypeInt,
 			Computed: true,
 		},
 		"resource_type": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"sntp_servers": {
+		"mac_address": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"domain_names": {
 			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
@@ -79,7 +50,42 @@ func resourceDhcpV6StaticBindingConfigSchema() map[string]*schema.Schema {
 		"tags": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 30,
 			Elem:     resourceTagSchema(),
+		},
+		"preferred_time": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Computed: true,
+		},
+		"lease_time": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  86400,
+		},
+		"sntp_servers": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			MinItems: 0,
+			MaxItems: 2,
+			Elem:     &schema.Schema{Type: schema.TypeString},
+		},
+		"dns_nameservers": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			MinItems: 0,
+			MaxItems: 2,
+			Elem:     &schema.Schema{Type: schema.TypeString},
+		},
+		"ip_addresses": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			MinItems: 0,
+			MaxItems: 1,
+			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"nsx_id": {
 			Type:     schema.TypeString,

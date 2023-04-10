@@ -15,9 +15,9 @@ import (
 	"log"
 )
 
-func dataSourceNsxtVpcGroup() *schema.Resource {
+func dataSourceNsxtVpcSubnetPort() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceNsxtVpcGroupRead,
+		Read: dataSourceNsxtVpcSubnetPortRead,
 		Schema: map[string]*schema.Schema{
 			"nsx_id": {
 				Type:     schema.TypeString,
@@ -38,13 +38,18 @@ func dataSourceNsxtVpcGroup() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"parent_path": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
 		},
 	}
 }
 
-func dataSourceNsxtVpcGroupRead(d *schema.ResourceData, meta interface{}) error {
-	s := dataSourceNsxtVpcGroup()
-	err := DatasourceRead(d, meta, "Group", s)
+func dataSourceNsxtVpcSubnetPortRead(d *schema.ResourceData, meta interface{}) error {
+	s := dataSourceNsxtVpcSubnetPort()
+	err := DatasourceRead(d, meta, "VpcSubnetPort", s)
 	if err != nil {
 		log.Printf("[ERROR] in reading object %v\n", err)
 	}

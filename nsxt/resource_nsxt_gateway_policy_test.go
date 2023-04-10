@@ -98,8 +98,6 @@ func testAccCheckNSXTGatewayPolicyDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint
-
 const testAccNSXTGatewayPolicyConfig = `
     resource "nsxt_vpc_gateway_policy" "testGatewayPolicy" {
       	nsx_id = "test-gatewaypolicy-abc"

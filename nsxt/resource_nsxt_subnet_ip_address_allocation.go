@@ -11,26 +11,26 @@
 package nsxt
 
 import (
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 	"log"
 	"strings"
-
-	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceSubnetIpAddressAllocationSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"_revision": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"allocation_ip": {
+		"resource_type": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"description": {
+		"sync_realization": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  false,
+		},
+		"allocation_ip": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
@@ -40,14 +40,18 @@ func resourceSubnetIpAddressAllocationSchema() map[string]*schema.Schema {
 			Optional: true,
 			Computed: true,
 		},
-		"resource_type": {
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
+		},
+		"_revision": {
+			Type:     schema.TypeInt,
 			Computed: true,
 		},
 		"tags": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 30,
 			Elem:     resourceTagSchema(),
 		},
 		"parent_path": {
@@ -127,5 +131,3 @@ func resourceNsxtVpcSubnetIpAddressAllocationDelete(d *schema.ResourceData, meta
 	}
 	return nil
 }
-
-//nolint

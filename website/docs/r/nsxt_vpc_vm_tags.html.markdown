@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_vm_tags"
+page_title: "NSXT: nsxt_vpc_vm_tags"
 sidebar_current: "docs-nsxt-vpc-resource-vpcvmtags"
 description: |-
   Creates and manages Vpc VM Tags.

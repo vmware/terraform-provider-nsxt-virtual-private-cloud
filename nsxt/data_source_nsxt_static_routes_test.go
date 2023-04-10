@@ -11,9 +11,8 @@
 package nsxt
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestNSXTDataSourceStaticRoutesBasic(t *testing.T) {
@@ -24,6 +23,12 @@ func TestNSXTDataSourceStaticRoutesBasic(t *testing.T) {
 			{
 				Config: testAccNSXTDSStaticRoutesConfig,
 				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckTypeSetElemNestedAttrs(
+						"nsxt_vpc_static_routes.testStaticRoutes", "next_hops.*", map[string]string{
+							"ip_address": "41.1.1.1"}),
+					resource.TestCheckTypeSetElemNestedAttrs(
+						"nsxt_vpc_static_routes.testStaticRoutes", "next_hops.*", map[string]string{
+							"admin_distance": "1"}),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_static_routes.testStaticRoutes", "nsx_id", "test-staticroutes-abc"),
 					resource.TestCheckResourceAttr(
@@ -32,12 +37,6 @@ func TestNSXTDataSourceStaticRoutesBasic(t *testing.T) {
 						"nsxt_vpc_static_routes.testStaticRoutes", "description", "StaticRoutes description"),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_static_routes.testStaticRoutes", "network", "45.1.1.0/24"),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_static_routes.testStaticRoutes", "next_hops.*", map[string]string{
-							"ip_address": "41.1.1.1"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_static_routes.testStaticRoutes", "next_hops.*", map[string]string{
-							"admin_distance": "1"}),
 				),
 			},
 		},
@@ -47,11 +46,7 @@ func TestNSXTDataSourceStaticRoutesBasic(t *testing.T) {
 const testAccNSXTDSStaticRoutesConfig = `
 
     resource "nsxt_vpc_static_routes" "testStaticRoutes" {
-      	nsx_id = "test-staticroutes-abc"
-	display_name = "test-staticroutes-abc"
-	description = "StaticRoutes description"
-	network = "45.1.1.0/24"
-	next_hops {
+      	next_hops {
 	ip_address = "41.1.1.1"
 	admin_distance = 1
 }
@@ -63,6 +58,10 @@ next_hops {
 	ip_address = "43.1.2.3"
 	admin_distance = 3
 }
+	nsx_id = "test-staticroutes-abc"
+	display_name = "test-staticroutes-abc"
+	description = "StaticRoutes description"
+	network = "45.1.1.0/24"
 }
 
 data "nsxt_vpc_static_routes" "testStaticRoutes" {

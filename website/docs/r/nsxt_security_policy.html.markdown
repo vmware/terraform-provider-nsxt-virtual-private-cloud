@@ -1,6 +1,6 @@
 ---
 layout: "nsxt"
-page_title: "Nsxt: nsxt_vpc_security_policy"
+page_title: "NSXT: nsxt_vpc_security_policy"
 sidebar_current: "docs-nsxt-vpc-securitypolicy"
 description: |-
   Creates and manages SecurityPolicy.

@@ -20,26 +20,31 @@ import (
 
 func resourceDhcpV4StaticBindingConfigSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"_revision": {
-			Type:     schema.TypeInt,
-			Computed: true,
-		},
-		"description": {
-			Type:     schema.TypeString,
+		"options": {
+			Type:     schema.TypeSet,
 			Optional: true,
 			Computed: true,
+			Elem:     resourceDhcpV4OptionsSchema(),
 		},
 		"display_name": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"gateway_address": {
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"host_name": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"host_name": {
+		"_revision": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
+		"gateway_address": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
@@ -48,20 +53,9 @@ func resourceDhcpV4StaticBindingConfigSchema() map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"lease_time": {
-			Type:     schema.TypeInt,
-			Optional: true,
-			Default:  86400,
-		},
 		"mac_address": {
 			Type:     schema.TypeString,
 			Required: true,
-		},
-		"options": {
-			Type:     schema.TypeSet,
-			Optional: true,
-			Computed: true,
-			Elem:     resourceDhcpV4OptionsSchema(),
 		},
 		"resource_type": {
 			Type:     schema.TypeString,
@@ -70,7 +64,13 @@ func resourceDhcpV4StaticBindingConfigSchema() map[string]*schema.Schema {
 		"tags": {
 			Type:     schema.TypeList,
 			Optional: true,
+			MaxItems: 30,
 			Elem:     resourceTagSchema(),
+		},
+		"lease_time": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  86400,
 		},
 		"nsx_id": {
 			Type:     schema.TypeString,

@@ -11,9 +11,8 @@
 package nsxt
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"testing"
 )
 
 func TestNSXTDataSourceGroupBasic(t *testing.T) {
@@ -24,21 +23,6 @@ func TestNSXTDataSourceGroupBasic(t *testing.T) {
 			{
 				Config: testAccNSXTDSGroupConfig,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(
-						"nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc"),
-					resource.TestCheckResourceAttr(
-						"nsxt_vpc_group.testGroup", "display_name", "test-group-abc"),
-					resource.TestCheckResourceAttr(
-						"nsxt_vpc_group.testGroup", "description", "Group description"),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*", map[string]string{
-							"resource_type": "NestedExpression"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
-							"member_type": "VirtualMachine"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
-							"value": "vm_1"}),
 					resource.TestCheckTypeSetElemNestedAttrs(
 						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
 							"key": "Name"}),
@@ -49,11 +33,26 @@ func TestNSXTDataSourceGroupBasic(t *testing.T) {
 						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
 							"resource_type": "Condition"}),
 					resource.TestCheckTypeSetElemNestedAttrs(
+						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
+							"value": "vm_1"}),
+					resource.TestCheckTypeSetElemNestedAttrs(
+						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
+							"member_type": "VirtualMachine"}),
+					resource.TestCheckTypeSetElemNestedAttrs(
+						"nsxt_vpc_group.testGroup", "expression.*", map[string]string{
+							"resource_type": "NestedExpression"}),
+					resource.TestCheckTypeSetElemNestedAttrs(
 						"nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
 							"scope": "scope1"}),
 					resource.TestCheckTypeSetElemNestedAttrs(
 						"nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
 							"tag": "webvm"}),
+					resource.TestCheckResourceAttr(
+						"nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc"),
+					resource.TestCheckResourceAttr(
+						"nsxt_vpc_group.testGroup", "display_name", "test-group-abc"),
+					resource.TestCheckResourceAttr(
+						"nsxt_vpc_group.testGroup", "description", "Group description"),
 				),
 			},
 		},
@@ -63,50 +62,50 @@ func TestNSXTDataSourceGroupBasic(t *testing.T) {
 const testAccNSXTDSGroupConfig = `
 
     resource "nsxt_vpc_group" "testGroup" {
-      	nsx_id = "test-group-abc"
-	display_name = "test-group-abc"
-	description = "Group description"
-	expression {
-	resource_type = "NestedExpression"
+      	expression {
 	expressions {
-	member_type = "VirtualMachine"
-	value = "vm_1"
 	key = "Name"
 	operator = "CONTAINS"
 	resource_type = "Condition"
-}
-expressions {
-	resource_type = "ConjunctionOperator"
-	conjunction_operator = "AND"
-}
-expressions {
+	value = "vm_1"
 	member_type = "VirtualMachine"
-	value = "London"
+}
+expressions {
+	conjunction_operator = "AND"
+	resource_type = "ConjunctionOperator"
+}
+expressions {
 	key = "Tag"
 	operator = "EQUALS"
 	resource_type = "Condition"
+	value = "London"
+	member_type = "VirtualMachine"
 }
+	resource_type = "NestedExpression"
 	tags {
 	scope = "scope1"
 	tag = "webvm"
 }
 }
 expression {
-	resource_type = "ConjunctionOperator"
 	conjunction_operator = "OR"
+	resource_type = "ConjunctionOperator"
 }
 expression {
-	resource_type = "IPAddressExpression"
 	ip_addresses = ["10.112.10.1"]
+	resource_type = "IPAddressExpression"
 }
 expression {
-	resource_type = "ConjunctionOperator"
 	conjunction_operator = "OR"
+	resource_type = "ConjunctionOperator"
 }
 expression {
-	resource_type = "PathExpression"
 	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
+	resource_type = "PathExpression"
 }
+	nsx_id = "test-group-abc"
+	display_name = "test-group-abc"
+	description = "Group description"
 }
 
 data "nsxt_vpc_group" "testGroup" {
