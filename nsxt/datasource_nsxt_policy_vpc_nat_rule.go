@@ -15,9 +15,9 @@ import (
 	"log"
 )
 
-func dataSourceNsxtVpcPolicyNatRule() *schema.Resource {
+func dataSourceNsxtPolicyVpcNatRule() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceNsxtVpcPolicyNatRuleRead,
+		Read: dataSourceNsxtPolicyVpcNatRuleRead,
 		Schema: map[string]*schema.Schema{
 			"nsx_id": {
 				Type:     schema.TypeString,
@@ -47,9 +47,9 @@ func dataSourceNsxtVpcPolicyNatRule() *schema.Resource {
 	}
 }
 
-func dataSourceNsxtVpcPolicyNatRuleRead(d *schema.ResourceData, meta interface{}) error {
-	s := dataSourceNsxtVpcPolicyNatRule()
-	err := DatasourceRead(d, meta, "PolicyNatRule", s)
+func dataSourceNsxtPolicyVpcNatRuleRead(d *schema.ResourceData, meta interface{}) error {
+	s := dataSourceNsxtPolicyVpcNatRule()
+	err := DatasourceRead(d, meta, "PolicyVpcNatRule", s)
 	if err != nil {
 		log.Printf("[ERROR] in reading object %v\n", err)
 	}
