@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-//nolint
+// nolint
 package nsxt
 
 import (
@@ -19,13 +19,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-func resourcePolicyNatRuleSchema() map[string]*schema.Schema {
+func resourcePolicyVpcNatRuleSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"service": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
 		"resource_type": {
 			Type:     schema.TypeString,
 			Optional: true,
@@ -50,27 +45,16 @@ func resourcePolicyNatRuleSchema() map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Optional: true,
 		},
-		"policy_based_vpn_mode": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.StringInSlice([]string{"BYPASS", "MATCH"}, false),
-			Computed:     true,
-		},
-		"translated_ports": {
-			Type:     schema.TypeString,
-			Optional: true,
-			Computed: true,
-		},
 		"_revision": {
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
-		"translated_network": {
+		"destination_network": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"destination_network": {
+		"translated_network": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
@@ -89,12 +73,6 @@ func resourcePolicyNatRuleSchema() map[string]*schema.Schema {
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice([]string{"MATCH_EXTERNAL_ADDRESS", "MATCH_INTERNAL_ADDRESS", "BYPASS"}, false),
 			Default:      "MATCH_INTERNAL_ADDRESS",
-		},
-		"scope": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Computed: true,
-			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"action": {
 			Type:     schema.TypeString,
@@ -123,60 +101,60 @@ func resourcePolicyNatRuleSchema() map[string]*schema.Schema {
 	}
 }
 
-func resourceNsxtVpcPolicyNatRule() *schema.Resource {
+func resourceNsxtPolicyVpcNatRule() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceNsxtVpcPolicyNatRuleCreate,
-		Read:   resourceNsxtVpcPolicyNatRuleRead,
-		Update: resourceNsxtVpcPolicyNatRuleUpdate,
-		Delete: resourceNsxtVpcPolicyNatRuleDelete,
-		Schema: resourcePolicyNatRuleSchema(),
+		Create: resourceNsxtPolicyVpcNatRuleCreate,
+		Read:   resourceNsxtPolicyVpcNatRuleRead,
+		Update: resourceNsxtPolicyVpcNatRuleUpdate,
+		Delete: resourceNsxtPolicyVpcNatRuleDelete,
+		Schema: resourcePolicyVpcNatRuleSchema(),
 		Importer: &schema.ResourceImporter{
-			State: resourcePolicyNatRuleImporter,
+			State: resourcePolicyVpcNatRuleImporter,
 		},
 	}
 }
 
-func resourcePolicyNatRuleImporter(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
-	s := resourcePolicyNatRuleSchema()
-	return ResourceImporter(d, m, "PolicyNatRule", s, d.Id())
+func resourcePolicyVpcNatRuleImporter(d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+	s := resourcePolicyVpcNatRuleSchema()
+	return ResourceImporter(d, m, "PolicyVpcNatRule", s, d.Id())
 }
 
-func resourceNsxtVpcPolicyNatRuleRead(d *schema.ResourceData, meta interface{}) error {
-	s := resourcePolicyNatRuleSchema()
-	err := APIRead(d, meta, "PolicyNatRule", s)
+func resourceNsxtPolicyVpcNatRuleRead(d *schema.ResourceData, meta interface{}) error {
+	s := resourcePolicyVpcNatRuleSchema()
+	err := APIRead(d, meta, "PolicyVpcNatRule", s)
 	if err != nil {
-		log.Printf("[ERROR] Error occurred in reading object PolicyNatRule %v\n", err)
+		log.Printf("[ERROR] Error occurred in reading object PolicyVpcNatRule %v\n", err)
 	}
 	return err
 }
 
-func resourceNsxtVpcPolicyNatRuleCreate(d *schema.ResourceData, meta interface{}) error {
-	s := resourcePolicyNatRuleSchema()
-	err := APICreateOrUpdate(d, meta, "PolicyNatRule", s)
+func resourceNsxtPolicyVpcNatRuleCreate(d *schema.ResourceData, meta interface{}) error {
+	s := resourcePolicyVpcNatRuleSchema()
+	err := APICreateOrUpdate(d, meta, "PolicyVpcNatRule", s)
 	if err == nil {
-		err = resourceNsxtVpcPolicyNatRuleRead(d, meta)
+		err = resourceNsxtPolicyVpcNatRuleRead(d, meta)
 	}
 	return err
 }
 
-func resourceNsxtVpcPolicyNatRuleUpdate(d *schema.ResourceData, meta interface{}) error {
-	s := resourcePolicyNatRuleSchema()
+func resourceNsxtPolicyVpcNatRuleUpdate(d *schema.ResourceData, meta interface{}) error {
+	s := resourcePolicyVpcNatRuleSchema()
 	var err error
-	err = APICreateOrUpdate(d, meta, "PolicyNatRule", s)
+	err = APICreateOrUpdate(d, meta, "PolicyVpcNatRule", s)
 	if err == nil {
-		err = resourceNsxtVpcPolicyNatRuleRead(d, meta)
+		err = resourceNsxtPolicyVpcNatRuleRead(d, meta)
 	}
 	return err
 }
 
-func resourceNsxtVpcPolicyNatRuleDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceNsxtPolicyVpcNatRuleDelete(d *schema.ResourceData, meta interface{}) error {
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
 	resourceID := d.Id()
 	if resourceID != "" {
 		path := nsxtClient.Config.BasePath + d.Get("path").(string)
 		err := nsxtClient.NsxtSession.Delete(path)
 		if err != nil && !(strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
-			log.Printf("[INFO] Resource PolicyNatRule not found\n")
+			log.Printf("[INFO] Resource PolicyVpcNatRule not found\n")
 			return err
 		}
 		d.SetId("")
