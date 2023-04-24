@@ -840,6 +840,12 @@ func resourceL2ExtensionSchema() *schema.Resource {
 				Computed: true,
 				Elem:     resourceLocalEgressSchema(),
 			},
+			"l2vpn_path": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				Deprecated: "This is a deprecated property. Please refer the documentation for details, and refrain from use as this will be removed in future versions.",
+			},
 			"l2vpn_paths": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -1717,6 +1723,12 @@ func resourceSegmentSchema() *schema.Resource {
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
+			"ls_id": {
+				Type:       schema.TypeString,
+				Optional:   true,
+				Computed:   true,
+				Deprecated: "This is a deprecated property. Please refer the documentation for details, and refrain from use as this will be removed in future versions.",
+			},
 			"replication_mode": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -1769,6 +1781,14 @@ func resourceSegmentSchema() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Computed: true,
+			},
+			"address_bindings": {
+				Type:       schema.TypeList,
+				Optional:   true,
+				Computed:   true,
+				MaxItems:   512,
+				Deprecated: "This is a deprecated property. Please refer the documentation for details, and refrain from use as this will be removed in future versions.",
+				Elem:       resourcePortAddressBindingEntrySchema(),
 			},
 			"path": {
 				Type:     schema.TypeString,

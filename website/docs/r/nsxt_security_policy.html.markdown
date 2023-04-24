@@ -104,6 +104,33 @@ ALLOWLIST_ENABLE_LOGGING - Allowlisting with logging enabled
 DENYLIST_ENABLE_LOGGING - Denylisting with logging enabled
 NONE - No default rule is created.
 
+* `logging_enabled` - (Optional) This property is deprecated.
+Flag to enable logging for all the rules in the security policy.
+If the value is true then logging will be enabled for all the rules
+in the security policy. If the value is false, then the rule level
+logging value will be honored.
+
+* `connectivity_strategy` - (Optional) This field indicates the default connectivity policy for the security
+policy. Based on the connectivity strategy, a default rule for this
+security policy will be created. An appropriate action will be set on
+the rule based on the value of the connectivity strategy. If NONE is
+selected or no connectivity strategy is specified, then no default
+rule for the security policy gets created. The default rule that gets
+created will be a any-any rule and applied to entities specified in the
+scope of the security policy. Specifying the connectivity_strategy
+without specifying the scope is not allowed. The scope has to be a
+Group and one cannot specify IPAddress directly in the group that is
+used as scope. This default rule is only applicable for the Layer3
+security policies.
+This property is deprecated. Use the type connectivity_preference instead.
+WHITELIST - Adds a default drop rule. Administrator can then use "allow"
+rules (aka whitelist) to allow traffic between groups
+BLACKLIST - Adds a default allow rule. Admin can then use "drop" rules
+(aka blacklist) to block traffic between groups
+WHITELIST_ENABLE_LOGGING - Whitelising with logging enabled
+BLACKLIST_ENABLE_LOGGING - Blacklisting with logging enabled
+NONE - No default rule is created.
+
 * `sequence_number` - (Required) This field is used to resolve conflicts between security policies
 across domains. In order to change the sequence number of a policy
 one can fire a POST request on the policy entity with

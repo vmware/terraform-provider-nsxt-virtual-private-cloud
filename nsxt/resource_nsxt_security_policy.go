@@ -75,6 +75,19 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 			ValidateFunc: validation.StringInSlice([]string{"ALLOWLIST", "DENYLIST", "ALLOWLIST_ENABLE_LOGGING", "DENYLIST_ENABLE_LOGGING", "NONE"}, false),
 			Computed:     true,
 		},
+		"logging_enabled": {
+			Type:       schema.TypeBool,
+			Optional:   true,
+			Default:    false,
+			Deprecated: "This is a deprecated property. Please refer the documentation for details, and refrain from use as this will be removed in future versions.",
+		},
+		"connectivity_strategy": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validation.StringInSlice([]string{"WHITELIST", "BLACKLIST", "WHITELIST_ENABLE_LOGGING", "BLACKLIST_ENABLE_LOGGING", "NONE"}, false),
+			Computed:     true,
+			Deprecated:   "This is a deprecated property. Please refer the documentation for details, and refrain from use as this will be removed in future versions.",
+		},
 		"sequence_number": {
 			Type:     schema.TypeInt,
 			Required: true,
