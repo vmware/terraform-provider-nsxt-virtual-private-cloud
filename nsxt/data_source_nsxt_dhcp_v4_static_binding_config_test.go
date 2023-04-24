@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-// nolint
+//nolint
 package nsxt
 
 import (
@@ -34,8 +34,6 @@ func TestNSXTDataSourceDhcpV4StaticBindingConfigBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "mac_address", "11:22:33:44:55:67"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "gateway_address", "30.30.30.17"),
-					resource.TestCheckResourceAttr(
 						"nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "30.30.30.16"),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "resource_type", "DhcpV4StaticBindingConfig"),
@@ -61,7 +59,6 @@ const testAccNSXTDSDhcpV4StaticBindingConfigConfig = `
 	nsx_id = "test-dhcpv4staticbinding-abc"
 	host_name = "vm1.vmware.com"
 	mac_address = "11:22:33:44:55:67"
-	gateway_address = "30.30.30.17"
 	ip_address = "30.30.30.16"
 	options {
 		option121 {

@@ -185,7 +185,7 @@ The following arguments are used to configure the VMware NSX-T VPC Provider:
 This release of the NSX-T VPC Terraform Provider extends to cover VPC APIs
 in NSX. The Provider has resources and data sources covering VPC, VpcSubnet,
 VpcSubnetPort, SecurityPolicy, SecurityPolicyRule, GatewayPolicy, GatewayPolicyRule,
-VpcGroup, PolicyNAT, PolicyNATRule, VpcIpAddressAllocation, VpcSubnetIpAllocation,
+VpcGroup, PolicyNAT, PolicyVpcNATRule, VpcIpAddressAllocation, VpcSubnetIpAllocation,
 VpcSubnetDhcpStaticBinding, VpcStaticRoutes, VpcSubnetBridgeProfile, Tag-operations.
 This typically allows VPC admin to create and manage VPC topologies. The resources
 and data sources have _vpc_ in their name. All these resources

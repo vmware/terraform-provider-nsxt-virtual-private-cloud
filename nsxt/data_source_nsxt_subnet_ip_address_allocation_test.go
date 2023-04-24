@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-// nolint
+//nolint
 package nsxt
 
 import (
@@ -41,8 +41,8 @@ func TestNSXTDataSourceIpAddressAllocationBasic(t *testing.T) {
 
 const testAccNSXTDSIpAddressAllocationConfig = `
 
-    resource "nsxt_vpc_subnet_ip_address_allocation" "testIpAddressAllocation" {
-      	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/static-ipv4-default"
+  resource "nsxt_vpc_subnet_ip_address_allocation" "testIpAddressAllocation" {
+  parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/_static-ipv4--empty"
 	nsx_id = "test-ipallocation-abc"
 	display_name = "test-ipallocation-abc"
 	description = "IpAllocation description"

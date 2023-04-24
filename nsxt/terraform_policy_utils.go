@@ -10,6 +10,7 @@ package nsxt
 import (
 	"fmt"
 	"log"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -47,6 +48,27 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 		} else {
 			// resource is new, this is a create request
 			log.Printf("[INFO] APICreateOrUpdate: Creating obj %v schema %v data %v with path %s\n", objType, d, data, path)
+			if objType == "SecurityPolicyRule" || objType == "GatewayPolicyRule" {
+				/* For Rule- source_groups, destination_groups, service, action and scope are optional and defaulted in create, but not defaulted in update. These are
+				kept as optional in yaml without mentioning defaults. Hence, terraform resource for Rule has optional and computed against them.path
+				Here adding the manual check to match API behaviour. Check each property value given or not. If not given, default it. */
+				dataMap := data.(map[string]interface{})
+				if dataMap["action"] == nil {
+					dataMap["action"] = "ALLOW"
+				}
+				if dataMap["source_groups"] == nil {
+					dataMap["source_groups"] = []interface{}{"ANY"}
+				}
+				if dataMap["destination_groups"] == nil {
+					dataMap["destination_groups"] = []interface{}{"ANY"}
+				}
+				if dataMap["services"] == nil {
+					dataMap["services"] = []interface{}{"ANY"}
+				}
+				if dataMap["scope"] == nil {
+					dataMap["scope"] = []interface{}{"ANY"}
+				}
+			}
 			err = nsxtClient.NsxtSession.Patch(path, data, &robj)
 			if err != nil {
 				log.Printf("[ERROR] APICreateOrUpdate creation failed %v\n", err)
@@ -367,8 +389,38 @@ func APIDataToSchema(adata interface{}, d interface{}, t map[string]*schema.Sche
 						switch dType := d.(type) {
 						default:
 						case *schema.ResourceData:
-							if err := d.(*schema.ResourceData).Set(k, obj); err != nil {
-								log.Printf("[ERROR] APIDataToSchema %v in setting %v   type %v", err, obj, dType)
+							objType := reflect.TypeOf(obj).Kind()
+							if objType != reflect.Map && objType != reflect.Array && objType != reflect.Slice {
+								// object is primitive type, set directy into schema if tf resource has the key in the schema
+								if err := d.(*schema.ResourceData).Set(k, obj); err != nil {
+									log.Printf("[ERROR] APIDataToSchema %v in setting %v type %v", err, obj, dType)
+								}
+							} else {
+								objList := obj.([]interface{})
+								isObjectMap := false
+								for _, v := range objList {
+									if m, ok := v.(map[string]interface{}); ok {
+										isObjectMap = true
+										for k, v := range m {
+											if nestedMap, ok := v.(map[string]interface{}); ok {
+												for nestedKey, nestedValue := range nestedMap {
+													fmt.Printf("%s.%s.%s = %v\n", k, nestedKey, reflect.TypeOf(nestedValue), nestedValue)
+													if _, ok := d.(*schema.ResourceData).State().Attributes[nestedKey]; ok {
+														// Set the value in the schema
+														if err := d.(*schema.ResourceData).Set(nestedKey, nestedValue); err != nil {
+															log.Printf("[ERROR] APIDataToSchema %v in setting %v   type %v", err, obj, dType)
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+								if !isObjectMap {
+									if err := d.(*schema.ResourceData).Set(k, obj); err != nil {
+										log.Printf("[ERROR] APIDataToSchema %v in setting %v type %v", err, obj, dType)
+									}
+								}
 							}
 						case map[string]interface{}:
 							d.(map[string]interface{})[k] = obj
@@ -523,7 +575,7 @@ func ComputePolicyPath(d *schema.ResourceData, objType string, isReadRequest boo
 		} else {
 			url = basePath + "/orgs/" + orgID + "/projects/" + projectID + "/vpcs/" + vpcID + "/subnets/" + d.Get("nsx_id").(string)
 		}
-	case "SubnetPort":
+	case "VpcSubnetPort":
 		if isListingRequest {
 			url = basePath + d.Get("parent_path").(string) + "/ports/"
 		} else {
@@ -553,7 +605,7 @@ func ComputePolicyPath(d *schema.ResourceData, objType string, isReadRequest boo
 		} else {
 			url = basePath + d.Get("parent_path").(string) + "/rules/" + d.Get("nsx_id").(string)
 		}
-	case "PolicyNatRule":
+	case "PolicyVpcNatRule":
 		if isListingRequest {
 			url = basePath + d.Get("parent_path").(string) + "/nat-rules/"
 		} else {

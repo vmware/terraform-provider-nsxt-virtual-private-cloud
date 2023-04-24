@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-// nolint
+//nolint
 package nsxt
 
 import (
@@ -111,8 +111,8 @@ func testAccCheckNSXTPolicyVpcNatRuleDestroy(s *terraform.State) error {
 }
 
 const testAccNSXTPolicyVpcNatRuleConfig = `
-    resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
-      	translated_network = "192.168.4.1"
+  resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
+  translated_network = "192.168.4.1"
 	display_name = "test-natrule-abc"
 	description = "NatRule description"
 	enabled = true
@@ -127,8 +127,8 @@ const testAccNSXTPolicyVpcNatRuleConfig = `
 `
 
 const testAccNSXTPolicyVpcNatRuleupdatedConfig = `
-    resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
-      	translated_network = "192.168.4.1"
+  resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
+  translated_network = "192.168.4.1"
 	display_name = "test-natrule-abc-updated"
 	description = "NatRule description"
 	enabled = true

@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-// nolint
+//nolint
 package nsxt
 
 import (
@@ -102,8 +102,8 @@ func testAccCheckNSXTIpAddressAllocationDestroy(s *terraform.State) error {
 }
 
 const testAccNSXTIpAddressAllocationConfig = `
-    resource "nsxt_vpc_subnet_ip_address_allocation" "testSubnetIpAddressAllocation" {
-      	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/static-ipv4-default"
+  resource "nsxt_vpc_subnet_ip_address_allocation" "testSubnetIpAddressAllocation" {
+  parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/_static-ipv4--empty"
 	nsx_id = "test-ipallocation-abc"
 	display_name = "test-ipallocation-abc"
 	description = "IpAllocation description"
@@ -112,8 +112,8 @@ const testAccNSXTIpAddressAllocationConfig = `
 `
 
 const testAccNSXTIpAddressAllocationupdatedConfig = `
-    resource "nsxt_vpc_subnet_ip_address_allocation" "testSubnetIpAddressAllocation" {
-      	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/static-ipv4-default"
+  resource "nsxt_vpc_subnet_ip_address_allocation" "testSubnetIpAddressAllocation" {
+  parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/_static-ipv4--empty"
 	nsx_id = "test-ipallocation-abc"
 	display_name = "test-ipallocation-abc-updated"
 	description = "IpAllocation description"

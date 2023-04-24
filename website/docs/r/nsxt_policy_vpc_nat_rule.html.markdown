@@ -20,7 +20,7 @@ The PolicyVpcNatRule resource allows the creation and management of Nsxt PolicyV
 ## Example Usage
 ```hcl
 resource "nsxt_policy_vpc_nat_rule" "test-policyvpcnatrule" {
-    	translated_network = "192.168.1.1"
+  translated_network = "192.168.4.1"
 	display_name = "MyNATRuleDemo"
 	description = "Example of a NAT rule"
 	enabled = true

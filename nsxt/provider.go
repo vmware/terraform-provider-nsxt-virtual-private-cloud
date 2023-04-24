@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-// nolint
+//nolint
 package nsxt
 
 import (
@@ -143,7 +143,7 @@ func Provider() *schema.Provider {
 			"nsxt_shared_infra_ip_address_block":               dataSourceNsxtSharedInfraIpAddressBlock(),
 			"nsxt_vpc_gateway_policy":                          dataSourceNsxtVpcGatewayPolicy(),
 			"nsxt_vpc_static_routes":                           dataSourceNsxtVpcStaticRoutes(),
-			"nsxt_vpc_policy_nat_rule":                         dataSourceNsxtVpcPolicyNatRule(),
+			"nsxt_policy_vpc_nat_rule":                         dataSourceNsxtPolicyVpcNatRule(),
 			"nsxt_vpc_security_policy_rule":                    dataSourceNsxtVpcSecurityPolicyRule(),
 			"nsxt_shared_infra_l2_bridge_endpoint_profile":     dataSourceNsxtSharedInfraL2BridgeEndpointProfile(),
 			"nsxt_vpc_security_policy":                         dataSourceNsxtVpcSecurityPolicy(),
@@ -169,7 +169,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"nsxt_vpc_gateway_policy":                resourceNsxtVpcGatewayPolicy(),
 			"nsxt_vpc_static_routes":                 resourceNsxtVpcStaticRoutes(),
-			"nsxt_vpc_policy_nat_rule":               resourceNsxtVpcPolicyNatRule(),
+			"nsxt_policy_vpc_nat_rule":               resourceNsxtPolicyVpcNatRule(),
 			"nsxt_vpc_security_policy_rule":          resourceNsxtVpcSecurityPolicyRule(),
 			"nsxt_vpc_security_policy":               resourceNsxtVpcSecurityPolicy(),
 			"nsxt_vpc_subnet":                        resourceNsxtVpcSubnet(),
