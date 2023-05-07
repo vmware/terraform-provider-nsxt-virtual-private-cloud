@@ -96,10 +96,6 @@ The following arguments are supported:
     * `scope` - (Optional) Tag searches may optionally be restricted by scope
     * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters
   * `resource_type` - (Required) 
-* `group_type` - (Optional) Group type can be specified during create and update of a group.
-Empty group type indicates a 'generic' group, ie group can
-include any entity from the valid GroupMemberType.
-
 * `tags` - (Optional) Opaque identifiers meaningful to the API user
   * `scope` - (Optional) Tag searches may optionally be restricted by scope
   * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters
