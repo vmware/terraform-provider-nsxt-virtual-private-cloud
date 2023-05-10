@@ -19,8 +19,8 @@ import (
 )
 
 func TestNSXTDataSourceInfraGroupBasic(t *testing.T) {
-	testCaseNsxID := os.Getenv("NSXT_TEST_GROUP_ID")
-	testCaseDisplayName := os.Getenv("NSXT_TEST_GROUP_NAME")
+	testCaseNsxID := os.Getenv("NSXT_INFRA_TEST_GROUP_ID")
+	testCaseDisplayName := os.Getenv("NSXT_INFRA_TEST_GROUP_NAME")
 	testResourceName := "data.nsxt_shared_infra_group.testInfraGroup"
 
 	resource.ParallelTest(t, resource.TestCase{

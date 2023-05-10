@@ -35,7 +35,7 @@ func TestNSXTDhcpV4StaticBindingConfigBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "nsx_id", "test-dhcpv4staticbinding-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "host_name", "vm1.vmware.com"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "mac_address", "11:22:33:44:55:67"),
-					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "30.30.30.16"),
+					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "192.168.4.32"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "resource_type", "DhcpV4StaticBindingConfig"),
 				),
 			},
@@ -48,7 +48,7 @@ func TestNSXTDhcpV4StaticBindingConfigBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "nsx_id", "test-dhcpv4staticbinding-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "host_name", "vm1.vmware.com"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "mac_address", "11:22:33:44:55:67"),
-					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "30.30.30.16"),
+					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "192.168.4.32"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "resource_type", "DhcpV4StaticBindingConfig"),
 				),
 			},
@@ -119,7 +119,7 @@ const testAccNSXTDhcpV4StaticBindingConfigConfig = `
 	nsx_id = "test-dhcpv4staticbinding-abc"
 	host_name = "vm1.vmware.com"
 	mac_address = "11:22:33:44:55:67"
-	ip_address = "30.30.30.16"
+	ip_address = "192.168.4.32"
 	options {
 		option121 {
 			static_routes {
@@ -151,7 +151,7 @@ const testAccNSXTDhcpV4StaticBindingConfigupdatedConfig = `
 	nsx_id = "test-dhcpv4staticbinding-abc"
 	host_name = "vm1.vmware.com"
 	mac_address = "11:22:33:44:55:67"
-	ip_address = "30.30.30.16"
+	ip_address = "192.168.4.32"
 	resource_type = "DhcpV4StaticBindingConfig"
 }
 `

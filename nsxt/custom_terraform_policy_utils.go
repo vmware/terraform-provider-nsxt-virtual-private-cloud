@@ -624,16 +624,6 @@ func ComputePolicyPath(d *schema.ResourceData, objType string, isReadRequest boo
 	return url
 }
 
-func GetPolicyPathSchema(isRequired bool, forceNew bool, description string) *schema.Schema {
-	return &schema.Schema{
-		Type:        schema.TypeString,
-		Description: description,
-		Optional:    !isRequired,
-		Required:    isRequired,
-		ForceNew:    forceNew,
-	}
-}
-
 // It sets default values in the terraform resources to avoid diffs for scalars.
 func SetDefaultsInAPIRes(apiRes interface{}, dLocal interface{}, s map[string]*schema.Schema) (interface{}, error) {
 	if apiRes == nil {

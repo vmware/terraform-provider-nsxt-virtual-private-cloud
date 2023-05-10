@@ -92,6 +92,12 @@ func Provider() *schema.Provider {
 				Description: "Maximum time in milliseconds for connection to wait for a TLS handshake. Zero means no timeout",
 				DefaultFunc: schema.EnvDefaultFunc("NSXT_CONNECTON_TIMEOUT", 60),
 			},
+			"site": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Site for NSXT Policy",
+				DefaultFunc: schema.EnvDefaultFunc("NSXT_POLICY_SITE", "default"),
+			},
 			"enforcement_point": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -145,7 +151,6 @@ func Provider() *schema.Provider {
 			"nsxt_vpc_static_routes":                           dataSourceNsxtVpcStaticRoutes(),
 			"nsxt_policy_vpc_nat_rule":                         dataSourceNsxtPolicyVpcNatRule(),
 			"nsxt_vpc_security_policy_rule":                    dataSourceNsxtVpcSecurityPolicyRule(),
-			"nsxt_shared_infra_l2_bridge_endpoint_profile":     dataSourceNsxtSharedInfraL2BridgeEndpointProfile(),
 			"nsxt_vpc_security_policy":                         dataSourceNsxtVpcSecurityPolicy(),
 			"nsxt_shared_project_infra_service":                dataSourceNsxtSharedProjectInfraService(),
 			"nsxt_shared_project_infra_ip_address_pool":        dataSourceNsxtSharedProjectInfraIpAddressPool(),
@@ -162,7 +167,6 @@ func Provider() *schema.Provider {
 			"nsxt_vpc_ip_address_allocation":                   dataSourceNsxtVpcIpAddressAllocation(),
 			"nsxt_shared_infra_ip_address_pool":                dataSourceNsxtSharedInfraIpAddressPool(),
 			"nsxt_vpc_dhcp_v4_static_binding_config":           dataSourceNsxtVpcDhcpV4StaticBindingConfig(),
-			"nsxt_vpc_dhcp_v6_static_binding_config":           dataSourceNsxtVpcDhcpV6StaticBindingConfig(),
 			"nsxt_vpc_vm":                                      dataSourceNsxtVpcVM(),
 		},
 
@@ -179,7 +183,6 @@ func Provider() *schema.Provider {
 			"nsxt_vpc_group":                         resourceNsxtVpcGroup(),
 			"nsxt_vpc_ip_address_allocation":         resourceNsxtVpcIpAddressAllocation(),
 			"nsxt_vpc_dhcp_v4_static_binding_config": resourceNsxtVpcDhcpV4StaticBindingConfig(),
-			"nsxt_vpc_dhcp_v6_static_binding_config": resourceNsxtVpcDhcpV6StaticBindingConfig(),
 			"nsxt_vpc_vm_tags":                       resourceNsxtVpcVmTags(),
 		},
 

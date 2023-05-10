@@ -19,8 +19,8 @@ import (
 )
 
 func TestNSXTDataSourceInfraIpAddressPoolBasic(t *testing.T) {
-	testCaseNsxID := os.Getenv("NSXT_TEST_IP_ADDRESS_POOL_ID")
-	testCaseDisplayName := os.Getenv("NSXT_TEST_IP_ADDRESS_POOL_NAME")
+	testCaseNsxID := os.Getenv("NSXT_INFRA_TEST_IP_ADDRESS_POOL_ID")
+	testCaseDisplayName := os.Getenv("NSXT_INFRA_TEST_IP_ADDRESS_POOL_NAME")
 	testResourceName := "data.nsxt_shared_infra_ip_address_pool.testInfraIpAddressPool"
 
 	resource.ParallelTest(t, resource.TestCase{

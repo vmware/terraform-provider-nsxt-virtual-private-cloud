@@ -19,6 +19,7 @@ import (
 func TestNSXTDataSourceVpcVMBasic(t *testing.T) {
 	testCaseExternalID := os.Getenv("NSXT_TEST_VM_EXTERNAL_ID")
 	testCaseDisplayName := os.Getenv("NSXT_TEST_VM_DISPLAY_NAME")
+	testCasePowerState := os.Getenv("NSXT_TEST_VM_POWER_STATE")
 	testResourceName := "data.nsxt_vpc_vm.testVM"
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -26,7 +27,7 @@ func TestNSXTDataSourceVpcVMBasic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNSXTDSVpcVMConfigTemplate(testCaseExternalID, testCaseDisplayName),
+				Config: testAccNSXTDSVpcVMConfigTemplate(testCaseExternalID, testCaseDisplayName, testCasePowerState),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testResourceName, "display_name"),
 					resource.TestCheckResourceAttrSet(testResourceName, "external_id"),
@@ -37,10 +38,11 @@ func TestNSXTDataSourceVpcVMBasic(t *testing.T) {
 	})
 }
 
-func testAccNSXTDSVpcVMConfigTemplate(testCaseExternalID string, testCaseDisplayName string) string {
+func testAccNSXTDSVpcVMConfigTemplate(testCaseExternalID string, testCaseDisplayName string, testCasePowerState string) string {
 	return fmt.Sprintf(`
   data "nsxt_vpc_vm" "testVM" {
 		external_id		 = "%s"
     display_name   = "%s"
-}`, testCaseExternalID, testCaseDisplayName)
+		power_state		 = "%s"
+}`, testCaseExternalID, testCaseDisplayName, testCasePowerState)
 }

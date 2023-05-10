@@ -47,7 +47,8 @@ resource "nsxt_vpc_vm_tags" "test-vpc-vm-tags" {
 The following arguments are supported:
 
 * `virtual_machine_id` - (Required) This is the external ID of the Virtual machine on which tags will be managed.
-* `tags` - (Optional) A list of scope + tag pairs to associate with this Virtual Machine.
+* `tags` - (Optional) A list of scope + tag pairs to associate with this Virtual Machine. This resource will replace the existing
+  tags on the virtual machine with the ones that have been passed
   * `scope` - (Optional) Tag searches may optionally be restricted by scope
   * `tag` - (Optional) Identifier meaningful to user with maximum length of 256 characters
 

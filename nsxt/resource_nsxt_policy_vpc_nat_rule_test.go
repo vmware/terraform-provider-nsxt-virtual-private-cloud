@@ -30,15 +30,14 @@ func TestNSXTPolicyVpcNatRuleBasic(t *testing.T) {
 				Config: testAccNSXTPolicyVpcNatRuleConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTPolicyVpcNatRuleExists("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "translated_network", "192.168.4.1"),
+					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "translated_network", "192.168.4.0"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "display_name", "test-natrule-abc"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "description", "NatRule description"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "enabled", "True"),
+					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "enabled", "true"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "nsx_id", "test-natrule-abc"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "action", "DNAT"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "logging", "False"),
+					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "action", "SNAT"),
+					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "logging", "false"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "firewall_match", "MATCH_EXTERNAL_ADDRESS"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "destination_network", "10.117.5.19"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "sequence_number", "10"),
 				),
 			},
@@ -46,15 +45,14 @@ func TestNSXTPolicyVpcNatRuleBasic(t *testing.T) {
 				Config: testAccNSXTPolicyVpcNatRuleupdatedConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTPolicyVpcNatRuleExists("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "translated_network", "192.168.4.1"),
+					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "translated_network", "192.168.4.0"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "display_name", "test-natrule-abc-updated"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "description", "NatRule description"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "enabled", "True"),
+					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "enabled", "true"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "nsx_id", "test-natrule-abc"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "action", "DNAT"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "logging", "False"),
+					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "action", "SNAT"),
+					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "logging", "false"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "firewall_match", "MATCH_EXTERNAL_ADDRESS"),
-					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "destination_network", "10.117.5.19"),
 					resource.TestCheckResourceAttr("nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "sequence_number", "10"),
 				),
 			},
@@ -111,33 +109,31 @@ func testAccCheckNSXTPolicyVpcNatRuleDestroy(s *terraform.State) error {
 }
 
 const testAccNSXTPolicyVpcNatRuleConfig = `
-    resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
-      	translated_network = "192.168.4.1"
+  resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
+  translated_network = "192.168.4.0"
 	display_name = "test-natrule-abc"
 	description = "NatRule description"
 	enabled = true
 	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/nat/USER"
 	nsx_id = "test-natrule-abc"
-	action = "DNAT"
+	action = "SNAT"
 	logging = false
 	firewall_match = "MATCH_EXTERNAL_ADDRESS"
-	destination_network = "10.117.5.19"
 	sequence_number = 10
 }
 `
 
 const testAccNSXTPolicyVpcNatRuleupdatedConfig = `
-    resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
-      	translated_network = "192.168.4.1"
+  resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
+  translated_network = "192.168.4.0"
 	display_name = "test-natrule-abc-updated"
 	description = "NatRule description"
 	enabled = true
 	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/nat/USER"
 	nsx_id = "test-natrule-abc"
-	action = "DNAT"
+	action = "SNAT"
 	logging = false
 	firewall_match = "MATCH_EXTERNAL_ADDRESS"
-	destination_network = "10.117.5.19"
 	sequence_number = 10
 }
 `

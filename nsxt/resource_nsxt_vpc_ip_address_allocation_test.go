@@ -33,7 +33,6 @@ func TestNSXTVpcIpAddressAllocationBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("nsxt_vpc_ip_address_allocation.testVpcIpAddressAllocation", "nsx_id", "test-vpcipaddressallocation-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_ip_address_allocation.testVpcIpAddressAllocation", "display_name", "test-vpcipaddressallocation-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_ip_address_allocation.testVpcIpAddressAllocation", "description", "Vpc IP address allocation description"),
-					resource.TestCheckResourceAttr("nsxt_vpc_ip_address_allocation.testVpcIpAddressAllocation", "allocation_ip", "192.168.12.2"),
 				),
 			},
 			{
@@ -93,6 +92,5 @@ const testAccNSXTVpcIpAddressAllocationConfig = `
       	nsx_id = "test-vpcipaddressallocation-abc"
 	display_name = "test-vpcipaddressallocation-abc"
 	description = "Vpc IP address allocation description"
-	allocation_ip = "192.168.12.2"
 }
 `

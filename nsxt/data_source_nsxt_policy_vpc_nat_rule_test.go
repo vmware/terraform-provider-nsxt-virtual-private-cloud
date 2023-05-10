@@ -24,23 +24,21 @@ func TestNSXTDataSourcePolicyVpcNatRuleBasic(t *testing.T) {
 				Config: testAccNSXTDSPolicyVpcNatRuleConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "translated_network", "192.168.4.1"),
+						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "translated_network", "192.168.4.0"),
 					resource.TestCheckResourceAttr(
 						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "display_name", "test-natrule-abc"),
 					resource.TestCheckResourceAttr(
 						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "description", "NatRule description"),
 					resource.TestCheckResourceAttr(
-						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "enabled", "True"),
+						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "enabled", "true"),
 					resource.TestCheckResourceAttr(
 						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "nsx_id", "test-natrule-abc"),
 					resource.TestCheckResourceAttr(
-						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "action", "DNAT"),
+						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "action", "SNAT"),
 					resource.TestCheckResourceAttr(
-						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "logging", "False"),
+						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "logging", "false"),
 					resource.TestCheckResourceAttr(
 						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "firewall_match", "MATCH_EXTERNAL_ADDRESS"),
-					resource.TestCheckResourceAttr(
-						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "destination_network", "10.117.5.19"),
 					resource.TestCheckResourceAttr(
 						"nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule", "sequence_number", "10"),
 				),
@@ -51,17 +49,16 @@ func TestNSXTDataSourcePolicyVpcNatRuleBasic(t *testing.T) {
 
 const testAccNSXTDSPolicyVpcNatRuleConfig = `
 
-    resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
-      	translated_network = "192.168.4.1"
+  resource "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
+  translated_network = "192.168.4.0"
 	display_name = "test-natrule-abc"
 	description = "NatRule description"
 	enabled = true
 	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/nat/USER"
 	nsx_id = "test-natrule-abc"
-	action = "DNAT"
+	action = "SNAT"
 	logging = false
 	firewall_match = "MATCH_EXTERNAL_ADDRESS"
-	destination_network = "10.117.5.19"
 	sequence_number = 10
 }
 

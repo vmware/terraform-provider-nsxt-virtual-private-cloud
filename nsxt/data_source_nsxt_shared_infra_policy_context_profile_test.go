@@ -19,8 +19,8 @@ import (
 )
 
 func TestNSXTDataSourceInfraPolicyContextProfileBasic(t *testing.T) {
-	testCaseNsxID := os.Getenv("NSXT_TEST_CONTEXT_PROFILE_ID")
-	testCaseDisplayName := os.Getenv("NSXT_TEST_CONTEXT_PROFILE_NAME")
+	testCaseNsxID := os.Getenv("NSXT_INFRA_TEST_CONTEXT_PROFILE_ID")
+	testCaseDisplayName := os.Getenv("NSXT_INFRA_TEST_CONTEXT_PROFILE_NAME")
 	testResourceName := "data.nsxt_shared_infra_policy_context_profile.testInfraPolicyContextProfile"
 
 	resource.ParallelTest(t, resource.TestCase{

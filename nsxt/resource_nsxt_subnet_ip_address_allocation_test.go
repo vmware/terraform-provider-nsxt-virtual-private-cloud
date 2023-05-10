@@ -35,7 +35,7 @@ func TestNSXTIpAddressAllocationBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation", "nsx_id", "test-ipallocation-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation", "display_name", "test-ipallocation-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation", "description", "IpAllocation description"),
-					resource.TestCheckResourceAttr("nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation", "allocation_ip", "192.168.12.2"),
+					resource.TestCheckResourceAttr("nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation", "allocation_ip", "192.168.4.0"),
 				),
 			},
 			{
@@ -46,7 +46,6 @@ func TestNSXTIpAddressAllocationBasic(t *testing.T) {
 					testAccCheckNSXTIpAddressAllocationExists("nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation", "nsx_id", "test-ipallocation-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation", "display_name", "test-ipallocation-abc-updated"),
-					resource.TestCheckResourceAttr("nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation", "description", "IpAllocation description"),
 				),
 			},
 			{
@@ -102,20 +101,19 @@ func testAccCheckNSXTIpAddressAllocationDestroy(s *terraform.State) error {
 }
 
 const testAccNSXTIpAddressAllocationConfig = `
-    resource "nsxt_vpc_subnet_ip_address_allocation" "testSubnetIpAddressAllocation" {
-      	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/_static-ipv4--empty"
+  resource "nsxt_vpc_subnet_ip_address_allocation" "testSubnetIpAddressAllocation" {
+  parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/_static-ipv4--empty"
 	nsx_id = "test-ipallocation-abc"
 	display_name = "test-ipallocation-abc"
 	description = "IpAllocation description"
-	allocation_ip = "192.168.12.2"
+	allocation_ip = "192.168.4.0"
 }
 `
 
 const testAccNSXTIpAddressAllocationupdatedConfig = `
-    resource "nsxt_vpc_subnet_ip_address_allocation" "testSubnetIpAddressAllocation" {
-      	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/_static-ipv4--empty"
+  resource "nsxt_vpc_subnet_ip_address_allocation" "testSubnetIpAddressAllocation" {
+  parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/subnets/test-vpcsubnet-abc/ip-pools/_static-ipv4--empty"
 	nsx_id = "test-ipallocation-abc"
 	display_name = "test-ipallocation-abc-updated"
-	description = "IpAllocation description"
 }
 `

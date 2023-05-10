@@ -22,11 +22,9 @@ import (
 func TestNSXTVpcVmTagsBasic(t *testing.T) {
 	testCaseVMID := os.Getenv("NSXT_TEST_VM_ID")
 	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t); testAccEnvDefined(t, "NSXT_TEST_VM_ID") },
-		Providers: testAccProviders,
-		CheckDestroy: func(state *terraform.State) error {
-			return testAccNSXTVpcVmTagsCheckDestroy(state)
-		},
+		PreCheck:     func() { testAccPreCheck(t); testAccEnvDefined(t, "NSXT_TEST_VM_ID") },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccNSXTVpcVmTagsCheckDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccNSXTVpcVmTagsConfig(testCaseVMID),

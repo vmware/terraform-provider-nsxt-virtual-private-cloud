@@ -19,8 +19,8 @@ import (
 )
 
 func TestNSXTDataSourceProjectInfraServiceBasic(t *testing.T) {
-	testCaseNsxID := os.Getenv("NSXT_TEST_SERVICE_ID")
-	testCaseDisplayName := os.Getenv("NSXT_TEST_SERVICE_NAME")
+	testCaseNsxID := os.Getenv("NSXT_PROJECT_INFRA_TEST_SERVICE_ID")
+	testCaseDisplayName := os.Getenv("NSXT_PROJECT_INFRA_TEST_SERVICE_NAME")
 	testResourceName := "data.nsxt_shared_project_infra_service.testProjectInfraService"
 
 	resource.ParallelTest(t, resource.TestCase{

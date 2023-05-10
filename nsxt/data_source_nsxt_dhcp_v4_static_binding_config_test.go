@@ -34,7 +34,7 @@ func TestNSXTDataSourceDhcpV4StaticBindingConfigBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "mac_address", "11:22:33:44:55:67"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "30.30.30.16"),
+						"nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "192.168.4.32"),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "resource_type", "DhcpV4StaticBindingConfig"),
 				),
@@ -59,7 +59,7 @@ const testAccNSXTDSDhcpV4StaticBindingConfigConfig = `
 	nsx_id = "test-dhcpv4staticbinding-abc"
 	host_name = "vm1.vmware.com"
 	mac_address = "11:22:33:44:55:67"
-	ip_address = "30.30.30.16"
+	ip_address = "192.168.4.32"
 	options {
 		option121 {
 			static_routes {

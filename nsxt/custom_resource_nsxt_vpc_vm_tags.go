@@ -79,7 +79,7 @@ func resourceNsxtVpcVmTagsCreate(d *schema.ResourceData, meta interface{}) error
 	var robj interface{}
 	if data, err := SchemaToNsxtData(d, s); err == nil {
 		nsxtClient := meta.(*nsxtclient.NsxtClient)
-		url := nsxtClient.Config.BasePath + "/infra/realized-state/enforcement-points/" + nsxtClient.NsxtSession.GetEnforcementPoint() + "/virtual-machines?action=update_tags"
+		url := nsxtClient.Config.BasePath + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID + "/vpcs/" + nsxtClient.Config.VpcID + "/virtual-machines/" + external_id + "/tags"
 		err := nsxtClient.NsxtSession.Post(url, data, &robj)
 		if err != nil {
 			log.Printf("[ERROR] VM tag addition failed %v\n", err)
@@ -109,7 +109,7 @@ func resourceNsxtVpcVmTagsDelete(d *schema.ResourceData, meta interface{}) error
 	json.Unmarshal(jsonData, &jsonInterface)
 
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
-	url := nsxtClient.Config.BasePath + "/infra/realized-state/enforcement-points/" + nsxtClient.NsxtSession.GetEnforcementPoint() + "/virtual-machines?action=update_tags"
+	url := nsxtClient.Config.BasePath + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID + "/vpcs/" + nsxtClient.Config.VpcID + "/virtual-machines/" + d.Id() + "/tags"
 	err := nsxtClient.NsxtSession.Post(url, jsonInterface, &robj)
 	if err != nil {
 		d.SetId("")
