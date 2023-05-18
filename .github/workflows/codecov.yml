@@ -12,9 +12,9 @@ jobs:
     
     env:
       TF_ACC: "1"
-      NSXT_MANAGER_HOST: "10.92.116.5"
+      NSXT_MANAGER_HOST: "10.215.102.137"
       NSXT_USERNAME: "admin"
-      NSXT_PASSWORD: "V6*IiT5VmM*+"
+      NSXT_PASSWORD: "d5*Hn+-ZNgXS"
       NSXT_ORG: "default"
       NSXT_PROJECT: "Dev_project"
       NSXT_VPC: "dev_vpc"
@@ -28,8 +28,8 @@ jobs:
       NSXT_INFRA_TEST_IP_ADDRESS_POOL_NAME: "test-ip-pool"
       NSXT_INFRA_TEST_CONTEXT_PROFILE_ID: "360ANTIV"
       NSXT_INFRA_TEST_SERVICE_ID: "Active_Directory_Server"
-      NSXT_TEST_VM_ID: "86f07fcf-46b5-40e9-8544-1a469d9c6a65"
-      NSXT_TEST_VM_EXTERNAL_ID: "86f07fcf-46b5-40e9-8544-1a469d9c6a65"
+      NSXT_TEST_VM_ID: "bd0a80fd-f25a-4cdd-8727-3a22220d00e9"
+      NSXT_TEST_VM_EXTERNAL_ID: "bd0a80fd-f25a-4cdd-8727-3a22220d00e9"
       NSXT_TEST_VM_POWER_STATE: "VM_RUNNING"
 
     steps:
@@ -40,11 +40,12 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.4.2
+          terraform_wrapper: false
 
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.19
+          go-version: 1.18.4
 
       - name: Install dependencies
         run: |
@@ -52,7 +53,7 @@ jobs:
 
       - name: Run tests and generate coverage report
         run: |
-          TF_ACC=1 go test -v -coverprofile=coverage_report.json ./nsxt/
+          TF_ACC=1 TF_LOG=TRACE go test -v -coverprofile=coverage_report.json ./nsxt/
           go tool cover -html=coverage_report.json -o coverage_report.html
 
       - name: Upload coverage reports to Codecov
