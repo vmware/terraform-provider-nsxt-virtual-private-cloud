@@ -109,7 +109,7 @@ func testAccPreCheck(t *testing.T) {
 	}
 
 	_, err := nsxtclient.NewNsxtClient(config.NsxManagerHost, config.Username, config.OrgId, config.ProjectId, config.VpcId,
-		"", "", "", "", "", "", true, nsxtsession.SetInsecure(false),
+		"", "", "", "", "", "", true, nsxtsession.SetPassword(config.Password), nsxtsession.SetInsecure(false),
 		nsxtsession.SetMaxAPIRetries(5), nsxtsession.SetTimeout(time.Duration(90*int(time.Second))))
 
 	if err != nil {
