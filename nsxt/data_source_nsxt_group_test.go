@@ -48,11 +48,11 @@ func TestNSXTDataSourceGroupBasic(t *testing.T) {
 						"nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
 							"tag": "webvm"}),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc"),
+						"nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc-2"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_group.testGroup", "display_name", "test-group-abc"),
+						"nsxt_vpc_group.testGroup", "display_name", "test-group-abc-2"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_group.testGroup", "description", "Group description"),
+						"nsxt_vpc_group.testGroup", "description", "Group 2 description"),
 				),
 			},
 		},
@@ -103,9 +103,9 @@ expression {
 	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
 	resource_type = "PathExpression"
 }
-	nsx_id = "test-group-abc"
-	display_name = "test-group-abc"
-	description = "Group description"
+	nsx_id = "test-group-abc-2"
+	display_name = "test-group-abc-2"
+	description = "Group 2 description"
 }
 
 data "nsxt_vpc_group" "testGroup" {

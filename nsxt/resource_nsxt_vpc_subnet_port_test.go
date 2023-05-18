@@ -107,9 +107,9 @@ func testAccCheckNSXTVpcSubnetPortDestroy(s *terraform.State) error {
 const testAccNSXTVpcSubnetPortConfig = `
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
       	ipv4_subnet_size = 16
-	nsx_id = "test-vpcsubnet-abc"
-	display_name = "test-vpcsubnet-abc"
-	description = "VpcSubnet description"
+	nsx_id = "test-vpcsubnet-abc-3"
+	display_name = "test-vpcsubnet-abc-3"
+	description = "VpcSubnet 3 description"
 	access_mode = "Public"
 }
     resource "nsxt_vpc_subnet_port" "testVpcSubnetPort" {
@@ -131,9 +131,9 @@ address_bindings {
 const testAccNSXTVpcSubnetPortupdatedConfig = `
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
       	ipv4_subnet_size = 16
-	nsx_id = "test-vpcsubnet-abc"
-	display_name = "test-vpcsubnet-abc-updated"
-	description = "updated VpcSubnet description"
+	nsx_id = "test-vpcsubnet-abc-3"
+	display_name = "test-vpcsubnet-abc-3-updated"
+	description = "updated VpcSubnet 3 description"
 	access_mode = "Public"
 }
     resource "nsxt_vpc_subnet_port" "testVpcSubnetPort" {

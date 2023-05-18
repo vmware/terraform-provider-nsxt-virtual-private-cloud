@@ -46,18 +46,18 @@ func TestNSXTGroupBasic(t *testing.T) {
 						"scope": "scope1"}),
 					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
 						"tag": "webvm"}),
-					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "display_name", "test-group-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "description", "Group description"),
+					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc-2"),
+					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "display_name", "test-group-abc-2"),
+					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "description", "Group 2 description"),
 				),
 			},
 			{
 				Config: testAccNSXTGroupupdatedConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTGroupExists("nsxt_vpc_group.testGroup"),
-					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "display_name", "test-group-abc-updated"),
-					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "description", "updated Group description"),
+					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc-2"),
+					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "display_name", "test-group-abc-2-updated"),
+					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "description", "updated Group 2 description"),
 				),
 			},
 			{
@@ -80,15 +80,15 @@ func TestNSXTGroupBasic(t *testing.T) {
 						"scope": "scope1"}),
 					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
 						"tag": "webvm"}),
-					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "display_name", "test-group-abc-updated-1"),
+					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc-2"),
+					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "display_name", "test-group-abc-updated-2"),
 				),
 			},
 			{
 				Config: testAccNSXTGroupUpdate2Config,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTGroupExists("nsxt_vpc_group.testGroup"),
-					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc"),
+					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc-2"),
 					resource.TestCheckTypeSetElemAttr("nsxt_vpc_group.testGroup", "expression.*.ip_addresses.*", "10.112.10.1"),
 					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "expression.*", map[string]string{
 						"resource_type": "IPAddressExpression"}),
@@ -189,17 +189,17 @@ expression {
 	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
 	resource_type = "PathExpression"
 }
-	nsx_id = "test-group-abc"
-	display_name = "test-group-abc"
-	description = "Group description"
+	nsx_id = "test-group-abc-2"
+	display_name = "test-group-abc-2"
+	description = "Group 2 description"
 }
 `
 
 const testAccNSXTGroupupdatedConfig = `
     resource "nsxt_vpc_group" "testGroup" {
-      	nsx_id = "test-group-abc"
-	display_name = "test-group-abc-updated"
-	description = "updated Group description"
+      	nsx_id = "test-group-abc-2"
+	display_name = "test-group-abc-2-updated"
+	description = "updated Group 2 description"
 }
 `
 
@@ -246,13 +246,13 @@ expression {
 	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
 	resource_type = "PathExpression"
 }
-	nsx_id = "test-group-abc"
-	display_name = "test-group-abc-updated-1"
+	nsx_id = "test-group-abc-2"
+	display_name = "test-group-abc-updated-2"
 }
 `
 const testAccNSXTGroupUpdate2Config = `
   resource "nsxt_vpc_group" "testGroup" {
-  	nsx_id = "test-group-abc"
+  	nsx_id = "test-group-abc-2"
 	expression {
 	ip_addresses = ["10.112.10.1"]
 	resource_type = "IPAddressExpression"

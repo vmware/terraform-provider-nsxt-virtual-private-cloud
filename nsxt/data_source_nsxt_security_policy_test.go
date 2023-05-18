@@ -24,11 +24,11 @@ func TestNSXTDataSourceSecurityPolicyBasic(t *testing.T) {
 				Config: testAccNSXTDSSecurityPolicyConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_security_policy.testSecurityPolicy", "nsx_id", "test-securitypolicy-abc"),
+						"nsxt_vpc_security_policy.testSecurityPolicy", "nsx_id", "test-securitypolicy-abc-2"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_security_policy.testSecurityPolicy", "display_name", "test-securitypolicy-abc"),
+						"nsxt_vpc_security_policy.testSecurityPolicy", "display_name", "test-securitypolicy-abc-2"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_security_policy.testSecurityPolicy", "description", "SecurityPolicy description"),
+						"nsxt_vpc_security_policy.testSecurityPolicy", "description", "SecurityPolicy 2 description"),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_security_policy.testSecurityPolicy", "sequence_number", "0"),
 				),
@@ -40,9 +40,9 @@ func TestNSXTDataSourceSecurityPolicyBasic(t *testing.T) {
 const testAccNSXTDSSecurityPolicyConfig = `
 
     resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
-      	nsx_id = "test-securitypolicy-abc"
-	display_name = "test-securitypolicy-abc"
-	description = "SecurityPolicy description"
+      	nsx_id = "test-securitypolicy-abc-2"
+	display_name = "test-securitypolicy-abc-2"
+	description = "SecurityPolicy 2 description"
 	sequence_number = 0
 }
 
