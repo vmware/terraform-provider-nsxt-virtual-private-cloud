@@ -136,7 +136,7 @@ An existing PolicyVpcNatRule can be [imported][docs-import] into this resource, 
 
 [docs-import]: https://www.terraform.io/cli/import
 
-```hcl
+```
 terraform import nsxt_policy_vpc_nat_rule.test-policyvpcnatrule ID
 ```
 

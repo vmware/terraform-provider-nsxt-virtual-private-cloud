@@ -62,7 +62,7 @@ An existing VpcIpAddressAllocation can be [imported][docs-import] into this reso
 
 [docs-import]: https://www.terraform.io/cli/import
 
-```hcl
+```
 terraform import nsxt_vpc_ip_address_allocation.test-vpcipaddressallocation ID
 ```
 

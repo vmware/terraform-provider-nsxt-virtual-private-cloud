@@ -57,7 +57,7 @@ An existing IpAddressAllocation can be [imported][docs-import] into this resourc
 
 [docs-import]: https://www.terraform.io/cli/import
 
-```hcl
+```
 terraform import nsxt_vpc_subnet_ip_address_allocation.test-ipaddressallocation ID
 ```
 

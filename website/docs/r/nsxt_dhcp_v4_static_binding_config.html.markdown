@@ -122,7 +122,7 @@ An existing DhcpV4StaticBindingConfig can be [imported][docs-import] into this r
 
 [docs-import]: https://www.terraform.io/cli/import
 
-```hcl
+```
 terraform import nsxt_vpc_dhcp_v4_static_binding_config.test-dhcpv4staticbindingconfig ID
 ```
 

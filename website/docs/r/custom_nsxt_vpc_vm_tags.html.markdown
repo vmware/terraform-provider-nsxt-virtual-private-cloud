@@ -58,7 +58,7 @@ An existing VpcVmTags collection can be [imported][docs-import] into this resour
 
 [docs-import]: https://www.terraform.io/cli/import
 
-```hcl
+```
 terraform import nsxt_vpc_vm_tags.test-vpc-vm-tags ID
 ```
 

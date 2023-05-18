@@ -114,7 +114,7 @@ An existing Group can be [imported][docs-import] into this resource, via the fol
 
 [docs-import]: https://www.terraform.io/cli/import
 
-```hcl
+```
 terraform import nsxt_vpc_group.test-group ID
 ```
 

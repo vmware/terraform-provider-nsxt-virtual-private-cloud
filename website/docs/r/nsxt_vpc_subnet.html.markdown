@@ -42,7 +42,7 @@ The following arguments are supported:
 If not specified, then the local DHCP server will be configured for all connected subnets.
 
   * `dns_client_config` - (Optional) 
-    * `dns_server_ips` - (Optional) IPs of the DNS servers which need to be configured on teh workload VMs
+    * `dns_server_ips` - (Optional) IPs of the DNS servers which need to be configured on the workload VMs
 
   * `static_pool_config` - (Optional) 
     * `ipv4_pool_size` - (Optional) Number of IPs to be reserved in static ip pool. Maximum allowed value is 'subnet size - 4'.
@@ -56,7 +56,7 @@ If disabled then neither DHCP server nor relay shall be configured.
 * `display_name` - (Optional) Defaults to ID if not set
 * `description` - (Optional) Description of this resource
 * `access_mode` - (Optional) There are three kinds of Access Types supported for an Application.
-Private  - Subnet is accessbile only within the application and its IPs are allocated from
+Private  - Subnet is accessible only within the application and its IPs are allocated from
            private IP address pool from VPC configuration unless specified explicitly by user.
 Public   - Subnet is accessible from external networks and its IPs are allocated from public IP
            address pool from VPC configuration unless specified explicitly by user.
@@ -90,7 +90,7 @@ An existing VpcSubnet can be [imported][docs-import] into this resource, via the
 
 [docs-import]: https://www.terraform.io/cli/import
 
-```hcl
+```
 terraform import nsxt_vpc_subnet.test-vpcsubnet ID
 ```
 

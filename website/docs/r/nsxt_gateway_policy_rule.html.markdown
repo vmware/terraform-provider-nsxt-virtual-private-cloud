@@ -140,7 +140,7 @@ An existing GatewayPolicyRule can be [imported][docs-import] into this resource,
 
 [docs-import]: https://www.terraform.io/cli/import
 
-```hcl
+```
 terraform import nsxt_vpc_gateway_policy_rule.test-gatewaypolicyrule ID
 ```
 

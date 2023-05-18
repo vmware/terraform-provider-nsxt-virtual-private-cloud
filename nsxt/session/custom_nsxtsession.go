@@ -220,7 +220,7 @@ func (nsxtsess *NsxtSession) initiateSession() error {
 	var res interface{}
 
 	// now login to get session_id, csrfToken
-	cred := make(map[string]string)
+	cred := make(map[string]interface{})
 	cred["username"] = nsxtsess.username
 	cred["password"] = nsxtsess.password
 
@@ -611,7 +611,7 @@ func (nsxtsess *NsxtSession) restRequestInterfaceResponse(verb string, url strin
 		return err
 	}
 
-	if len(res) != 0 {
+	if len(res) != 0 && url != "login" {
 		return json.Unmarshal(res, &response)
 	}
 	return nil
