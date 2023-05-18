@@ -85,7 +85,7 @@ the lock, other users can update this security policy.
 * `display_name` - (Optional) Defaults to ID if not set
 * `description` - (Optional) Description of this resource
 * `connectivity_preference` - (Optional) This field indicates the default connectivity policy for the security
-policy. Based on the connectivitiy preference, a default rule for this
+policy. Based on the connectivity preference, a default rule for this
 security policy will be created. An appropriate action will be set on
 the rule based on the value of the connectivity preference. If NONE is
 selected or no connectivity preference is specified, then no default
@@ -179,7 +179,7 @@ An existing SecurityPolicy can be [imported][docs-import] into this resource, vi
 
 [docs-import]: https://www.terraform.io/cli/import
 
-```hcl
+```
 terraform import nsxt_vpc_security_policy.test-securitypolicy ID
 ```
 
