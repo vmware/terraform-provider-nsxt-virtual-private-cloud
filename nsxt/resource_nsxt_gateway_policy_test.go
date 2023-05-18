@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-//nolint
+// nolint
 package nsxt
 
 import (
@@ -30,19 +30,23 @@ func TestNSXTGatewayPolicyBasic(t *testing.T) {
 				Config: testAccNSXTGatewayPolicyConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTGatewayPolicyExists("nsxt_vpc_gateway_policy.testGatewayPolicy"),
-					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "nsx_id", "test-gatewaypolicy-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "display_name", "test-gatewaypolicy-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "description", "GatewayPolicy description"),
+					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "nsx_id", "test-gatewaypolicy-abc-1"),
+					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "display_name", "test-gatewaypolicy-abc-1"),
+					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "description", "GatewayPolicy 1 description"),
 					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "sequence_number", "0"),
+					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_gateway_policy.testGatewayPolicy", "tags.*", map[string]string{
+						"scope": "scope1"}),
+					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_gateway_policy.testGatewayPolicy", "tags.*", map[string]string{
+						"tag": "webvm1"}),
 				),
 			},
 			{
 				Config: testAccNSXTGatewayPolicyupdatedConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTGatewayPolicyExists("nsxt_vpc_gateway_policy.testGatewayPolicy"),
-					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "nsx_id", "test-gatewaypolicy-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "display_name", "test-gatewaypolicy-abc-updated"),
-					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "description", "updated GatewayPolicy description"),
+					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "nsx_id", "test-gatewaypolicy-abc-1"),
+					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "display_name", "test-gatewaypolicy-abc-1-updated"),
+					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "description", "updated GatewayPolicy 1 description"),
 					resource.TestCheckResourceAttr("nsxt_vpc_gateway_policy.testGatewayPolicy", "sequence_number", "0"),
 				),
 			},
@@ -100,18 +104,26 @@ func testAccCheckNSXTGatewayPolicyDestroy(s *terraform.State) error {
 
 const testAccNSXTGatewayPolicyConfig = `
     resource "nsxt_vpc_gateway_policy" "testGatewayPolicy" {
-      	nsx_id = "test-gatewaypolicy-abc"
-	display_name = "test-gatewaypolicy-abc"
-	description = "GatewayPolicy description"
+      	nsx_id = "test-gatewaypolicy-abc-1"
+	display_name = "test-gatewaypolicy-abc-1"
+	description = "GatewayPolicy 1 description"
 	sequence_number = 0
+	tags {
+	scope = "scope1"
+	tag = "webvm1"
+}
+tags {
+	scope = "scope2"
+	tag = "webvm2"
+}
 }
 `
 
 const testAccNSXTGatewayPolicyupdatedConfig = `
     resource "nsxt_vpc_gateway_policy" "testGatewayPolicy" {
-      	nsx_id = "test-gatewaypolicy-abc"
-	display_name = "test-gatewaypolicy-abc-updated"
-	description = "updated GatewayPolicy description"
+      	nsx_id = "test-gatewaypolicy-abc-1"
+	display_name = "test-gatewaypolicy-abc-1-updated"
+	description = "updated GatewayPolicy 1 description"
 	sequence_number = 0
 }
 `

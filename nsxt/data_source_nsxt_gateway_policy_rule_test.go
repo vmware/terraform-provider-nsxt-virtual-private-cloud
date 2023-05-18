@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-//nolint
+// nolint
 package nsxt
 
 import (
@@ -95,15 +95,23 @@ expression {
 	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
 	resource_type = "PathExpression"
 }
-	nsx_id = "test-group-abc"
-	display_name = "test-group-abc"
-	description = "Group description"
+	nsx_id = "test-group-abc-3"
+	display_name = "test-group-abc-3"
+	description = "Group 3 description"
 }
     resource "nsxt_vpc_gateway_policy" "testGatewayPolicy" {
-      	nsx_id = "test-gatewaypolicy-abc"
-	display_name = "test-gatewaypolicy-abc"
-	description = "GatewayPolicy description"
+      	nsx_id = "test-gatewaypolicy-abc-2"
+	display_name = "test-gatewaypolicy-abc-2"
+	description = "GatewayPolicy 2 description"
 	sequence_number = 0
+	tags {
+	scope = "scope1"
+	tag = "webvm1"
+}
+tags {
+	scope = "scope2"
+	tag = "webvm2"
+}
 }
 
 data "nsxt_vpc_gateway_policy_rule" "testGatewayPolicyRule" {

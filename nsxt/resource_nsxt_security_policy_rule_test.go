@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-//nolint
+// nolint
 package nsxt
 
 import (
@@ -156,14 +156,14 @@ expression {
 	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
 	resource_type = "PathExpression"
 }
-	nsx_id = "test-group-abc"
-	display_name = "test-group-abc"
-	description = "Group description"
+	nsx_id = "test-group-abc-1"
+	display_name = "test-group-abc-1"
+	description = "Group 1 description"
 }
     resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
-      	nsx_id = "test-securitypolicy-abc"
-	display_name = "test-securitypolicy-abc"
-	description = "SecurityPolicy description"
+      	nsx_id = "test-securitypolicy-abc-1"
+	display_name = "test-securitypolicy-abc-1"
+	description = "SecurityPolicy 1 description"
 	sequence_number = 0
 }
 `
@@ -181,14 +181,14 @@ const testAccNSXTSecurityPolicyRuleupdatedConfig = `
 	source_groups = [nsxt_vpc_group.testGroup.path]
 }
     resource "nsxt_vpc_group" "testGroup" {
-      	nsx_id = "test-group-abc"
-	display_name = "test-group-abc-updated"
-	description = "updated Group description"
+      	nsx_id = "test-group-abc-1"
+	display_name = "test-group-abc-1-updated"
+	description = "updated Group 1 description"
 }
     resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
-      	nsx_id = "test-securitypolicy-abc"
-	display_name = "test-secutitypolicy-abc-updated"
-	description = "updated SecurityPolicy description"
+      	nsx_id = "test-securitypolicy-abc-1"
+	display_name = "test-secutitypolicy-abc-1-updated"
+	description = "updated SecurityPolicy 1 description"
 	sequence_number = 0
 }
 `

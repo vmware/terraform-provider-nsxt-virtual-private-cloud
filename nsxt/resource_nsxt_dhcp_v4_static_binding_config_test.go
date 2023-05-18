@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-//nolint
+// nolint
 package nsxt
 
 import (
@@ -35,7 +35,7 @@ func TestNSXTDhcpV4StaticBindingConfigBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "nsx_id", "test-dhcpv4staticbinding-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "host_name", "vm1.vmware.com"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "mac_address", "11:22:33:44:55:67"),
-					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "192.168.4.32"),
+					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "192.168.4.96"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "resource_type", "DhcpV4StaticBindingConfig"),
 				),
 			},
@@ -48,7 +48,7 @@ func TestNSXTDhcpV4StaticBindingConfigBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "nsx_id", "test-dhcpv4staticbinding-abc"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "host_name", "vm1.vmware.com"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "mac_address", "11:22:33:44:55:67"),
-					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "192.168.4.32"),
+					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "ip_address", "192.168.4.96"),
 					resource.TestCheckResourceAttr("nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig", "resource_type", "DhcpV4StaticBindingConfig"),
 				),
 			},
@@ -107,9 +107,9 @@ func testAccCheckNSXTDhcpV4StaticBindingConfigDestroy(s *terraform.State) error 
 const testAccNSXTDhcpV4StaticBindingConfigConfig = `
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
       	ipv4_subnet_size = 16
-	nsx_id = "test-vpcsubnet-abc"
-	display_name = "test-vpcsubnet-abc"
-	description = "VpcSubnet description"
+	nsx_id = "test-vpcsubnet-abc-1"
+	display_name = "test-vpcsubnet-abc-1"
+	description = "VpcSubnet 1 description"
 	access_mode = "Public"
 }
     resource "nsxt_vpc_dhcp_v4_static_binding_config" "testDhcpV4StaticBindingConfig" {
@@ -119,7 +119,7 @@ const testAccNSXTDhcpV4StaticBindingConfigConfig = `
 	nsx_id = "test-dhcpv4staticbinding-abc"
 	host_name = "vm1.vmware.com"
 	mac_address = "11:22:33:44:55:67"
-	ip_address = "192.168.4.32"
+	ip_address = "192.168.4.96"
 	options {
 		option121 {
 			static_routes {
@@ -139,9 +139,9 @@ static_routes {
 const testAccNSXTDhcpV4StaticBindingConfigupdatedConfig = `
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
       	ipv4_subnet_size = 16
-	nsx_id = "test-vpcsubnet-abc"
-	display_name = "test-vpcsubnet-abc-updated"
-	description = "updated VpcSubnet description"
+	nsx_id = "test-vpcsubnet-abc-1"
+	display_name = "test-vpcsubnet-abc-1-updated"
+	description = "updated VpcSubnet 1 description"
 	access_mode = "Public"
 }
     resource "nsxt_vpc_dhcp_v4_static_binding_config" "testDhcpV4StaticBindingConfig" {
@@ -151,7 +151,7 @@ const testAccNSXTDhcpV4StaticBindingConfigupdatedConfig = `
 	nsx_id = "test-dhcpv4staticbinding-abc"
 	host_name = "vm1.vmware.com"
 	mac_address = "11:22:33:44:55:67"
-	ip_address = "192.168.4.32"
+	ip_address = "192.168.4.96"
 	resource_type = "DhcpV4StaticBindingConfig"
 }
 `

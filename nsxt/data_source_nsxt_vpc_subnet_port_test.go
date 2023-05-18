@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-//nolint
+// nolint
 package nsxt
 
 import (
@@ -45,9 +45,9 @@ const testAccNSXTDSVpcSubnetPortConfig = `
 
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
       	ipv4_subnet_size = 16
-	nsx_id = "test-vpcsubnet-abc"
-	display_name = "test-vpcsubnet-abc"
-	description = "VpcSubnet description"
+	nsx_id = "test-vpcsubnet-abc-3"
+	display_name = "test-vpcsubnet-abc-3"
+	description = "VpcSubnet 3 description"
 	access_mode = "Public"
 }
     resource "nsxt_vpc_subnet_port" "testVpcSubnetPort" {

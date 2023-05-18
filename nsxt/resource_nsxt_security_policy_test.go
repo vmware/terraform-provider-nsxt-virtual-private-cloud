@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-//nolint
+// nolint
 package nsxt
 
 import (
@@ -30,9 +30,9 @@ func TestNSXTSecurityPolicyBasic(t *testing.T) {
 				Config: testAccNSXTSecurityPolicyConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTSecurityPolicyExists("nsxt_vpc_security_policy.testSecurityPolicy"),
-					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "nsx_id", "test-securitypolicy-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "display_name", "test-securitypolicy-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "description", "SecurityPolicy description"),
+					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "nsx_id", "test-securitypolicy-abc-2"),
+					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "display_name", "test-securitypolicy-abc-2"),
+					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "description", "SecurityPolicy 2 description"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "sequence_number", "0"),
 				),
 			},
@@ -40,9 +40,9 @@ func TestNSXTSecurityPolicyBasic(t *testing.T) {
 				Config: testAccNSXTSecurityPolicyupdatedConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckNSXTSecurityPolicyExists("nsxt_vpc_security_policy.testSecurityPolicy"),
-					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "nsx_id", "test-securitypolicy-abc"),
-					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "display_name", "test-secutitypolicy-abc-updated"),
-					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "description", "updated SecurityPolicy description"),
+					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "nsx_id", "test-securitypolicy-abc-2"),
+					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "display_name", "test-secutitypolicy-abc-2-updated"),
+					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "description", "updated SecurityPolicy 2 description"),
 					resource.TestCheckResourceAttr("nsxt_vpc_security_policy.testSecurityPolicy", "sequence_number", "0"),
 				),
 			},
@@ -100,18 +100,18 @@ func testAccCheckNSXTSecurityPolicyDestroy(s *terraform.State) error {
 
 const testAccNSXTSecurityPolicyConfig = `
     resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
-      	nsx_id = "test-securitypolicy-abc"
-	display_name = "test-securitypolicy-abc"
-	description = "SecurityPolicy description"
+      	nsx_id = "test-securitypolicy-abc-2"
+	display_name = "test-securitypolicy-abc-2"
+	description = "SecurityPolicy 2 description"
 	sequence_number = 0
 }
 `
 
 const testAccNSXTSecurityPolicyupdatedConfig = `
     resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
-      	nsx_id = "test-securitypolicy-abc"
-	display_name = "test-secutitypolicy-abc-updated"
-	description = "updated SecurityPolicy description"
+      	nsx_id = "test-securitypolicy-abc-2"
+	display_name = "test-secutitypolicy-abc-2-updated"
+	description = "updated SecurityPolicy 2 description"
 	sequence_number = 0
 }
 `

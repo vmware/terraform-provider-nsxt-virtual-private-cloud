@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-//nolint
+// nolint
 package nsxt
 
 import (
@@ -24,13 +24,19 @@ func TestNSXTDataSourceGatewayPolicyBasic(t *testing.T) {
 				Config: testAccNSXTDSGatewayPolicyConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_gateway_policy.testGatewayPolicy", "nsx_id", "test-gatewaypolicy-abc"),
+						"nsxt_vpc_gateway_policy.testGatewayPolicy", "nsx_id", "test-gatewaypolicy-abc-1"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_gateway_policy.testGatewayPolicy", "display_name", "test-gatewaypolicy-abc"),
+						"nsxt_vpc_gateway_policy.testGatewayPolicy", "display_name", "test-gatewaypolicy-abc-1"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_gateway_policy.testGatewayPolicy", "description", "GatewayPolicy description"),
+						"nsxt_vpc_gateway_policy.testGatewayPolicy", "description", "GatewayPolicy 1 description"),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_gateway_policy.testGatewayPolicy", "sequence_number", "0"),
+					resource.TestCheckTypeSetElemNestedAttrs(
+						"nsxt_vpc_gateway_policy.testGatewayPolicy", "tags.*", map[string]string{
+							"scope": "scope1"}),
+					resource.TestCheckTypeSetElemNestedAttrs(
+						"nsxt_vpc_gateway_policy.testGatewayPolicy", "tags.*", map[string]string{
+							"tag": "webvm1"}),
 				),
 			},
 		},
@@ -40,10 +46,18 @@ func TestNSXTDataSourceGatewayPolicyBasic(t *testing.T) {
 const testAccNSXTDSGatewayPolicyConfig = `
 
     resource "nsxt_vpc_gateway_policy" "testGatewayPolicy" {
-      	nsx_id = "test-gatewaypolicy-abc"
-	display_name = "test-gatewaypolicy-abc"
-	description = "GatewayPolicy description"
+      	nsx_id = "test-gatewaypolicy-abc-1"
+	display_name = "test-gatewaypolicy-abc-1"
+	description = "GatewayPolicy 1 description"
 	sequence_number = 0
+	tags {
+	scope = "scope1"
+	tag = "webvm1"
+}
+tags {
+	scope = "scope2"
+	tag = "webvm2"
+}
 }
 
 data "nsxt_vpc_gateway_policy" "testGatewayPolicy" {

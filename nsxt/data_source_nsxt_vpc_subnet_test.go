@@ -7,7 +7,7 @@
 
 // Auto generated code. DO NOT EDIT.
 
-//nolint
+// nolint
 package nsxt
 
 import (
@@ -26,11 +26,11 @@ func TestNSXTDataSourceVpcSubnetBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_subnet.testVpcSubnet", "ipv4_subnet_size", "16"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_subnet.testVpcSubnet", "nsx_id", "test-vpcsubnet-abc"),
+						"nsxt_vpc_subnet.testVpcSubnet", "nsx_id", "test-vpcsubnet-abc-2"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_subnet.testVpcSubnet", "display_name", "test-vpcsubnet-abc"),
+						"nsxt_vpc_subnet.testVpcSubnet", "display_name", "test-vpcsubnet-abc-2"),
 					resource.TestCheckResourceAttr(
-						"nsxt_vpc_subnet.testVpcSubnet", "description", "VpcSubnet description"),
+						"nsxt_vpc_subnet.testVpcSubnet", "description", "VpcSubnet 2 description"),
 					resource.TestCheckResourceAttr(
 						"nsxt_vpc_subnet.testVpcSubnet", "access_mode", "Public"),
 				),
@@ -43,9 +43,9 @@ const testAccNSXTDSVpcSubnetConfig = `
 
     resource "nsxt_vpc_subnet" "testVpcSubnet" {
       	ipv4_subnet_size = 16
-	nsx_id = "test-vpcsubnet-abc"
-	display_name = "test-vpcsubnet-abc"
-	description = "VpcSubnet description"
+	nsx_id = "test-vpcsubnet-abc-2"
+	display_name = "test-vpcsubnet-abc-2"
+	description = "VpcSubnet 2 description"
 	access_mode = "Public"
 }
 
