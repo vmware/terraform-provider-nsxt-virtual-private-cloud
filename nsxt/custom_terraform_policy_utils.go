@@ -10,6 +10,7 @@ package nsxt
 import (
 	"fmt"
 	"log"
+	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
@@ -151,7 +152,7 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 	nsxID := d.Get("nsx_id").(string)
 	isInfraObject := false
 	isProjectInfra := false
-	var url string
+	var uri string
 	if strings.HasPrefix(objType, "ProjectInfra") {
 		objType = strings.TrimPrefix(objType, "ProjectInfra")
 		isProjectInfra = true
@@ -168,27 +169,29 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 	}
 
 	// Get the object from NSX using hidden full text search API
-	url = nsxtClient.Config.BasePath + "/search?query=resource_type:" + objType
+	uri = nsxtClient.Config.BasePath + "/search?query=resource_type:" + objType
 	if nsxID != "" {
-		url += "%20AND%20id:" + nsxID
+		encodedNsxId := url.QueryEscape(nsxID)
+		uri += "%20AND%20id:" + encodedNsxId
 	}
 	if displayName != "" {
-		url += "%20AND%20display_name:" + displayName
+		encodedDisplayName := url.QueryEscape(displayName)
+		uri += "%20AND%20display_name:" + encodedDisplayName
 	}
 	if d.Get("parent_path") != nil {
 		parentPath := d.Get("parent_path").(string)
 		if parentPath != "" {
-			url += "%20AND%20parent_path:\"" + parentPath + "\""
+			uri += "%20AND%20parent_path:\"" + parentPath + "\""
 		}
 	}
 	if isProjectInfra {
 		// If it is project/infra object, search in context of project
-		url += "&context=projects:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID
+		uri += "&context=projects:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID
 	} else if !isInfraObject && !isProjectInfra {
 		// If not infra and project/infra object, search in context of VPC
-		url += "&context=vpcs:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID + "/vpcs/" + nsxtClient.Config.VpcID
+		uri += "&context=vpcs:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID + "/vpcs/" + nsxtClient.Config.VpcID
 	}
-	err := nsxtClient.NsxtSession.Get(url, &obj)
+	err := nsxtClient.NsxtSession.Get(uri, &obj)
 	if err != nil {
 		return fmt.Errorf("[ERROR] Search failed for object %s %v", objType, err)
 	} else {
@@ -223,10 +226,10 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 			}
 		} else if objMap["result_count"].(float64) == 0 {
 			// get the entity using listing api, for some VPC resources(eg VpcIpAddressAllocation), search API isn't indexed
-			url = ComputePolicyPath(d, objType, false, nsxtClient, true)
+			uri = ComputePolicyPath(d, objType, false, nsxtClient, true)
 			// keep maximum allowed page size for pagination
-			url += "?page_size=1000"
-			err := nsxtClient.NsxtSession.Get(url, &obj)
+			uri += "?page_size=1000"
+			err := nsxtClient.NsxtSession.Get(uri, &obj)
 			if err != nil {
 				return fmt.Errorf("[ERROR] GET failed for object %s %v", objType, err)
 			} else {
@@ -284,8 +287,8 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 						break
 					} else {
 						// get next page using cursor
-						url += "&cursor=" + strconv.Itoa(cursor)
-						err = nsxtClient.NsxtSession.Get(url, &obj)
+						uri += "&cursor=" + strconv.Itoa(cursor)
+						err = nsxtClient.NsxtSession.Get(uri, &obj)
 						if err != nil {
 							return fmt.Errorf("[ERROR] GET failed for object %s %v", objType, err)
 						} else {
@@ -316,21 +319,22 @@ func DatasourceReadForVM(d *schema.ResourceData, meta interface{}, objType strin
 	displayName := d.Get("display_name").(string)
 	externalID := d.Get("external_id").(string)
 	powerState := d.Get("power_state").(string)
-	var url string
+	var uri string
 
 	// Get the object from NSX using hidden full text search API for specific VPC
-	url = nsxtClient.Config.BasePath + "/search?query=resource_type:" + objType
+	uri = nsxtClient.Config.BasePath + "/search?query=resource_type:" + objType
 	if externalID != "" {
-		url += "%20AND%20external_id:" + externalID
+		uri += "%20AND%20external_id:" + externalID
 	}
 	if displayName != "" {
-		url += "%20AND%20display_name:" + displayName
+		encodedDisplayName := url.QueryEscape(displayName)
+		uri += "%20AND%20display_name:" + encodedDisplayName
 	}
 	if powerState != "" {
-		url += "%20AND%20power_state:" + powerState
+		uri += "%20AND%20power_state:" + powerState
 	}
-	url += "&context=vpcs:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID + "/vpcs/" + nsxtClient.Config.VpcID
-	err := nsxtClient.NsxtSession.Get(url, &obj)
+	uri += "&context=vpcs:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID + "/vpcs/" + nsxtClient.Config.VpcID
+	err := nsxtClient.NsxtSession.Get(uri, &obj)
 	if err != nil {
 		log.Printf("[ERROR] Search failed for object %s %v\n", objType, err)
 	} else {
