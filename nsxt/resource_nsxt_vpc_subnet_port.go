@@ -28,6 +28,7 @@ func resourceVpcSubnetPortSchema() map[string]*schema.Schema {
 		},
 		"attachment": {
 			Type:     schema.TypeSet,
+			MaxItems: 1,
 			Optional: true,
 			Computed: true,
 			Elem:     resourcePortAttachmentSchema(),

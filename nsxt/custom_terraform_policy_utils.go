@@ -480,6 +480,17 @@ func SchemaToNsxtData(d interface{}, s interface{}) (interface{}, error) {
 		if len(d.(*schema.Set).List()) == 0 {
 			return nil, nil
 		}
+		/**
+		Because both Object type and Set type are defined as TypeSet in terraform schema and there is no way to differentiate between the two,
+		Get maxItems from schema for that Set. If its 1, means its an object type in schema, otherwise a Set with multiple items allowed.
+		**/
+		maxItems := s.(*schema.Schema).MaxItems
+		if maxItems == 1 {
+			// Its an object
+			obj, err := SchemaToNsxtData(d.(*schema.Set).List()[0], s.(*schema.Schema).Elem.(*schema.Resource).Schema)
+			return obj, err
+		}
+		// Its a Set
 		var objList []interface{}
 		varray := d.(*schema.Set).List()
 		var setSchema interface{}

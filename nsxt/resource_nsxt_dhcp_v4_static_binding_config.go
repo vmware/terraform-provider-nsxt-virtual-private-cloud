@@ -22,6 +22,7 @@ func resourceDhcpV4StaticBindingConfigSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"options": {
 			Type:     schema.TypeSet,
+			MaxItems: 1,
 			Optional: true,
 			Computed: true,
 			Elem:     resourceDhcpV4OptionsSchema(),

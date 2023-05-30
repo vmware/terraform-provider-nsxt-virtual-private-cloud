@@ -357,6 +357,7 @@ func resourceSegmentDhcpV4ConfigSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"options": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceDhcpV4OptionsSchema(),
@@ -429,6 +430,7 @@ func resourceDhcpV4OptionsSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"option121": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceDhcpOption121Schema(),
@@ -590,6 +592,7 @@ func resourceSegmentExtraConfigSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"config_pair": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Required: true,
 				Elem:     resourceUnboundedKeyValuePairSchema(),
 			},
@@ -663,6 +666,7 @@ func resourcePortAttachmentSchema() *schema.Resource {
 			},
 			"bms_interface_config": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceAttachedInterfaceEntrySchema(),
@@ -836,6 +840,7 @@ func resourceL2ExtensionSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"local_egress": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceLocalEgressSchema(),
@@ -923,6 +928,7 @@ func resourceSegmentPortSchema() *schema.Resource {
 			},
 			"attachment": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourcePortAttachmentSchema(),
@@ -992,6 +998,7 @@ func resourceConditionSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"exclude": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceExcludedMembersListSchema(),
@@ -1113,18 +1120,21 @@ func resourceVirtualMachineSchema() *schema.Resource {
 			},
 			"guest_info": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceGuestInfoSchema(),
 			},
 			"source": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceResourceReferenceSchema(),
 			},
 			"runtime_info": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceVirtualMachineRuntimeInfoSchema(),
@@ -1184,12 +1194,14 @@ func resourceExcludedMembersListSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"ip_address_expression": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceIPAddressExpressionSchema(),
 			},
 			"path_expression": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourcePathExpressionSchema(),
@@ -1370,12 +1382,14 @@ func resourceVpcSubnetDhcpConfigSchema() *schema.Resource {
 			},
 			"dns_client_config": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceDnsClientConfigSchema(),
 			},
 			"static_pool_config": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceStaticPoolConfigSchema(),
@@ -1694,18 +1708,21 @@ func resourceSegmentSchema() *schema.Resource {
 			},
 			"federation_config": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceFederationConnectivityConfigSchema(),
 			},
 			"l2_extension": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceL2ExtensionSchema(),
 			},
 			"advanced_config": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceSegmentAdvancedConfigSchema(),
@@ -1803,6 +1820,7 @@ func resourceSegmentSubnetSchema() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"dhcp_config": {
 				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
 				Elem:     resourceSegmentDhcpConfigSchema(),
