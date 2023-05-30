@@ -30,7 +30,6 @@ func resourceVpcSubnetSchema() map[string]*schema.Schema {
 			Type:     schema.TypeSet,
 			MaxItems: 1,
 			Optional: true,
-			Computed: true,
 			Elem:     resourceVpcSubnetDhcpConfigSchema(),
 		},
 		"display_name": {

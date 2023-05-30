@@ -29,7 +29,6 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 		"tag": {
 			Type:     schema.TypeString,
 			Optional: true,
-			Computed: true,
 		},
 		"disabled": {
 			Type:     schema.TypeBool,
@@ -63,7 +62,6 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 		"notes": {
 			Type:     schema.TypeString,
 			Optional: true,
-			Computed: true,
 		},
 		"_revision": {
 			Type:     schema.TypeInt,
@@ -108,7 +106,6 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 		"service_entries": {
 			Type:     schema.TypeSet,
 			Optional: true,
-			Computed: true,
 			MaxItems: 128,
 			Elem:     resourceServiceEntryCustomSchema(),
 		},

@@ -48,6 +48,27 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 		} else {
 			// resource is new, this is a create request
 			log.Printf("[INFO] APICreateOrUpdate: Creating obj %v schema %v data %v with path %s\n", objType, d, data, path)
+			if objType == "SecurityPolicyRule" || objType == "GatewayPolicyRule" {
+				/* For Rule- source_groups, destination_groups, service, action and scope are optional and defaulted in create, but not defaulted in update. These are
+				kept as optional in yaml without mentioning defaults. Hence, terraform resource for Rule has optional against them.path
+				Here adding the manual check to match API behaviour. Check each property value given or not. If not given, default it. */
+				dataMap := data.(map[string]interface{})
+				if dataMap["action"] == nil {
+					dataMap["action"] = "ALLOW"
+				}
+				if dataMap["source_groups"] == nil {
+					dataMap["source_groups"] = []interface{}{"ANY"}
+				}
+				if dataMap["destination_groups"] == nil {
+					dataMap["destination_groups"] = []interface{}{"ANY"}
+				}
+				if dataMap["services"] == nil {
+					dataMap["services"] = []interface{}{"ANY"}
+				}
+				if dataMap["scope"] == nil {
+					dataMap["scope"] = []interface{}{"ANY"}
+				}
+			}
 			err = nsxtClient.NsxtSession.Patch(path, data, &robj)
 			if err != nil {
 				log.Printf("[ERROR] APICreateOrUpdate creation failed %v\n", err)

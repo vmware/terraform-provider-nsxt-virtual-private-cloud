@@ -24,7 +24,6 @@ func resourceDhcpV4StaticBindingConfigSchema() map[string]*schema.Schema {
 			Type:     schema.TypeSet,
 			MaxItems: 1,
 			Optional: true,
-			Computed: true,
 			Elem:     resourceDhcpV4OptionsSchema(),
 		},
 		"display_name": {
@@ -39,7 +38,6 @@ func resourceDhcpV4StaticBindingConfigSchema() map[string]*schema.Schema {
 		"host_name": {
 			Type:     schema.TypeString,
 			Optional: true,
-			Computed: true,
 		},
 		"_revision": {
 			Type:     schema.TypeInt,
@@ -48,7 +46,6 @@ func resourceDhcpV4StaticBindingConfigSchema() map[string]*schema.Schema {
 		"gateway_address": {
 			Type:     schema.TypeString,
 			Optional: true,
-			Computed: true,
 		},
 		"ip_address": {
 			Type:     schema.TypeString,
