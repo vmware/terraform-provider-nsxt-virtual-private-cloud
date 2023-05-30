@@ -480,8 +480,27 @@ func SchemaToNsxtData(d interface{}, s interface{}) (interface{}, error) {
 		if len(d.(*schema.Set).List()) == 0 {
 			return nil, nil
 		}
-		obj, err := SchemaToNsxtData(d.(*schema.Set).List()[0], s.(*schema.Schema).Elem.(*schema.Resource).Schema)
-		return obj, err
+		var objList []interface{}
+		varray := d.(*schema.Set).List()
+		var setSchema interface{}
+		switch setSchemaType := s.(*schema.Schema).Elem.(type) {
+		default:
+			log.Printf("%v", setSchemaType)
+		case *schema.Resource:
+			setSchema = s.(*schema.Schema).Elem.(*schema.Resource).Schema
+		case *schema.Schema:
+			setSchema = s.(*schema.Schema).Elem.(*schema.Schema)
+		}
+		for i := 0; i < len(varray); i++ {
+			obj, err := SchemaToNsxtData(varray[i], setSchema)
+			if err == nil && obj != nil {
+				objList = append(objList, obj)
+			}
+		}
+		if len(objList) == 0 {
+			return nil, nil
+		}
+		return objList, nil
 
 	case *schema.ResourceData:
 		// In this case the top level schema should be present.

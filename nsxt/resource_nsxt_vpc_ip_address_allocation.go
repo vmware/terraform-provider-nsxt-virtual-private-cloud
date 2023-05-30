@@ -57,7 +57,7 @@ func resourceVpcIpAddressAllocationSchema() map[string]*schema.Schema {
 			Default:      "IPV4",
 		},
 		"tags": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),

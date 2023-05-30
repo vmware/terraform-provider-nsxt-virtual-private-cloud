@@ -93,20 +93,20 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 			Required: true,
 		},
 		"tags": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),
 		},
 		"scope": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			Computed: true,
 			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"application_connectivity_strategy": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			Computed: true,
 			MaxItems: 3,

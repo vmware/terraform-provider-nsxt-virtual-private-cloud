@@ -113,7 +113,7 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 			Elem:     resourceServiceEntryCustomSchema(),
 		},
 		"tags": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),
@@ -126,14 +126,14 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"destination_groups": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			Computed: true,
 			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"source_groups": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			Computed: true,
 			MaxItems: 128,

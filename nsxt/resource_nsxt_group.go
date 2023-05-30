@@ -51,7 +51,7 @@ func resourceGroupSchema() map[string]*schema.Schema {
 			Elem:     resourceExpressionCustomSchema(),
 		},
 		"tags": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),

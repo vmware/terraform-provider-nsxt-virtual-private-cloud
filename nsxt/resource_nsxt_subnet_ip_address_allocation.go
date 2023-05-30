@@ -49,7 +49,7 @@ func resourceSubnetIpAddressAllocationSchema() map[string]*schema.Schema {
 			Computed: true,
 		},
 		"tags": {
-			Type:     schema.TypeList,
+			Type:     schema.TypeSet,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),

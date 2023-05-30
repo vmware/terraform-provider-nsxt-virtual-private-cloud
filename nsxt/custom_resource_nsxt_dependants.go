@@ -55,7 +55,7 @@ func resourceExpressionsCustomSchema() *schema.Resource {
 				Computed: true,
 			},
 			"tags": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     resourceTagSchema(),
 			},
@@ -72,7 +72,7 @@ func resourceExpressionCustomSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"tags": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     resourceTagSchema(),
 				MaxItems: 30,
@@ -221,7 +221,7 @@ func resourceServiceEntryCustomSchema() *schema.Resource {
 				Computed: true,
 			},
 			"tags": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
 				Elem:     resourceTagSchema(),
 			},
