@@ -76,7 +76,6 @@ The following arguments are supported:
 * `resource_type` - (Optional) The type of this resource.
 * `display_name` - (Optional) Defaults to ID if not set
 * `description` - (Optional) Description of this resource
-* `state` - (Optional) Realization state of this group
 * `expression` - (Optional) The expression list must follow below criteria:
   1. A non-empty expression list, must be of odd size. In a list, with
   indices starting from 0, all non-conjunction expressions must be at

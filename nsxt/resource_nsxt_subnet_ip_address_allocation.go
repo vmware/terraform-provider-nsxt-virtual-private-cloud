@@ -92,8 +92,10 @@ func resourceIpAddressAllocationImporter(d *schema.ResourceData, m interface{}) 
 func resourceNsxtVpcSubnetIpAddressAllocationRead(d *schema.ResourceData, meta interface{}) error {
 	s := resourceSubnetIpAddressAllocationSchema()
 	err := APIRead(d, meta, "IpAddressAllocation", s)
-	if err != nil {
-		log.Printf("[ERROR] Error occurred in reading object IpAddressAllocation %v\n", err)
+	// if 404 not found error occurs, terraform should swallow it and not fail read on object
+	if err != nil && strings.Contains(err.Error(), "404") {
+		log.Printf("[WARNING] Failed to read object IpAddressAllocation %v\n", err)
+		return nil
 	}
 	return err
 }
@@ -123,8 +125,9 @@ func resourceNsxtVpcSubnetIpAddressAllocationDelete(d *schema.ResourceData, meta
 	if resourceID != "" {
 		path := nsxtClient.Config.BasePath + d.Get("path").(string)
 		err := nsxtClient.NsxtSession.Delete(path)
+		// if 'object not found' or 'forbidden' or 'success with no response' response occurs, terraform should swallow it and not fail apply on object, else throw error and fail
 		if err != nil && !(strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
-			log.Printf("[INFO] Resource IpAddressAllocation not found\n")
+			log.Printf("[INFO] Error occurred in Delete for resource IpAddressAllocation \n")
 			return err
 		}
 		d.SetId("")

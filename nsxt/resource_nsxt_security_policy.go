@@ -140,8 +140,10 @@ func resourceSecurityPolicyImporter(d *schema.ResourceData, m interface{}) ([]*s
 func resourceNsxtVpcSecurityPolicyRead(d *schema.ResourceData, meta interface{}) error {
 	s := resourceSecurityPolicySchema()
 	err := APIRead(d, meta, "SecurityPolicy", s)
-	if err != nil {
-		log.Printf("[ERROR] Error occurred in reading object SecurityPolicy %v\n", err)
+	// if 404 not found error occurs, terraform should swallow it and not fail read on object
+	if err != nil && strings.Contains(err.Error(), "404") {
+		log.Printf("[WARNING] Failed to read object SecurityPolicy %v\n", err)
+		return nil
 	}
 	return err
 }
@@ -171,8 +173,9 @@ func resourceNsxtVpcSecurityPolicyDelete(d *schema.ResourceData, meta interface{
 	if resourceID != "" {
 		path := nsxtClient.Config.BasePath + d.Get("path").(string)
 		err := nsxtClient.NsxtSession.Delete(path)
+		// if 'object not found' or 'forbidden' or 'success with no response' response occurs, terraform should swallow it and not fail apply on object, else throw error and fail
 		if err != nil && !(strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
-			log.Printf("[INFO] Resource SecurityPolicy not found\n")
+			log.Printf("[INFO] Error occurred in Delete for resource SecurityPolicy \n")
 			return err
 		}
 		d.SetId("")
