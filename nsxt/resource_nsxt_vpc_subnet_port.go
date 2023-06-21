@@ -151,11 +151,9 @@ func resourceNsxtVpcSubnetPortDelete(d *schema.ResourceData, meta interface{}) e
 	if resourceID != "" {
 		path := nsxtClient.Config.BasePath + d.Get("path").(string)
 		err := nsxtClient.NsxtSession.Delete(path)
-		// if object not found errors occur, terraform should swallow it and not fail apply on object
-		if err != nil && (strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
-			log.Printf("[WARNING] Resource VpcSubnetPort not found on backend\n")
-			return nil
-		} else if err != nil {
+		// if 'object not found' or 'forbidden' or 'success with no response' response occurs, terraform should swallow it and not fail apply on object, else throw error and fail
+		if err != nil && !(strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
+			log.Printf("[INFO] Error occurred in Delete for resource VpcSubnetPort \n")
 			return err
 		}
 		d.SetId("")

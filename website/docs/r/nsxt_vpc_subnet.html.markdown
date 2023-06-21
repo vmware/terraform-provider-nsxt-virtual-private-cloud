@@ -36,7 +36,7 @@ The following arguments are supported:
 
 * `nsx_id` - (Required) The NSX ID of this resource. This ID will be used to create the resource.
 * `resource_type` - (Optional) The type of this resource.
-* `dhcp_config` - (Optional) Vpc Subnet DHCP config
+* `dhcp_config` - (Optional) VPC Subnet DHCP config
 
   * `dhcp_relay_config_path` - (Optional) Policy path of DHCP-relay-config. If configured then all the subnets will be configured with the DHCP relay server.
 If not specified, then the local DHCP server will be configured for all connected subnets.
@@ -56,19 +56,19 @@ If disabled then neither DHCP server nor relay shall be configured.
 * `display_name` - (Optional) Defaults to ID if not set
 * `description` - (Optional) Description of this resource
 * `access_mode` - (Optional) There are three kinds of Access Types supported for an Application.
-Private  - Subnet is accessible only within the application and its IPs are allocated from
+Private  - VPC Subnet is accessible only within the application and its IPs are allocated from
            private IP address pool from VPC configuration unless specified explicitly by user.
-Public   - Subnet is accessible from external networks and its IPs are allocated from public IP
+Public   - VPC Subnet is accessible from external networks and its IPs are allocated from public IP
            address pool from VPC configuration unless specified explicitly by user.
-Isolated - Subnet is not accessible from other subnets within the same VPC.
+Isolated - VPC Subnet is not accessible from other VPC Subnets within the same VPC.
 
 * `ipv4_subnet_size` - (Optional) If IP Addresses are not provided, this field will be used to carve out the ips
-from respective ip block defined in the parent vpc. The default is 64.
+from respective ip block defined in the parent VPC. The default is 64.
 If ip_addresses field is provided then ipv4_subnet_size field is ignored.
-This field cannot be modified after creating a subnet.
+This field cannot be modified after creating a VPC Subnet.
 
 * `ip_addresses` - (Optional) If not provided, Ip assignment will be done based on VPC CIDRs
-This represents the subnet that is associated with tier.
+This represents the VPC Subnet that is associated with tier.
 If IPv4 CIDR is given, ipv4_subnet_size property is ignored.
 For IPv6 CIDR, supported prefix length is /64.
 

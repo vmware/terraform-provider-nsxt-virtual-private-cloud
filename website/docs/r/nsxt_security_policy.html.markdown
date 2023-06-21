@@ -22,7 +22,7 @@ The SecurityPolicy resource allows the creation and management of Nsxt SecurityP
 resource "nsxt_vpc_security_policy" "test-securitypolicy" {
     	nsx_id = "test-SecurityPolicy-abc"
 	display_name = "Test Policy"
-	description = "This is Test vpc policy patch operation"
+	description = "This is Test VPC policy patch operation"
 	sequence_number = 1
 
   }

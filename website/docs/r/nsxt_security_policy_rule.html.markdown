@@ -21,7 +21,7 @@ The SecurityPolicyRule resource allows the creation and management of Nsxt Secur
 ```hcl
 resource "nsxt_vpc_security_policy_rule" "test-securitypolicyrule" {
     	display_name = "rule-1"
-	description = "Vpc Policy Rule1 patch operation"
+	description = "VPC Policy Rule1 patch operation"
 	parent_path = nsxt_vpc_parentResource.resource_name.path
 	notes = "This is sample Policy Rule to allow HTTPS traffic between default and prod-policy"
 	destination = ["/orgs/org1/projects/project1/vpcs/vpc-1/groups/group1"]

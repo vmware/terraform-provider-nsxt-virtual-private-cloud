@@ -22,7 +22,7 @@ The GatewayPolicy resource allows the creation and management of Nsxt GatewayPol
 resource "nsxt_vpc_gateway_policy" "test-gatewaypolicy" {
     	nsx_id = "test-GatewayPolicy-abc"
 	display_name = "Test Policy"
-	description = "This is Test vpc policy patch operation"
+	description = "This is Test VPC policy patch operation"
 	sequence_number = 1
 
   }
