@@ -108,8 +108,10 @@ func resourceDhcpV4StaticBindingConfigImporter(d *schema.ResourceData, m interfa
 func resourceNsxtVpcDhcpV4StaticBindingConfigRead(d *schema.ResourceData, meta interface{}) error {
 	s := resourceDhcpV4StaticBindingConfigSchema()
 	err := APIRead(d, meta, "DhcpV4StaticBindingConfig", s)
-	if err != nil {
-		log.Printf("[ERROR] in reading object %v\n", err)
+	// if 404 not found error occurs, terraform should swallow it and not fail read on object
+	if err != nil && strings.Contains(err.Error(), "404") {
+		log.Printf("[WARNING] Failed to read object DhcpV4StaticBindingConfig %v\n", err)
+		return nil
 	}
 	return err
 }
@@ -139,8 +141,11 @@ func resourceNsxtVpcDhcpV4StaticBindingConfigDelete(d *schema.ResourceData, meta
 	if resourceID != "" {
 		path := nsxtClient.Config.BasePath + d.Get("path").(string)
 		err := nsxtClient.NsxtSession.Delete(path)
-		if err != nil && !(strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
-			log.Printf("[INFO] resourceNsxtVpcDhcpV4StaticBindingConfigDelete not found\n")
+		// if object not found errors occur, terraform should swallow it and should not fail apply on the object
+		if err != nil && (strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
+			log.Printf("[WARNING] Resource DhcpV4StaticBindingConfig not found on backend\n")
+			return nil
+		} else if err != nil {
 			return err
 		}
 		d.SetId("")

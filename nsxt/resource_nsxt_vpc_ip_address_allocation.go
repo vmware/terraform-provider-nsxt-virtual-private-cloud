@@ -95,8 +95,10 @@ func resourceVpcIpAddressAllocationImporter(d *schema.ResourceData, m interface{
 func resourceNsxtVpcIpAddressAllocationRead(d *schema.ResourceData, meta interface{}) error {
 	s := resourceVpcIpAddressAllocationSchema()
 	err := APIRead(d, meta, "VpcIpAddressAllocation", s)
-	if err != nil {
-		log.Printf("[ERROR] Error occurred in reading object VpcIpAddressAllocation %v\n", err)
+	// if 404 not found error occurs, terraform should swallow it and not fail read on object
+	if err != nil && strings.Contains(err.Error(), "404") {
+		log.Printf("[WARNING] Failed to read object VpcIpAddressAllocation %v\n", err)
+		return nil
 	}
 	return err
 }
@@ -120,8 +122,11 @@ func resourceNsxtVpcIpAddressAllocationDelete(d *schema.ResourceData, meta inter
 	if resourceID != "" {
 		path := nsxtClient.Config.BasePath + d.Get("path").(string)
 		err := nsxtClient.NsxtSession.Delete(path)
-		if err != nil && !(strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
-			log.Printf("[INFO] Resource VpcIpAddressAllocation not found\n")
+		// if object not found errors occur, terraform should swallow it and not fail apply on object
+		if err != nil && (strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
+			log.Printf("[WARNING] Resource VpcIpAddressAllocation not found on backend\n")
+			return nil
+		} else if err != nil {
 			return err
 		}
 		d.SetId("")

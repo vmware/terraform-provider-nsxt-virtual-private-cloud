@@ -87,8 +87,10 @@ func resourceStaticRoutesImporter(d *schema.ResourceData, m interface{}) ([]*sch
 func resourceNsxtVpcStaticRoutesRead(d *schema.ResourceData, meta interface{}) error {
 	s := resourceStaticRoutesSchema()
 	err := APIRead(d, meta, "StaticRoutes", s)
-	if err != nil {
-		log.Printf("[ERROR] Error occurred in reading object StaticRoutes %v\n", err)
+	// if 404 not found error occurs, terraform should swallow it and not fail read on object
+	if err != nil && strings.Contains(err.Error(), "404") {
+		log.Printf("[WARNING] Failed to read object StaticRoutes %v\n", err)
+		return nil
 	}
 	return err
 }
@@ -118,8 +120,11 @@ func resourceNsxtVpcStaticRoutesDelete(d *schema.ResourceData, meta interface{})
 	if resourceID != "" {
 		path := nsxtClient.Config.BasePath + d.Get("path").(string)
 		err := nsxtClient.NsxtSession.Delete(path)
-		if err != nil && !(strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
-			log.Printf("[INFO] Resource StaticRoutes not found\n")
+		// if object not found errors occur, terraform should swallow it and not fail apply on object
+		if err != nil && (strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
+			log.Printf("[WARNING] Resource StaticRoutes not found on backend\n")
+			return nil
+		} else if err != nil {
 			return err
 		}
 		d.SetId("")

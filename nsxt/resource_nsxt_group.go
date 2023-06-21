@@ -16,7 +16,6 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
 func resourceGroupSchema() map[string]*schema.Schema {
@@ -34,11 +33,6 @@ func resourceGroupSchema() map[string]*schema.Schema {
 		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
-		},
-		"state": {
-			Type:         schema.TypeString,
-			Optional:     true,
-			ValidateFunc: validation.StringInSlice([]string{"IN_PROGRESS", "SUCCESS", "FAILURE"}, false),
 		},
 		"_revision": {
 			Type:     schema.TypeInt,
@@ -88,8 +82,10 @@ func resourceGroupImporter(d *schema.ResourceData, m interface{}) ([]*schema.Res
 func resourceNsxtVpcGroupRead(d *schema.ResourceData, meta interface{}) error {
 	s := resourceGroupSchema()
 	err := APIRead(d, meta, "Group", s)
-	if err != nil {
-		log.Printf("[ERROR] Error occurred in reading object Group %v\n", err)
+	// if 404 not found error occurs, terraform should swallow it and not fail read on object
+	if err != nil && strings.Contains(err.Error(), "404") {
+		log.Printf("[WARNING] Failed to read object Group %v\n", err)
+		return nil
 	}
 	return err
 }
@@ -119,8 +115,11 @@ func resourceNsxtVpcGroupDelete(d *schema.ResourceData, meta interface{}) error 
 	if resourceID != "" {
 		path := nsxtClient.Config.BasePath + d.Get("path").(string)
 		err := nsxtClient.NsxtSession.Delete(path)
-		if err != nil && !(strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
-			log.Printf("[INFO] Resource Group not found\n")
+		// if object not found errors occur, terraform should swallow it and not fail apply on object
+		if err != nil && (strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
+			log.Printf("[WARNING] Resource Group not found on backend\n")
+			return nil
+		} else if err != nil {
 			return err
 		}
 		d.SetId("")

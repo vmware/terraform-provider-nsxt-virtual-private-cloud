@@ -51,23 +51,17 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 			log.Printf("[INFO] APICreateOrUpdate: Creating obj %v schema %v data %v with path %s\n", objType, d, data, path)
 			if objType == "SecurityPolicyRule" || objType == "GatewayPolicyRule" {
 				/* For Rule- source_groups, destination_groups, service, action and scope are optional and defaulted in create, but not defaulted in update. These are
-				kept as optional in yaml without mentioning defaults. Hence, terraform resource for Rule has optional against them.path
+				kept as optional in yaml without mentioning defaults. Hence, terraform resource for Rule has optional against them.
 				Here adding the manual check to match API behaviour. Check each property value given or not. If not given, default it. */
 				dataMap := data.(map[string]interface{})
 				if dataMap["action"] == nil {
 					dataMap["action"] = "ALLOW"
 				}
-				if dataMap["source_groups"] == nil {
-					dataMap["source_groups"] = []interface{}{"ANY"}
-				}
-				if dataMap["destination_groups"] == nil {
-					dataMap["destination_groups"] = []interface{}{"ANY"}
-				}
-				if dataMap["services"] == nil {
-					dataMap["services"] = []interface{}{"ANY"}
-				}
-				if dataMap["scope"] == nil {
-					dataMap["scope"] = []interface{}{"ANY"}
+				keys_with_any_default_value := []string{"source_groups", "destination_groups", "services", "scope"}
+				for _, key := range keys_with_any_default_value {
+					if dataMap[key] == nil {
+						dataMap[key] = []interface{}{"ANY"}
+					}
 				}
 			}
 			err = nsxtClient.NsxtSession.Patch(path, data, &robj)
@@ -96,7 +90,7 @@ func APIRead(d *schema.ResourceData, meta interface{}, objType string, s map[str
 		// Read using ID as complete policy path
 		log.Printf("[DEBUG] APIRead reading object with id %v\n", id)
 		err := nsxtClient.NsxtSession.Get(id, &obj)
-		log.Printf("json unmarshal response: %v\n", obj)
+		log.Printf("[DEBUG] json unmarshal response: %v\n", obj)
 		if err == nil && obj != nil {
 			d.SetId(id)
 			// set readonly property _revision for terraform show
@@ -105,8 +99,9 @@ func APIRead(d *schema.ResourceData, meta interface{}, objType string, s map[str
 				return fmt.Errorf("want type map[string]interface{};  got %T", objMap)
 			}
 		} else {
-			log.Printf("Read not successful for " + objType)
+			log.Printf("[INFO] Read not successful for " + objType)
 			d.SetId("")
+			return err
 		}
 	} else if resourceName != "" {
 		// compute policy path, and read using display_name
@@ -121,8 +116,9 @@ func APIRead(d *schema.ResourceData, meta interface{}, objType string, s map[str
 				return fmt.Errorf("want type map[string]interface{};  got %T", objMap)
 			}
 		} else {
-			log.Printf("Read not successful for " + objType)
+			log.Printf("[INFO] Read not successful for " + objType)
 			d.SetId("")
+			return err
 		}
 	} else {
 		log.Printf("[DEBUG] APIRead object ID not present for resource %s\n", objType)
@@ -133,16 +129,43 @@ func APIRead(d *schema.ResourceData, meta interface{}, objType string, s map[str
 		modAPIRes, err := SetDefaultsInAPIRes(obj, localData, s)
 		if err != nil {
 			log.Printf("[ERROR] APIRead in modifying api response object %v\n", err)
+			return err
 		}
 		if _, err := APIDataToSchema(modAPIRes, d, s); err != nil {
 			log.Printf("[ERROR] APIRead in setting read object %v\n", err)
 			d.SetId("")
+			return err
 		}
-		log.Printf("[DEBUG] type: %v localData : %v", objType, localData)
-		log.Printf("[DEBUG] type: %v modAPIRes: %v", objType, modAPIRes)
+	} else {
+		return err
 	}
 
 	return nil
+}
+
+func setAttrsInDatasourceSchema(mapObject interface{}, d *schema.ResourceData, objType string) {
+	for key, value := range mapObject.(map[string]interface{}) {
+		// Filter based on nsx_id or display_name to get only what datasource desires
+		if key == "id" {
+			d.Set("nsx_id", value.(string))
+		}
+		if key == "path" {
+			d.SetId(value.(string)) // because terraform ID is policyPath value
+			d.Set("path", value.(string))
+		}
+		if key == "display_name" {
+			d.Set("display_name", value.(string))
+		}
+		if key == "description" {
+			d.Set("description", value.(string))
+		}
+		if key == "parent_path" && d.Get("parent_path") != nil {
+			d.Set("parent_path", value.(string))
+		}
+		if (objType == "VpcIpAddressAllocation" || objType == "IpAddressAllocation") && key == "allocation_ip" {
+			d.Set("allocation_ip", value.(string))
+		}
+	}
 }
 
 func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s *schema.Resource) error {
@@ -202,28 +225,7 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 		// get results of type []interface {} to get id and policypath
 		results := objMap["results"]
 		if objMap["result_count"].(float64) == 1 {
-			for key, value := range results.([]interface{})[0].(map[string]interface{}) {
-				// This API returns all default objects + project shared objects + VPC objects. We need to filter based on path to get only what datasource desires
-				if key == "id" {
-					d.Set("nsx_id", value.(string))
-				}
-				if key == "path" {
-					d.SetId(value.(string)) // because terraform ID is policyPath value
-					d.Set("path", value.(string))
-				}
-				if key == "display_name" {
-					d.Set("display_name", value.(string))
-				}
-				if key == "description" {
-					d.Set("description", value.(string))
-				}
-				if key == "parent_path" && d.Get("parent_path") != nil {
-					d.Set("parent_path", value.(string))
-				}
-				if (objType == "VpcIpAddressAllocation" || objType == "IpAddressAllocation") && key == "allocation_ip" {
-					d.Set("allocation_ip", value.(string))
-				}
-			}
+			setAttrsInDatasourceSchema(results.([]interface{})[0], d, objType)
 		} else if objMap["result_count"].(float64) == 0 {
 			// get the entity using listing api, for some VPC resources(eg VpcIpAddressAllocation), search API isn't indexed
 			uri = ComputePolicyPath(d, objType, false, nsxtClient, true)
@@ -245,10 +247,8 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 					cursor = objMap["cursor"].(int)
 				}
 				for {
-					for index, itemObject := range results.([]interface{}) {
-						log.Printf("itemObject: %v at index %d\n", itemObject, index)
+					for _, itemObject := range results.([]interface{}) {
 						for key, value := range itemObject.(map[string]interface{}) {
-							log.Printf("key: %s at value %v\n", key, value)
 							// Filter based on nsx_id or display_name to get only what datasource desires
 							//TODO: Check how to refine search in case of multiple entries found with same display_name
 							if (nsxID != "" && key == "id" && value == nsxID) || (displayName != "" && key == "display_name" && value == displayName) {
@@ -257,28 +257,7 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 							}
 						}
 						if perfectMatchFound {
-							for key, value := range itemObject.(map[string]interface{}) {
-								// Filter based on nsx_id or display_name to get only what datasource desires
-								if key == "id" {
-									d.Set("nsx_id", value.(string))
-								}
-								if key == "path" {
-									d.SetId(value.(string)) // because terraform ID is policyPath value
-									d.Set("path", value.(string))
-								}
-								if key == "display_name" {
-									d.Set("display_name", value.(string))
-								}
-								if key == "description" {
-									d.Set("description", value.(string))
-								}
-								if key == "parent_path" && d.Get("parent_path") != nil {
-									d.Set("parent_path", value.(string))
-								}
-								if (objType == "VpcIpAddressAllocation" || objType == "IpAddressAllocation") && key == "allocation_ip" {
-									d.Set("allocation_ip", value.(string))
-								}
-							}
+							setAttrsInDatasourceSchema(itemObject, d, objType)
 							break
 						}
 					}
@@ -442,7 +421,7 @@ func APIDataToSchema(adata interface{}, d interface{}, t map[string]*schema.Sche
 			if err == nil {
 				switch objType := obj.(type) {
 				default:
-					log.Printf("Appending objtype %v to list %v", objType, objList)
+					log.Printf("[DEBUG] Appending objtype %v to list %v", objType, objList)
 					objList = append(objList, obj)
 				case *schema.Set:
 					objList = append(objList, obj.(*schema.Set).List()[0])
@@ -484,7 +463,7 @@ func SchemaToNsxtData(d interface{}, s interface{}) (interface{}, error) {
 		var listSchema interface{}
 		switch sType := s.(*schema.Schema).Elem.(type) {
 		default:
-			log.Printf("%v", sType)
+			log.Printf("[DEBUG] Element schema type: %v", sType)
 		case *schema.Resource:
 			listSchema = s.(*schema.Schema).Elem.(*schema.Resource).Schema
 		case *schema.Schema:
@@ -521,7 +500,7 @@ func SchemaToNsxtData(d interface{}, s interface{}) (interface{}, error) {
 		var setSchema interface{}
 		switch setSchemaType := s.(*schema.Schema).Elem.(type) {
 		default:
-			log.Printf("%v", setSchemaType)
+			log.Printf("[DEBUG] Set schema type: %v", setSchemaType)
 		case *schema.Resource:
 			setSchema = s.(*schema.Schema).Elem.(*schema.Resource).Schema
 		case *schema.Schema:

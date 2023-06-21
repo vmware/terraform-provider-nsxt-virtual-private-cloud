@@ -118,8 +118,10 @@ func resourceVpcSubnetPortImporter(d *schema.ResourceData, m interface{}) ([]*sc
 func resourceNsxtVpcSubnetPortRead(d *schema.ResourceData, meta interface{}) error {
 	s := resourceVpcSubnetPortSchema()
 	err := APIRead(d, meta, "VpcSubnetPort", s)
-	if err != nil {
-		log.Printf("[ERROR] Error occurred in reading object VpcSubnetPort %v\n", err)
+	// if 404 not found error occurs, terraform should swallow it and not fail read on object
+	if err != nil && strings.Contains(err.Error(), "404") {
+		log.Printf("[WARNING] Failed to read object VpcSubnetPort %v\n", err)
+		return nil
 	}
 	return err
 }
@@ -149,8 +151,11 @@ func resourceNsxtVpcSubnetPortDelete(d *schema.ResourceData, meta interface{}) e
 	if resourceID != "" {
 		path := nsxtClient.Config.BasePath + d.Get("path").(string)
 		err := nsxtClient.NsxtSession.Delete(path)
-		if err != nil && !(strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
-			log.Printf("[INFO] Resource VpcSubnetPort not found\n")
+		// if object not found errors occur, terraform should swallow it and not fail apply on object
+		if err != nil && (strings.Contains(err.Error(), "404") || strings.Contains(err.Error(), "204") || strings.Contains(err.Error(), "403")) {
+			log.Printf("[WARNING] Resource VpcSubnetPort not found on backend\n")
+			return nil
+		} else if err != nil {
 			return err
 		}
 		d.SetId("")
