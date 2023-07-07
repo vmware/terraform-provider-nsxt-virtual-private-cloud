@@ -16,28 +16,11 @@ import (
 )
 
 func dataSourceNsxtSharedProjectInfraService() *schema.Resource {
+	additionalSchemaItems := map[string]*schema.Schema{} // Define any additional schema items specific to the data source
+
 	return &schema.Resource{
-		Read: dataSourceNsxtSharedProjectInfraServiceRead,
-		Schema: map[string]*schema.Schema{
-			"nsx_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"display_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-		},
+		Read:   dataSourceNsxtSharedProjectInfraServiceRead,
+		Schema: getDataSourceCommonSchema(additionalSchemaItems),
 	}
 }
 

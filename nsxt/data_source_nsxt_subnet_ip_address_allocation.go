@@ -16,37 +16,21 @@ import (
 )
 
 func dataSourceNsxtVpcSubnetIpAddressAllocation() *schema.Resource {
+	additionalSchemaItems := map[string]*schema.Schema{} // Define any additional schema items specific to the data source
+	additionalSchemaItems["allocation_ip"] = &schema.Schema{
+		Type:     schema.TypeString,
+		Computed: true,
+	}
+
+	additionalSchemaItems["parent_path"] = &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+		Computed: true,
+	}
+
 	return &schema.Resource{
-		Read: dataSourceNsxtVpcSubnetIpAddressAllocationRead,
-		Schema: map[string]*schema.Schema{
-			"nsx_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"display_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"allocation_ip": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"parent_path": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-		},
+		Read:   dataSourceNsxtVpcSubnetIpAddressAllocationRead,
+		Schema: getDataSourceCommonSchema(additionalSchemaItems),
 	}
 }
 

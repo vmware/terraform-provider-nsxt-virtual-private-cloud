@@ -16,33 +16,17 @@ import (
 )
 
 func dataSourceNsxtVpcSubnetPort() *schema.Resource {
+	additionalSchemaItems := map[string]*schema.Schema{} // Define any additional schema items specific to the data source
+
+	additionalSchemaItems["parent_path"] = &schema.Schema{
+		Type:     schema.TypeString,
+		Optional: true,
+		Computed: true,
+	}
+
 	return &schema.Resource{
-		Read: dataSourceNsxtVpcSubnetPortRead,
-		Schema: map[string]*schema.Schema{
-			"nsx_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"display_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"parent_path": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-		},
+		Read:   dataSourceNsxtVpcSubnetPortRead,
+		Schema: getDataSourceCommonSchema(additionalSchemaItems),
 	}
 }
 

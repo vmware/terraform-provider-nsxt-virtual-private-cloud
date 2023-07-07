@@ -16,32 +16,16 @@ import (
 )
 
 func dataSourceNsxtVpcDhcpV4StaticBindingConfig() *schema.Resource {
-	return &schema.Resource{
-		Read: dataSourceNsxtVpcDhcpV4StaticBindingConfigRead,
-		Schema: map[string]*schema.Schema{
-			"nsx_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"display_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"path": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"parent_path": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
+	additionalSchemaItems := map[string]*schema.Schema{
+		"parent_path": {
+			Type:     schema.TypeString,
+			Optional: true,
 		},
+	}
+
+	return &schema.Resource{
+		Read:   dataSourceNsxtVpcDhcpV4StaticBindingConfigRead,
+		Schema: getDataSourceCommonSchema(additionalSchemaItems),
 	}
 }
 
