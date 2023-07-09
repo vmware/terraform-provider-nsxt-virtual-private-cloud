@@ -22,8 +22,6 @@ import (
 	"reflect"
 	"strings"
 	"time"
-
-	"github.com/golang/glog"
 )
 
 type Result struct {
@@ -212,7 +210,7 @@ func NewNsxtSession(host string, username string, tlsConfig *tls.Config, securit
 
 func (nsxtsess *NsxtSession) initiateSession() error {
 	if nsxtsess.insecure {
-		glog.Warning("Strict certificate verification is *DISABLED*")
+		log.Printf("[WARNING] Strict certificate verification is *DISABLED*")
 	}
 
 	// initiate http session here
@@ -461,7 +459,7 @@ func (nsxtsess *NsxtSession) restRequest(verb string, uri string, payload interf
 	}
 
 	req, errorResult := nsxtsess.newNsxtRequest(verb, url, payloadIO)
-	glog.Infof("nsxt req: %v\n", req)
+	log.Printf("[DEBUG] nsxt req: %v\n", req)
 	if errorResult.err != nil {
 		return nil, errorResult
 	}
@@ -470,10 +468,10 @@ func (nsxtsess *NsxtSession) restRequest(verb string, uri string, payload interf
 	resp, err := nsxtsess.client.Do(req)
 	if err != nil {
 		// retry until Manager status check limits.
-		glog.Errorf("Client error for URI: %+v. Error: %+v", uri, err.Error())
+		log.Printf("[ERROR] Client error for URI: %+v. Error: %+v", uri, err.Error())
 		dump, dumpErr := httputil.DumpRequestOut(req, true)
 		if dumpErr != nil {
-			glog.Error("Error while dumping request. Still retrying.")
+			log.Printf("[ERROR] Error while dumping request. Still retrying.")
 		}
 		debug(dump, dumpErr)
 		retryReq = true
@@ -481,8 +479,7 @@ func (nsxtsess *NsxtSession) restRequest(verb string, uri string, payload interf
 
 	if resp != nil && resp.StatusCode != 0 && retryReq {
 		for i := 0; i < maxAPIRetries; i++ {
-			glog.Infof("Retrying url %s; retry %d due to Status Code %d", url, i, resp.StatusCode)
-			glog.Infof("Req for %s uri %v  RespCode %v", verb, url, resp.StatusCode)
+			log.Printf("[DEBUG] Retrying url %s; retry %d due to Status Code %d", url, i, resp.StatusCode)
 			errorResult.HTTPStatusCode = resp.StatusCode
 			// If response status code is failure code among user given codes, retry.
 			if inSlice(resp.StatusCode, nsxtsess.retryStausCodes) {
@@ -514,7 +511,7 @@ func (nsxtsess *NsxtSession) fetchBody(verb, uri string, resp *http.Response) (r
 
 		// Below block will take care for errors without body.
 		if resp.Body == nil {
-			glog.Errorf("Encountered client side error: %+v", resp)
+			log.Printf("[ERROR] Encountered client side error: %+v", resp)
 			errorResult.Message = &resp.Status
 			return result, errorResult
 		}
@@ -524,7 +521,7 @@ func (nsxtsess *NsxtSession) fetchBody(verb, uri string, resp *http.Response) (r
 		if err == nil {
 			if resp.StatusCode < 200 || resp.StatusCode > 299 {
 				mres, merr := convertNsxtResponseToMapInterface(result)
-				glog.Infof("Error code %v parsed resp: %v err %v",
+				log.Printf("[DEBUG] Error code %v parsed resp: %v err %v",
 					resp.StatusCode, mres, merr)
 				emsg := fmt.Sprintf("%v", mres)
 				errorResult.Message = &emsg
@@ -534,7 +531,7 @@ func (nsxtsess *NsxtSession) fetchBody(verb, uri string, resp *http.Response) (r
 		} else {
 			errmsg := fmt.Sprintf("Response body read failed: %v", err)
 			errorResult.Message = &errmsg
-			glog.Errorf("Error in reading uri %v %v", uri, err)
+			log.Printf("[ERROR] Error in reading uri %v %v", uri, err)
 		}
 	} else {
 		errmsg := "Error occurred; no response from server"
@@ -558,9 +555,9 @@ type CollectionResult struct {
 
 func debug(data []byte, err error) {
 	if err == nil {
-		glog.Infof("%s\n\n", data)
+		log.Printf("\n\n[DEBUG] %s\n\n", data)
 	} else {
-		glog.Errorf("%s\n\n", err)
+		log.Printf("\n\n[DEBUG] %s\n\n", err)
 	}
 }
 

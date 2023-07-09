@@ -8,10 +8,9 @@
 package nsxt
 
 import (
+	"log"
 	"os"
 	"testing"
-
-	"github.com/golang/glog"
 )
 
 func testNsxtSession(t *testing.T, nsxtsess *NsxtSession) {
@@ -23,7 +22,6 @@ func testNsxtSession(t *testing.T, nsxtsess *NsxtSession) {
 		return
 	}
 	resp := res.(map[string]interface{})
-	glog.Infof("resp: %+v", resp)
 
 	// create a group
 	group := make(map[string]interface{})
@@ -41,7 +39,7 @@ func testNsxtSession(t *testing.T, nsxtsess *NsxtSession) {
 		return
 	}
 	resp = res.(map[string]interface{})
-	glog.Infof("res for GET after PATCH *******: %+v", resp)
+	log.Printf("[DEBUG] Response for GET after PATCH *******: %+v", resp)
 	if resp["display_name"] != "testgroupviasession" {
 		t.Error("Expected group not fetched")
 		return
@@ -61,7 +59,7 @@ func testNsxtSession(t *testing.T, nsxtsess *NsxtSession) {
 		return
 	}
 	resp = res.(map[string]interface{})
-	glog.Infof("res for GET after PUT *******: %+v", resp)
+	log.Printf("[DEBUG] Response for GET after PUT *******: %+v", resp)
 	if resp["display_name"] != "updated_group_test_1" {
 		t.Error("Expected group not fetched")
 		return
@@ -69,7 +67,7 @@ func testNsxtSession(t *testing.T, nsxtsess *NsxtSession) {
 
 	// delete the group
 	err = nsxtsess.Delete("policy/api/v1/infra/domains/default/groups/group-test-1")
-	glog.Infof("err: %s", err)
+	log.Printf("[ERROR] Error occurred, err: %s", err)
 	if err != nil {
 		t.Error("Deletion failed")
 		return
@@ -103,7 +101,7 @@ func TestNsxtSession(t *testing.T) {
 	session, err = NewNsxtSession(NsxtManager, NsxtUsername, nil, true, SetPassword(NsxtPassword), SetInsecure(true))
 
 	if err != nil {
-		glog.Infof("ignoring login err: %s", err)
+		log.Printf("[DEBUG] Ignoring login error: %s", err)
 	}
 	testNsxtSession(t, session)
 }

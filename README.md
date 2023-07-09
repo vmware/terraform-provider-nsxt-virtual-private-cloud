@@ -124,9 +124,9 @@ require.
 
 Minimum environment variable :
 ```sh
-$ export NSXT_MANAGER_HOST="10.191.153.238"
+$ export NSXT_MANAGER_HOST="10.191.155.100"
 $ export NSXT_USERNAME="admin"
-$ export NSXT_PASSWORD="e6+DgNzYA5D*"
+$ export NSXT_PASSWORD="r6.Or#F_z_.F"
 $ export NSXT_ALLOW_UNVERIFIED_SSL=true
 ```
 

@@ -2,10 +2,7 @@ module github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-clou
 
 go 1.18
 
-require (
-	github.com/golang/glog v1.0.0
-	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
-)
+require github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
 
 require (
 	github.com/agext/levenshtein v1.2.2 // indirect

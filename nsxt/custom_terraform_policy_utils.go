@@ -204,7 +204,7 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 	if d.Get("parent_path") != nil {
 		parentPath := d.Get("parent_path").(string)
 		if parentPath != "" {
-			uri += "%20AND%20parent_path:\"" + parentPath + "\""
+			uri += "%20AND%20parent_path:%22" + parentPath + "%22"
 		}
 	}
 	if isProjectInfra {
