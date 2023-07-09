@@ -22,7 +22,7 @@ import (
 
 var defaultRetryOnStatusCodes = []int{400, 409, 429, 500, 503, 504, 603}
 
-// Provider for VMWare NSX-T
+// Provider for VMware NSX-T VPC
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
@@ -193,8 +193,8 @@ func Provider() *schema.Provider {
 func isNSXTManagerAccessible(nsxtClient interface{}) error {
 	// Do GET on /api/v1/node API and check for response status code whether server is accessible or not
 	var response interface{}
-	uri := "api/v1/node"
-	err := nsxtClient.(*nsxtclient.NsxtClient).NsxtSession.Get(uri, &response)
+	client := nsxtClient.(*nsxtclient.NsxtClient)
+	err := client.NsxtSession.Get(client.Config.NodePath, &response)
 	if err != nil {
 		return fmt.Errorf("failed to access NSX-T manager (%s). Please check connectivity and authentication settings of the provider", err)
 	}

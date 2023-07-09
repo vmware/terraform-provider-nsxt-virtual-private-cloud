@@ -17,6 +17,7 @@ import (
 
 type Configuration struct {
 	BasePath             string
+	NodePath             string
 	Scheme               string
 	UserName             string
 	Password             string
@@ -110,6 +111,7 @@ func NewConfiguration(orgID string, projectID string, vpcID string) (*Configurat
 		ProjectID: projectID,
 		VpcID:     vpcID,
 		BasePath:  "policy/api/v1",
+		NodePath:  "api/v1/node",
 	}
 	return cfg, nil
 }

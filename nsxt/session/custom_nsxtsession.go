@@ -213,15 +213,12 @@ func (nsxtsess *NsxtSession) initiateSession() error {
 		log.Printf("[WARNING] Strict certificate verification is *DISABLED*")
 	}
 
-	// initiate http session here
-	// first set the csrf token
 	var res interface{}
-
-	// now login to get session_id, csrfToken
 	cred := make(map[string]interface{})
 	cred["username"] = nsxtsess.username
 	cred["password"] = nsxtsess.password
 
+	// login with credentials
 	err := nsxtsess.Patch("login", cred, res)
 	if err != nil {
 		log.Printf("Error in Patch operation during NSX manager login. Error: %+v", err.Error())

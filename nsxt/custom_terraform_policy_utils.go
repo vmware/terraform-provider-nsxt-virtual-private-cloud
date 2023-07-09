@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"log"
 	"net/url"
-	"path"
 	"strconv"
 	"strings"
 
@@ -135,22 +134,13 @@ func APIRead(d *schema.ResourceData, meta interface{}, objType string, s map[str
 		d.SetId("")
 	}
 
-	isImport := false
-	// Get nsx_id from state file, it will be null in case of import because import doesn't consider resource config
-	nsxId := d.Get("nsx_id").(string)
-	if nsxId == "" {
-		isImport = true
-		// Set nsx_id in resource config because after import when we plan/apply, tf would otheriwse detect a change in nsx_id and would try to destroy and recreate resource with main.tf resource config, because state file and config's nsx_id won't match. and nsx_id is ForceNew
-		d.Set("nsx_id", path.Base(d.Id()))
-	}
-
 	if localData, err := SchemaToNsxtData(d, s); err == nil {
 		modAPIRes, err := SetDefaultsInAPIRes(obj, localData, s)
 		if err != nil {
 			log.Printf("[ERROR] APIRead in modifying api response object %v\n", err)
 			return err
 		}
-		if _, err := APIDataToSchema(modAPIRes, d, s, isImport); err != nil {
+		if _, err := APIDataToSchema(modAPIRes, d, s); err != nil {
 			log.Printf("[ERROR] APIRead in setting read object %v\n", err)
 			d.SetId("")
 			return err
@@ -393,7 +383,7 @@ func convertToSchemaMap(dataMap map[string]interface{}) map[string]*schema.Schem
 }
 
 /* Populate data from JSON to terraform schema properties. Check for dataType, chec whether property is present in tf schema, if present, then populate. */
-func populateTerraformData(key string, value interface{}, fieldSchema *schema.Schema, terraformDataMap map[string]interface{}, terraformDataData *schema.ResourceData, schema_s map[string]*schema.Schema, isImport bool) (interface{}, error) {
+func populateTerraformData(key string, value interface{}, fieldSchema *schema.Schema, terraformDataMap map[string]interface{}, terraformDataData *schema.ResourceData, schema_s map[string]*schema.Schema) (interface{}, error) {
 	switch fieldSchema.Type {
 	case schema.TypeString:
 		strValue, ok := value.(string)
@@ -453,7 +443,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 				if item != nil {
 					if terraformDataMap != nil {
 						if itemResource, isResource := item.(*schema.Schema); isResource {
-							itemData, err := APIDataToSchema(item, make(map[string]interface{}), itemResource.Elem.(*schema.Resource).Schema, isImport)
+							itemData, err := APIDataToSchema(item, make(map[string]interface{}), itemResource.Elem.(*schema.Resource).Schema)
 							if err != nil {
 								return nil, err
 							}
@@ -463,7 +453,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 							case string, int, float64, bool:
 								listData = append(listData, item)
 							case map[string]interface{}:
-								itemData, err := APIDataToSchema(item, make(map[string]interface{}), schema_s, isImport)
+								itemData, err := APIDataToSchema(item, make(map[string]interface{}), schema_s)
 								if err != nil {
 									return nil, err
 								}
@@ -474,7 +464,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 						}
 					} else {
 						// process terraformDataData
-						itemData, err := APIDataToSchema(item, make(map[string]interface{}), fieldSchema.Elem.(*schema.Resource).Schema, isImport)
+						itemData, err := APIDataToSchema(item, make(map[string]interface{}), fieldSchema.Elem.(*schema.Resource).Schema)
 						if err != nil {
 							return nil, err
 						}
@@ -503,7 +493,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 					case map[string]interface{}:
 						mapSchemaItem := convertToSchemaMap(item.(map[string]interface{}))
 						// Handle the map type item here, recursively call the APIDataToSchema function on the map item
-						itemData, err := APIDataToSchema(item, make(map[string]interface{}), mapSchemaItem, isImport)
+						itemData, err := APIDataToSchema(item, make(map[string]interface{}), mapSchemaItem)
 						if err != nil {
 							return nil, err
 						}
@@ -512,14 +502,14 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 						schemaItem := item.(*schema.Schema)
 						itemData, err := APIDataToSchema(item, make(map[string]interface{}), map[string]*schema.Schema{
 							"schema": schemaItem,
-						}, isImport)
+						})
 						if err != nil {
 							return nil, err
 						}
 						setData = append(setData, itemData)
 					case *schema.Resource:
 						resourceItem := item.(*schema.Resource)
-						itemData, err := APIDataToSchema(item, make(map[string]interface{}), resourceItem.Schema, isImport)
+						itemData, err := APIDataToSchema(item, make(map[string]interface{}), resourceItem.Schema)
 						if err != nil {
 							return nil, err
 						}
@@ -538,7 +528,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 	case schema.TypeMap:
 		mapValue, ok := value.(map[string]interface{})
 		if ok {
-			mapData, err := APIDataToSchema(mapValue, make(map[string]interface{}), fieldSchema.Elem.(*schema.Schema).Elem.(*schema.Resource).Schema, isImport)
+			mapData, err := APIDataToSchema(mapValue, make(map[string]interface{}), fieldSchema.Elem.(*schema.Schema).Elem.(*schema.Resource).Schema)
 			if err != nil {
 				return nil, err
 			}
@@ -559,7 +549,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 /* It takes the NSXT JSON data and fills in the terraform data during API read.
 It takes input as the top level schema and it uses that to properly create the corresponding terraform resource data
 It also checks whether a given nsxt key is defined in the schema before attempting to fill the data. */
-func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s map[string]*schema.Schema, isImport bool) (interface{}, error) {
+func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s map[string]*schema.Schema) (interface{}, error) {
 	jsonDataMap, ok := jsonData.(map[string]interface{})
 	if !ok {
 		return nil, fmt.Errorf("invalid JSON data type: %T", jsonData)
@@ -570,15 +560,8 @@ func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s m
 		terraformDataMap := v
 		for key, value := range jsonDataMap {
 			if fieldSchema, exists := schema_s[key]; exists {
-				if isImport {
-					// Because there is no state during import operation
-					populateTerraformData(key, value, fieldSchema, terraformDataMap, nil, schema_s, isImport)
-				} else {
-					// Because otherwise state file is present, so only if key is present in state file and has no value, populate its value.
-					if _, ok := terraformData.(*schema.ResourceData).State().Attributes[key]; ok {
-						populateTerraformData(key, value, fieldSchema, terraformDataMap, nil, schema_s, isImport)
-					}
-				}
+				// Because there is no state during import operation
+				populateTerraformData(key, value, fieldSchema, terraformDataMap, nil, schema_s)
 			}
 		}
 		return terraformDataMap, nil
@@ -588,14 +571,7 @@ func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s m
 		for key, value := range jsonDataMap {
 			// Process the key if its present in terraform schema. We don't want all properties from API response, only want the ones in tf resource schema
 			if fieldSchema, exists := schema_s[key]; exists {
-				if isImport {
-					populateTerraformData(key, value, fieldSchema, nil, terraformDataData, schema_s, isImport)
-				} else {
-					// Only if key is present in state file and has no value, populate its value.
-					if _, ok := terraformData.(*schema.ResourceData).State().Attributes[key]; ok {
-						populateTerraformData(key, value, fieldSchema, nil, terraformDataData, schema_s, isImport)
-					}
-				}
+				populateTerraformData(key, value, fieldSchema, nil, terraformDataData, schema_s)
 			}
 		}
 		return terraformDataData, nil
@@ -725,7 +701,7 @@ func ResourceImporter(d *schema.ResourceData, meta interface{}, objType string, 
 	obj := data.(map[string]interface{})
 	log.Printf("[DEBUG] ResourceImporter processing obj %v\n", obj)
 	result := new(schema.ResourceData)
-	if _, err := APIDataToSchema(obj, result, s, true); err == nil {
+	if _, err := APIDataToSchema(obj, result, s); err == nil {
 		log.Printf("[DEBUG] ResourceImporter Processing obj %v\n", obj)
 		id := obj["id"].(string)
 		result.SetId(id)

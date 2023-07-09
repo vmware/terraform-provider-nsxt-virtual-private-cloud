@@ -6,6 +6,9 @@
  */
 
 // nolint
+/*
+Custom resource because VPC offers an API to apply multiple tags on a VM, but that doesn't support full CRUD. It supports POST method, to make it terraform compliant and for users to be able to do a CRUD on VM tags, this resource is helpful.
+*/
 package nsxt
 
 import (
