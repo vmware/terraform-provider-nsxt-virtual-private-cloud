@@ -11,7 +11,7 @@ import (
 	"fmt"
 	"log"
 	"net/url"
-	"reflect"
+	"path"
 	"strconv"
 	"strings"
 
@@ -19,8 +19,8 @@ import (
 	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 )
 
-// It is generic API to create and update any Nsxt REST resource. If the resource does not exist it will try to
-// create it. In case, it is present then automatically converts to PATCH semantics.
+/* Function to create and update NSXT resources. If the resource does not exist it will try to
+create it. In case it is present then it updates the resource. */
 func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string, s map[string]*schema.Schema,
 	opts ...bool) error {
 	log.Printf("[DEBUG] start of APICreateOrUpdate")
@@ -34,7 +34,7 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 		path := ComputePolicyPath(d, objType, false, nsxtClient, false)
 		pathWithoutQueryParams := strings.Split(path, "?")[0]
 		// trim policy/api/v1 from pathWithoutQueryParams and save as path, this way path can also be used to refer dependant resource policypath
-		pathWithoutQueryParamsTrimmed := strings.TrimPrefix(pathWithoutQueryParams, "policy/api/v1")
+		pathWithoutQueryParamsTrimmed := strings.TrimPrefix(pathWithoutQueryParams, nsxtClient.Config.BasePath)
 
 		if resourceID != "" {
 			// resource with id already present in NSX, this is an update request
@@ -43,7 +43,7 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 			if err != nil {
 				log.Printf("[ERROR] APICreateOrUpdate updation failed %v\n", err)
 			} else {
-				d.SetId(pathWithoutQueryParams)
+				d.SetId(pathWithoutQueryParamsTrimmed)
 				d.Set("path", pathWithoutQueryParamsTrimmed)
 			}
 		} else {
@@ -68,28 +68,37 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 			if err != nil {
 				log.Printf("[ERROR] APICreateOrUpdate creation failed %v\n", err)
 			} else {
-				d.SetId(pathWithoutQueryParams)
+				d.SetId(pathWithoutQueryParamsTrimmed)
 				d.Set("path", pathWithoutQueryParamsTrimmed)
 			}
 		}
 		return err
-	} else { //nolint
+	} else {
 		log.Printf("[ERROR] APICreateOrUpdate: Error %v", err)
 		return err
 	}
 }
 
+/* Funtion for reading the current state of the resource in NSX.
+Called during multiple phases in lifecycle-
+1. Initial Resource Creation: When Terraform creates a new resource for the first time, the Read function is called to fetch the initial state of the resource. This state is then stored in the Terraform state file.
+2. Refresh Operation: During a refresh operation, Terraform calls the Read function to retrieve the current state of the resource from NSX. This allows Terraform to compare the current state with the desired state defined in the Terraform configuration and determine if any updates are required.
+(The refresh operation in Terraform is triggered explicitly by running the terraform refresh command or as part of other Terraform operations like terraform apply or terraform plan).
+3. Post Update operation: To fetch latest changes and update state file accordingly.
+4. Post Delete operation: To fetch the final state of the resource, which will typically be null state to indicate that the resource no longer exists, the update the state file with the final state of the resource, ensuring that the state accurately reflects the state of the infrastructure.
+*/
 func APIRead(d *schema.ResourceData, meta interface{}, objType string, s map[string]*schema.Schema) error {
 	var obj interface{}
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
 	// calculate the policy path of resource
 	id := d.Id()
+	policyPath := nsxtClient.Config.BasePath + id
 	resourceName := d.Get("display_name").(string)
 
 	if id != "" {
 		// Read using ID as complete policy path
 		log.Printf("[DEBUG] APIRead reading object with id %v\n", id)
-		err := nsxtClient.NsxtSession.Get(id, &obj)
+		err := nsxtClient.NsxtSession.Get(policyPath, &obj)
 		log.Printf("[DEBUG] json unmarshal response: %v\n", obj)
 		if err == nil && obj != nil {
 			d.SetId(id)
@@ -100,6 +109,7 @@ func APIRead(d *schema.ResourceData, meta interface{}, objType string, s map[str
 			}
 		} else {
 			log.Printf("[INFO] Read not successful for " + objType)
+			// Set resource ID to "" to signal Terraform that the resource should be treated as non-existent or in an error state.
 			d.SetId("")
 			return err
 		}
@@ -125,13 +135,22 @@ func APIRead(d *schema.ResourceData, meta interface{}, objType string, s map[str
 		d.SetId("")
 	}
 
+	isImport := false
+	// Get nsx_id from state file, it will be null in case of import because import doesn't consider resource config
+	nsxId := d.Get("nsx_id").(string)
+	if nsxId == "" {
+		isImport = true
+		// Set nsx_id in resource config because after import when we plan/apply, tf would otheriwse detect a change in nsx_id and would try to destroy and recreate resource with main.tf resource config, because state file and config's nsx_id won't match. and nsx_id is ForceNew
+		d.Set("nsx_id", path.Base(d.Id()))
+	}
+
 	if localData, err := SchemaToNsxtData(d, s); err == nil {
 		modAPIRes, err := SetDefaultsInAPIRes(obj, localData, s)
 		if err != nil {
 			log.Printf("[ERROR] APIRead in modifying api response object %v\n", err)
 			return err
 		}
-		if _, err := APIDataToSchema(modAPIRes, d, s); err != nil {
+		if _, err := APIDataToSchema(modAPIRes, d, s, isImport); err != nil {
 			log.Printf("[ERROR] APIRead in setting read object %v\n", err)
 			d.SetId("")
 			return err
@@ -168,6 +187,7 @@ func setAttrsInDatasourceSchema(mapObject interface{}, d *schema.ResourceData, o
 	}
 }
 
+// Function to do READ on datasource, using id, display_name, parent_path
 func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s *schema.Resource) error {
 	var obj interface{}
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
@@ -343,106 +363,254 @@ func DatasourceReadForVM(d *schema.ResourceData, meta interface{}, objType strin
 	return err
 }
 
-// It takes the Nsxt JSON data and fills in the terraform data during API read.
-// It takes input as the top level schema and it uses that to properly create the corresponding terraform resource data
-// It also checks whether a given nsxt key is defined in the schema before attempting to fill the data.
-func APIDataToSchema(adata interface{}, d interface{}, t map[string]*schema.Schema) (interface{}, error) {
-	switch adata.(type) {
-	default:
-	case map[string]interface{}:
-		// resolve d interface into a set
-		if t == nil {
-			m := map[string]interface{}{}
-			for k, v := range adata.(map[string]interface{}) {
-				if obj, err := APIDataToSchema(v, nil, nil); err == nil {
-					m[k] = obj
-				} else if err != nil {
-					log.Printf("[ERROR] APIDataToSchema %v in converting k: %v v: %v", err, k, v)
+func convertToSchemaMap(dataMap map[string]interface{}) map[string]*schema.Schema {
+	schemaMap := make(map[string]*schema.Schema)
+
+	for key, value := range dataMap {
+		// Create a new schema based on the value's type
+		var fieldSchema *schema.Schema
+
+		switch value.(type) {
+		case string:
+			fieldSchema = &schema.Schema{Type: schema.TypeString}
+		case int:
+			fieldSchema = &schema.Schema{Type: schema.TypeInt}
+		case float64:
+			fieldSchema = &schema.Schema{Type: schema.TypeFloat}
+		case bool:
+			fieldSchema = &schema.Schema{Type: schema.TypeBool}
+		// Add additional cases for other types as needed
+		default:
+			// Handle unsupported types or custom schema generation logic
+			// we can set the fieldSchema to a generic schema type or define a custom schema based on requirements
+			fieldSchema = &schema.Schema{Type: schema.TypeString}
+		}
+
+		// Add the schema to the new schema map
+		schemaMap[key] = fieldSchema
+	}
+	return schemaMap
+}
+
+/* Populate data from JSON to terraform schema properties. Check for dataType, chec whether property is present in tf schema, if present, then populate. */
+func populateTerraformData(key string, value interface{}, fieldSchema *schema.Schema, terraformDataMap map[string]interface{}, terraformDataData *schema.ResourceData, schema_s map[string]*schema.Schema, isImport bool) (interface{}, error) {
+	switch fieldSchema.Type {
+	case schema.TypeString:
+		strValue, ok := value.(string)
+		if ok {
+			if terraformDataMap != nil {
+				terraformDataMap[key] = strValue
+			} else {
+				terraformDataData.Set(key, strValue)
+			}
+		} else {
+			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+		}
+	case schema.TypeInt:
+		intValue, ok := value.(int)
+		if ok {
+			if terraformDataMap != nil {
+				terraformDataMap[key] = intValue
+			} else {
+				terraformDataData.Set(key, intValue)
+			}
+		} else if floatValue, ok := value.(float64); ok {
+			if terraformDataMap != nil {
+				terraformDataMap[key] = int(floatValue)
+			} else {
+				terraformDataData.Set(key, int(floatValue))
+			}
+		} else {
+			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+		}
+	case schema.TypeFloat:
+		floatValue, ok := value.(float64)
+		if ok {
+			if terraformDataMap != nil {
+				terraformDataMap[key] = floatValue
+			} else {
+				terraformDataData.Set(key, floatValue)
+			}
+		} else {
+			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+		}
+	case schema.TypeBool:
+		boolValue, ok := value.(bool)
+		if ok {
+			if terraformDataMap != nil {
+				terraformDataMap[key] = boolValue
+			} else {
+				terraformDataData.Set(key, boolValue)
+			}
+		} else {
+			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+		}
+	case schema.TypeList:
+		listValue, ok := value.([]interface{})
+		if ok {
+			listData := make([]interface{}, 0)
+			for _, item := range listValue {
+				if item != nil {
+					if terraformDataMap != nil {
+						if itemResource, isResource := item.(*schema.Schema); isResource {
+							itemData, err := APIDataToSchema(item, make(map[string]interface{}), itemResource.Elem.(*schema.Resource).Schema, isImport)
+							if err != nil {
+								return nil, err
+							}
+							listData = append(listData, itemData)
+						} else {
+							switch item.(type) {
+							case string, int, float64, bool:
+								listData = append(listData, item)
+							case map[string]interface{}:
+								itemData, err := APIDataToSchema(item, make(map[string]interface{}), schema_s, isImport)
+								if err != nil {
+									return nil, err
+								}
+								listData = append(listData, itemData)
+							default:
+								return nil, fmt.Errorf("invalid data type for field %s: %v", key, item)
+							}
+						}
+					} else {
+						// process terraformDataData
+						itemData, err := APIDataToSchema(item, make(map[string]interface{}), fieldSchema.Elem.(*schema.Resource).Schema, isImport)
+						if err != nil {
+							return nil, err
+						}
+						listData = append(listData, itemData)
+					}
+
 				}
 			}
-			objs := []interface{}{}
-			objs = append(objs, m)
-			s := schema.NewSet(CommonHash, objs)
-			return s, nil
-		} else { //nolint
-			for k, v := range adata.(map[string]interface{}) {
-				if _, ok := t[k]; ok {
-					// found in the schema
-					if obj, err := APIDataToSchema(v, nil, nil); err == nil {
-						switch dType := d.(type) {
-						default:
-						case *schema.ResourceData:
-							objType := reflect.TypeOf(obj).Kind()
-							if objType != reflect.Map && objType != reflect.Array && objType != reflect.Slice {
-								// object is primitive type, set directy into schema if tf resource has the key in the schema
-								if err := d.(*schema.ResourceData).Set(k, obj); err != nil {
-									log.Printf("[ERROR] APIDataToSchema %v in setting %v type %v", err, obj, dType)
-								}
-							} else {
-								objList := obj.([]interface{})
-								isObjectMap := false
-								for _, v := range objList {
-									if m, ok := v.(map[string]interface{}); ok {
-										isObjectMap = true
-										for k, v := range m {
-											if nestedMap, ok := v.(map[string]interface{}); ok {
-												for nestedKey, nestedValue := range nestedMap {
-													fmt.Printf("%s.%s.%s = %v\n", k, nestedKey, reflect.TypeOf(nestedValue), nestedValue)
-													if _, ok := d.(*schema.ResourceData).State().Attributes[nestedKey]; ok {
-														// Set the value in the schema
-														if err := d.(*schema.ResourceData).Set(nestedKey, nestedValue); err != nil {
-															log.Printf("[ERROR] APIDataToSchema %v in setting %v   type %v", err, obj, dType)
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-								if !isObjectMap {
-									if err := d.(*schema.ResourceData).Set(k, obj); err != nil {
-										log.Printf("[ERROR] APIDataToSchema %v in setting %v type %v", err, obj, dType)
-									}
-								}
-							}
-						case map[string]interface{}:
-							d.(map[string]interface{})[k] = obj
+			if terraformDataMap != nil {
+				terraformDataMap[key] = listData
+			} else {
+				terraformDataData.Set(key, listData)
+			}
+		} else {
+			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+		}
+	case schema.TypeSet:
+		setValue, ok := value.([]interface{})
+		if ok {
+			setData := make([]interface{}, 0)
+			for _, item := range setValue {
+				if item != nil {
+					switch item.(type) {
+					case string, int, float64, bool:
+						setData = append(setData, item)
+					case map[string]interface{}:
+						mapSchemaItem := convertToSchemaMap(item.(map[string]interface{}))
+						// Handle the map type item here, recursively call the APIDataToSchema function on the map item
+						itemData, err := APIDataToSchema(item, make(map[string]interface{}), mapSchemaItem, isImport)
+						if err != nil {
+							return nil, err
 						}
+						setData = append(setData, itemData)
+					case *schema.Schema:
+						schemaItem := item.(*schema.Schema)
+						itemData, err := APIDataToSchema(item, make(map[string]interface{}), map[string]*schema.Schema{
+							"schema": schemaItem,
+						}, isImport)
+						if err != nil {
+							return nil, err
+						}
+						setData = append(setData, itemData)
+					case *schema.Resource:
+						resourceItem := item.(*schema.Resource)
+						itemData, err := APIDataToSchema(item, make(map[string]interface{}), resourceItem.Schema, isImport)
+						if err != nil {
+							return nil, err
+						}
+						setData = append(setData, itemData)
+					default:
+						return nil, fmt.Errorf("invalid data type for field %s: %T, expected primitive type or map or *schema.Schema or *schema.Resource", key, item)
 					}
 				}
 			}
-			return d, nil
-		}
-	case []interface{}:
-		var objList []interface{}
-		varray := adata.([]interface{})
-		for i := 0; i < len(varray); i++ {
-			obj, err := APIDataToSchema(varray[i], nil, nil)
-			if err == nil {
-				switch objType := obj.(type) {
-				default:
-					log.Printf("[DEBUG] Appending objtype %v to list %v", objType, objList)
-					objList = append(objList, obj)
-				case *schema.Set:
-					objList = append(objList, obj.(*schema.Set).List()[0])
-				}
+			if terraformDataMap != nil {
+				terraformDataMap[key] = schema.NewSet(CommonHash, setData)
 			} else {
-				log.Printf("[ERROR] APIDataToSchema %v", err)
+				terraformDataData.Set(key, schema.NewSet(CommonHash, setData))
 			}
 		}
-		return objList, nil
-		/** Return the same object as there is nothing special about **/
+	case schema.TypeMap:
+		mapValue, ok := value.(map[string]interface{})
+		if ok {
+			mapData, err := APIDataToSchema(mapValue, make(map[string]interface{}), fieldSchema.Elem.(*schema.Schema).Elem.(*schema.Resource).Schema, isImport)
+			if err != nil {
+				return nil, err
+			}
+			if terraformDataMap != nil {
+				terraformDataMap[key] = mapData
+			} else {
+				terraformDataData.Set(key, mapData)
+			}
+		} else {
+			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+		}
+	default:
+		return nil, fmt.Errorf("unsupported schema type for field %s: %s", key, fieldSchema.Type)
 	}
-	return adata, nil
+	return nil, nil
+}
+
+/* It takes the NSXT JSON data and fills in the terraform data during API read.
+It takes input as the top level schema and it uses that to properly create the corresponding terraform resource data
+It also checks whether a given nsxt key is defined in the schema before attempting to fill the data. */
+func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s map[string]*schema.Schema, isImport bool) (interface{}, error) {
+	jsonDataMap, ok := jsonData.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("invalid JSON data type: %T", jsonData)
+	}
+
+	switch v := terraformData.(type) {
+	case map[string]interface{}:
+		terraformDataMap := v
+		for key, value := range jsonDataMap {
+			if fieldSchema, exists := schema_s[key]; exists {
+				if isImport {
+					// Because there is no state during import operation
+					populateTerraformData(key, value, fieldSchema, terraformDataMap, nil, schema_s, isImport)
+				} else {
+					// Because otherwise state file is present, so only if key is present in state file and has no value, populate its value.
+					if _, ok := terraformData.(*schema.ResourceData).State().Attributes[key]; ok {
+						populateTerraformData(key, value, fieldSchema, terraformDataMap, nil, schema_s, isImport)
+					}
+				}
+			}
+		}
+		return terraformDataMap, nil
+
+	case *schema.ResourceData:
+		terraformDataData := v
+		for key, value := range jsonDataMap {
+			// Process the key if its present in terraform schema. We don't want all properties from API response, only want the ones in tf resource schema
+			if fieldSchema, exists := schema_s[key]; exists {
+				if isImport {
+					populateTerraformData(key, value, fieldSchema, nil, terraformDataData, schema_s, isImport)
+				} else {
+					// Only if key is present in state file and has no value, populate its value.
+					if _, ok := terraformData.(*schema.ResourceData).State().Attributes[key]; ok {
+						populateTerraformData(key, value, fieldSchema, nil, terraformDataData, schema_s, isImport)
+					}
+				}
+			}
+		}
+		return terraformDataData, nil
+
+	default:
+		return nil, fmt.Errorf("invalid Terraform data type: %T", terraformData)
+	}
 }
 
 func CommonHash(v interface{}) int {
 	return schema.HashString("nsxt")
 }
 
-// It takes the terraform plan data and schema and converts it into Nsxt JSON
-// It recursively resolves the data type of the terraform schema and converts scalar to scalar, Set to dictionary,
-// and list to list.
+/* Function that takes the terraform plan data and schema and converts it into NSXT JSON
+It recursively resolves the data type of the terraform schema and converts scalar to scalar, Set to dictionary and list to list. */
 func SchemaToNsxtData(d interface{}, s interface{}) (interface{}, error) {
 	switch dType := d.(type) {
 	default:
@@ -536,6 +704,7 @@ func SchemaToNsxtData(d interface{}, s interface{}) (interface{}, error) {
 	return d, nil
 }
 
+// Function to import an existing entity on NSXT into terraform management, so we can manage it using terraform.
 func ResourceImporter(d *schema.ResourceData, meta interface{}, objType string, s map[string]*schema.Schema, path string) ([]*schema.ResourceData, error) {
 	log.Printf("[DEBUG] ResourceImporter objType %v using policy path %v\n", objType, d.Id())
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
@@ -556,7 +725,7 @@ func ResourceImporter(d *schema.ResourceData, meta interface{}, objType string, 
 	obj := data.(map[string]interface{})
 	log.Printf("[DEBUG] ResourceImporter processing obj %v\n", obj)
 	result := new(schema.ResourceData)
-	if _, err := APIDataToSchema(obj, result, s); err == nil {
+	if _, err := APIDataToSchema(obj, result, s, true); err == nil {
 		log.Printf("[DEBUG] ResourceImporter Processing obj %v\n", obj)
 		id := obj["id"].(string)
 		result.SetId(id)
@@ -565,6 +734,7 @@ func ResourceImporter(d *schema.ResourceData, meta interface{}, objType string, 
 	return results, nil
 }
 
+// Calculate policy path for different resources in the provider
 func ComputePolicyPath(d *schema.ResourceData, objType string, isReadRequest bool, nsxtClient *nsxtclient.NsxtClient, isListingRequest bool) string {
 	var url string
 	var orgID string
