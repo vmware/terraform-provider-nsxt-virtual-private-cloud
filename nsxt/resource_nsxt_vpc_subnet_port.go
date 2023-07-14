@@ -30,6 +30,7 @@ func resourceVpcSubnetPortSchema() map[string]*schema.Schema {
 			Type:     schema.TypeSet,
 			MaxItems: 1,
 			Optional: true,
+			Computed: true,
 			Elem:     resourcePortAttachmentSchema(),
 		},
 		"display_name": {
@@ -45,6 +46,7 @@ func resourceVpcSubnetPortSchema() map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice([]string{"UNBLOCKED_VLAN", "RESTORE_VIF"}, false),
+			Computed:     true,
 		},
 		"_revision": {
 			Type:     schema.TypeInt,
@@ -59,10 +61,11 @@ func resourceVpcSubnetPortSchema() map[string]*schema.Schema {
 		"extra_configs": {
 			Type:     schema.TypeList,
 			Optional: true,
+			Computed: true,
 			Elem:     resourceSegmentExtraConfigSchema(),
 		},
 		"tags": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),
@@ -70,12 +73,14 @@ func resourceVpcSubnetPortSchema() map[string]*schema.Schema {
 		"address_bindings": {
 			Type:     schema.TypeList,
 			Optional: true,
+			Computed: true,
 			MaxItems: 512,
 			Elem:     resourcePortAddressBindingEntrySchema(),
 		},
 		"ignored_address_bindings": {
 			Type:     schema.TypeList,
 			Optional: true,
+			Computed: true,
 			MinItems: 0,
 			MaxItems: 16,
 			Elem:     resourcePortAddressBindingEntrySchema(),

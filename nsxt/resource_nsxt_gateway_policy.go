@@ -28,6 +28,7 @@ func resourceGatewayPolicySchema() map[string]*schema.Schema {
 		"comments": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"tcp_strict": {
 			Type:     schema.TypeBool,
@@ -37,6 +38,7 @@ func resourceGatewayPolicySchema() map[string]*schema.Schema {
 		"scheduler_path": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"stateful": {
 			Type:     schema.TypeBool,
@@ -71,7 +73,7 @@ func resourceGatewayPolicySchema() map[string]*schema.Schema {
 			Required: true,
 		},
 		"tags": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),

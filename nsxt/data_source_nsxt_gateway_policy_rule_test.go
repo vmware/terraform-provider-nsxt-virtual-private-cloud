@@ -115,6 +115,6 @@ tags {
 }
 
 data "nsxt_vpc_gateway_policy_rule" "testGatewayPolicyRule" {
-  parent_path = nsxt_vpc_gateway_policy_rule.testGatewayPolicyRule.parent_path
+  display_name = nsxt_vpc_gateway_policy_rule.testGatewayPolicyRule.display_name
 }
 `
