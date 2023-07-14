@@ -48,10 +48,10 @@ If not specified, then the local DHCP server will be configured for all connecte
     * `ipv4_pool_size` - (Optional) Number of IPs to be reserved in static ip pool. Maximum allowed value is 'subnet size - 4'.
 If dhcp is enabled then by default static ipv4 pool size will be zero and all available IPs will be reserved in
 local dhcp pool.
-If dhcp is disabled then by default all IPs will be reserved in static ip pool.
+If dhcp is deactivated then by default all IPs will be reserved in static ip pool.
 
-  * `enable_dhcp` - (Optional) If enabled, the DHCP server will be configured based on IP address type.
-If disabled then neither DHCP server nor relay shall be configured.
+  * `enable_dhcp` - (Optional) If activated, the DHCP server will be configured based on IP address type.
+If deactivated then neither DHCP server nor relay shall be configured.
 
 * `display_name` - (Optional) Defaults to ID if not set
 * `description` - (Optional) Description of this resource
