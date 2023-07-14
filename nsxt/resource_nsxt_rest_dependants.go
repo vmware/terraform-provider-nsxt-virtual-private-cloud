@@ -132,7 +132,7 @@ func resourceServiceSchema() *schema.Resource {
 				Elem:     resourceServiceEntryCustomSchema(),
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -335,7 +335,7 @@ func resourceIPProtocolServiceEntrySchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -496,7 +496,7 @@ func resourceServiceEntrySchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -524,7 +524,7 @@ func resourcePolicyAttributesSchema() *schema.Resource {
 			"custom_url_partial_match": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  true,
+				Computed: true,
 			},
 			"attribute_source": {
 				Type:         schema.TypeString,
@@ -775,7 +775,7 @@ func resourceConjunctionOperatorSchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -815,7 +815,7 @@ func resourceIPAddressExpressionSchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -905,7 +905,7 @@ func resourceICMPTypeServiceEntrySchema() *schema.Resource {
 				Computed: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -965,7 +965,7 @@ func resourceSegmentPortSchema() *schema.Resource {
 				Elem:     resourceSegmentExtraConfigSchema(),
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1045,7 +1045,7 @@ func resourceConditionSchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1097,7 +1097,7 @@ func resourceL4PortSetServiceEntrySchema() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1176,7 +1176,7 @@ func resourceVirtualMachineSchema() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1235,7 +1235,7 @@ func resourceMACAddressExpressionSchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1280,7 +1280,7 @@ func resourceExternalIDExpressionSchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1354,7 +1354,7 @@ func resourceIGMPTypeServiceEntrySchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1427,7 +1427,7 @@ func resourceNestedServiceServiceEntrySchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1471,7 +1471,7 @@ func resourceEtherTypeServiceEntrySchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1505,7 +1505,7 @@ func resourceExpressionSchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1581,7 +1581,7 @@ func resourceVirtualNetworkInterfaceSchema() *schema.Resource {
 				Elem:     resourceDiscoveredResourceScopeSchema(),
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1789,7 +1789,7 @@ func resourceSegmentSchema() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -1878,7 +1878,7 @@ func resourceALGTypeServiceEntrySchema() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -2048,7 +2048,7 @@ func resourcePathExpressionSchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -2088,7 +2088,7 @@ func resourceIdentityGroupExpressionSchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),
@@ -2129,7 +2129,7 @@ func resourceNestedExpressionSchema() *schema.Resource {
 				Required: true,
 			},
 			"tags": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 30,
 				Elem:     resourceTagSchema(),

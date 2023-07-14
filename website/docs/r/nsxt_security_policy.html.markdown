@@ -161,7 +161,7 @@ redirecting to service chain.
 * `application_connectivity_strategy` - (Optional) This field indicates the application connectivity policy for the security
 policy.
 
-  * `logging_enabled` - (Optional) Flag to enable packet logging. Default is disabled.
+  * `logging_enabled` - (Optional) Flag to enable packet logging. Default is deactivated.
   * `application_connectivity_strategy` - (Required) App connectivity strategies
 
 
