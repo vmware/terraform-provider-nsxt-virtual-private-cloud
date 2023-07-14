@@ -47,8 +47,8 @@ The following arguments are supported:
 Even though there is no limitation on length of a tag, internally
 tag will get truncated after 32 characters.
 
-* `disabled` - (Optional) Flag to disable the rule. Default is enabled.
-* `logged` - (Optional) Flag to enable packet logging. Default is disabled.
+* `disabled` - (Optional) Flag to deactivate the rule. Default is activated.
+* `logged` - (Optional) Flag to enable packet logging. Default is deactivated.
 * `destinations_excluded` - (Optional) If set to true, the rule gets applied on all the groups that are
 NOT part of the destination groups. If false, the rule applies to the
 destination groups

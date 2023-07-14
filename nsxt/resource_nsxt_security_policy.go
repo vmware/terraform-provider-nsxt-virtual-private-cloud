@@ -29,6 +29,7 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 		"comments": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"tcp_strict": {
 			Type:     schema.TypeBool,
@@ -38,6 +39,7 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 		"scheduler_path": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"stateful": {
 			Type:     schema.TypeBool,
@@ -71,6 +73,7 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice([]string{"ALLOWLIST", "DENYLIST", "ALLOWLIST_ENABLE_LOGGING", "DENYLIST_ENABLE_LOGGING", "NONE"}, false),
+			Computed:     true,
 		},
 		"logging_enabled": {
 			Type:       schema.TypeBool,
@@ -82,6 +85,7 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice([]string{"WHITELIST", "BLACKLIST", "WHITELIST_ENABLE_LOGGING", "BLACKLIST_ENABLE_LOGGING", "NONE"}, false),
+			Computed:     true,
 			Deprecated:   "This is a deprecated property. Please refer the documentation for details, and refrain from use as this will be removed in future versions.",
 		},
 		"sequence_number": {
@@ -89,21 +93,22 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 			Required: true,
 		},
 		"tags": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),
 		},
 		"scope": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
 			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"application_connectivity_strategy": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
+			Computed: true,
 			MaxItems: 3,
 			Elem:     resourceApplicationConnectivityStrategySchema(),
 		},

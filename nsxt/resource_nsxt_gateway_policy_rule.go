@@ -29,6 +29,7 @@ func resourceGatewayPolicyRuleSchema() map[string]*schema.Schema {
 		"tag": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"disabled": {
 			Type:     schema.TypeBool,
@@ -62,6 +63,7 @@ func resourceGatewayPolicyRuleSchema() map[string]*schema.Schema {
 		"notes": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"_revision": {
 			Type:     schema.TypeInt,
@@ -90,47 +92,48 @@ func resourceGatewayPolicyRuleSchema() map[string]*schema.Schema {
 			Required: true,
 		},
 		"profiles": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
 			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"services": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
 			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"service_entries": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
+			Computed: true,
 			MaxItems: 128,
 			Elem:     resourceServiceEntryCustomSchema(),
 		},
 		"tags": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),
 		},
 		"scope": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
 			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"destination_groups": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
 			MaxItems: 128,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},
 		"source_groups": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			Computed: true,
 			MaxItems: 128,
