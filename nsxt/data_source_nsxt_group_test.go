@@ -21,7 +21,7 @@ import (
 func TestNSXTDataSourceGroupBasic(t *testing.T) {
 	testCaseNsxID := os.Getenv("NSXT_TEST_GROUP_ID")
 	testCaseDisplayName := os.Getenv("NSXT_TEST_GROUP_NAME")
-	testCaseContext := os.Getenv("NSXT_TEST_GROUP_CONTEXT")
+	testCaseScope := os.Getenv("NSXT_TEST_GROUP_SCOPE")
 	testCaseDomain := os.Getenv("NSXT_TEST_GROUP_DOMAIN")
 	testResourceName := "data.nsxt_vpc_group.testGroup"
 
@@ -30,7 +30,7 @@ func TestNSXTDataSourceGroupBasic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNSXTDSGroupConfigTemplate(testCaseNsxID, testCaseDisplayName, testCaseContext, testCaseDomain),
+				Config: testAccNSXTDSGroupConfigTemplate(testCaseNsxID, testCaseDisplayName, testCaseScope, testCaseDomain),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testResourceName, "display_name"),
 					resource.TestCheckResourceAttrSet(testResourceName, "id"),
@@ -41,14 +41,14 @@ func TestNSXTDataSourceGroupBasic(t *testing.T) {
 	})
 }
 
-func testAccNSXTDSGroupConfigTemplate(testCaseNsxID string, testCaseDisplayName string, testCaseContext string, testCaseDomain string) string {
+func testAccNSXTDSGroupConfigTemplate(testCaseNsxID string, testCaseDisplayName string, testCaseScope string, testCaseDomain string) string {
 	return fmt.Sprintf(`
   data "nsxt_vpc_group" "testGroup" {
 		nsx_id				 = "%s"
     display_name   = "%s"
-		context_info {
-			context = "%s"
+		context {
+			scope = "%s"
 	domain = "%s"
 		}
-}`, testCaseNsxID, testCaseDisplayName, testCaseContext, testCaseDomain)
+}`, testCaseNsxID, testCaseDisplayName, testCaseScope, testCaseDomain)
 }

@@ -45,8 +45,8 @@ const testAccNSXTDSVpcIpAddressAllocationConfig = `
 
 data "nsxt_vpc_ip_address_allocation" "testVpcIpAddressAllocation" {
   display_name = nsxt_vpc_ip_address_allocation.testVpcIpAddressAllocation.display_name
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
   }
 }
 `

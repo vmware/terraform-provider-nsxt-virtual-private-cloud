@@ -182,13 +182,13 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 	var obj interface{}
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
 	var contextInfoMap map[string]interface{}
-	var context string
+	var scope string
 	var domain string
-	contextInfo := d.Get("context_info").([]interface{})
+	contextInfo := d.Get("context").([]interface{})
 	if len(contextInfo) > 0 {
 		contextInfoMap = contextInfo[0].(map[string]interface{})
 	}
-	context = contextInfoMap["context"].(string)
+	scope = contextInfoMap["scope"].(string)
 	domain = contextInfoMap["domain"].(string)
 
 	displayName := d.Get("display_name").(string)
@@ -218,10 +218,10 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 			uri += "%20AND%20parent_path:%22" + parentPath + "%22"
 		}
 	}
-	if context == "project" {
+	if scope == "project" {
 		// If it is project/infra object, search in context of project
 		uri += "&context=projects:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID
-	} else if context == "vpc" {
+	} else if scope == "vpc" {
 		// Search in context of Vpc
 		uri += "&context=vpcs:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID + "/vpcs/" + nsxtClient.Config.VpcID
 	} else {
@@ -299,7 +299,7 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 					}
 				}
 				if !perfectMatchFound {
-					return fmt.Errorf("no record found for %s with display_name '%s'", objType, displayName)
+					return fmt.Errorf("no record found for %s with display_name '%s' in scope %s", objType, displayName, scope)
 				}
 			}
 		} else {

@@ -77,8 +77,8 @@ static_routes {
 
 data "nsxt_vpc_dhcp_v4_static_binding_config" "testDhcpV4StaticBindingConfig" {
   display_name = nsxt_vpc_dhcp_v4_static_binding_config.testDhcpV4StaticBindingConfig.display_name
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
   }
 }
 `

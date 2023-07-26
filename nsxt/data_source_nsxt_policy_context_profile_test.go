@@ -21,7 +21,7 @@ import (
 func TestNSXTDataSourcePolicyContextProfileBasic(t *testing.T) {
 	testCaseNsxID := os.Getenv("NSXT_TEST_CONTEXT_PROFILE_ID")
 	testCaseDisplayName := os.Getenv("NSXT_TEST_CONTEXT_PROFILE_NAME")
-	testCaseContext := os.Getenv("NSXT_TEST_CONTEXT_PROFILE_CONTEXT")
+	testCaseScope := os.Getenv("NSXT_TEST_CONTEXT_PROFILE_SCOPE")
 	testResourceName := "data.nsxt_vpc_policy_context_profile.testPolicyContextProfile"
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -29,7 +29,7 @@ func TestNSXTDataSourcePolicyContextProfileBasic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNSXTDSPolicyContextProfileConfigTemplate(testCaseNsxID, testCaseDisplayName, testCaseContext),
+				Config: testAccNSXTDSPolicyContextProfileConfigTemplate(testCaseNsxID, testCaseDisplayName, testCaseScope),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testResourceName, "display_name"),
 					resource.TestCheckResourceAttrSet(testResourceName, "id"),
@@ -40,13 +40,13 @@ func TestNSXTDataSourcePolicyContextProfileBasic(t *testing.T) {
 	})
 }
 
-func testAccNSXTDSPolicyContextProfileConfigTemplate(testCaseNsxID string, testCaseDisplayName string, testCaseContext string) string {
+func testAccNSXTDSPolicyContextProfileConfigTemplate(testCaseNsxID string, testCaseDisplayName string, testCaseScope string) string {
 	return fmt.Sprintf(`
   data "nsxt_vpc_policy_context_profile" "testPolicyContextProfile" {
 		nsx_id				 = "%s"
     display_name   = "%s"
-		context_info {
-			context = "%s"
+		context {
+			scope = "%s"
 		}
-}`, testCaseNsxID, testCaseDisplayName, testCaseContext)
+}`, testCaseNsxID, testCaseDisplayName, testCaseScope)
 }

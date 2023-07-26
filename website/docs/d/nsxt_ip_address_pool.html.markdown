@@ -21,8 +21,8 @@ This data source is used to to get nsxt_vpc_ip_address_pool objects.
 
 ```hcl
 data "nsxt_vpc_ip_address_pool" "foo_ip_address_pool" {
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
     }
   display_name = "ip_address_pool-Test"
 }
@@ -32,8 +32,8 @@ data "nsxt_vpc_ip_address_pool" "foo_ip_address_pool" {
 
 * `display_name` - (Optional) Search IpAddressPool by its display_name.
 * `nsx_id` - (Optional) Search IpAddressPool by its NSX ID.
-* `context_info` - (Optional) Provide context information for IpAddressPool.
-  * `context` - (Optional) Provide context for searching the IpAddressPool. It can be any one of vpc, project or infra. Defaulted to vpc if not provided.
+* `context` - (Required) Provide context information for IpAddressPool.
+  * `scope` - (Required) Provide scope for searching the IpAddressPool. It can be any one of vpc, project or infra. Defaulted to vpc if not provided.
 
 ## Attributes Reference
 

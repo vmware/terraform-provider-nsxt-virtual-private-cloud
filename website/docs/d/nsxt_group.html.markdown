@@ -21,8 +21,8 @@ This data source is used to to get nsxt_vpc_group objects.
 
 ```hcl
 data "nsxt_vpc_group" "foo_group" {
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
       domain = "default"
     }
   display_name = "group-Test"
@@ -33,8 +33,8 @@ data "nsxt_vpc_group" "foo_group" {
 
 * `display_name` - (Optional) Search Group by its display_name.
 * `nsx_id` - (Optional) Search Group by its NSX ID.
-* `context_info` - (Optional) Provide context information for Group.
-  * `context` - (Optional) Provide context for searching the Group. It can be any one of vpc, project or infra. Defaulted to vpc if not provided.
+* `context` - (Required) Provide context information for Group.
+  * `scope` - (Required) Provide scope for searching the Group. It can be any one of vpc, project or infra. Defaulted to vpc if not provided.
   * `domain` - (Optional) Domain ID to search the Group in a particular domain.
 
 ## Attributes Reference

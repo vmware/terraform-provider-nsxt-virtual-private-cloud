@@ -21,8 +21,8 @@ This data source is used to to get nsxt_vpc_policy_context_profile objects.
 
 ```hcl
 data "nsxt_vpc_policy_context_profile" "foo_policy_context_profile" {
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
     }
   display_name = "policy_context_profile-Test"
 }
@@ -32,8 +32,8 @@ data "nsxt_vpc_policy_context_profile" "foo_policy_context_profile" {
 
 * `display_name` - (Optional) Search PolicyContextProfile by its display_name.
 * `nsx_id` - (Optional) Search PolicyContextProfile by its NSX ID.
-* `context_info` - (Optional) Provide context information for PolicyContextProfile.
-  * `context` - (Optional) Provide context for searching the PolicyContextProfile. It can be any one of vpc, project or infra. Defaulted to vpc if not provided.
+* `context` - (Required) Provide context information for PolicyContextProfile.
+  * `scope` - (Required) Provide scope for searching the PolicyContextProfile. It can be any one of vpc, project or infra. Defaulted to vpc if not provided.
 
 ## Attributes Reference
 

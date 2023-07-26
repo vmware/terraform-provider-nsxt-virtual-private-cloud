@@ -51,8 +51,8 @@ const testAccNSXTDSVpcSubnetConfig = `
 
 data "nsxt_vpc_subnet" "testVpcSubnet" {
   display_name = nsxt_vpc_subnet.testVpcSubnet.display_name
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
   }
 }
 `

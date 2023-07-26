@@ -116,8 +116,8 @@ tags {
 
 data "nsxt_vpc_gateway_policy_rule" "testGatewayPolicyRule" {
   display_name = nsxt_vpc_gateway_policy_rule.testGatewayPolicyRule.display_name
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
   }
 }
 `

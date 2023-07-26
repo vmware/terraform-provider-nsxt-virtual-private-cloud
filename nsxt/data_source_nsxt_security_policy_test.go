@@ -48,8 +48,8 @@ const testAccNSXTDSSecurityPolicyConfig = `
 
 data "nsxt_vpc_security_policy" "testSecurityPolicy" {
   display_name = nsxt_vpc_security_policy.testSecurityPolicy.display_name
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
   }
 }
 `

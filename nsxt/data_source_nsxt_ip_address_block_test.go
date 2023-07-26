@@ -21,7 +21,7 @@ import (
 func TestNSXTDataSourceIpAddressBlockBasic(t *testing.T) {
 	testCaseNsxID := os.Getenv("NSXT_TEST_IP_ADDRESS_BLOCK_ID")
 	testCaseDisplayName := os.Getenv("NSXT_TEST_IP_ADDRESS_BLOCK_NAME")
-	testCaseContext := os.Getenv("NSXT_TEST_IP_ADDRESS_BLOCK_CONTEXT")
+	testCaseScope := os.Getenv("NSXT_TEST_IP_ADDRESS_BLOCK_SCOPE")
 	testResourceName := "data.nsxt_vpc_ip_address_block.testIpAddressBlock"
 
 	resource.ParallelTest(t, resource.TestCase{
@@ -29,7 +29,7 @@ func TestNSXTDataSourceIpAddressBlockBasic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNSXTDSIpAddressBlockConfigTemplate(testCaseNsxID, testCaseDisplayName, testCaseContext),
+				Config: testAccNSXTDSIpAddressBlockConfigTemplate(testCaseNsxID, testCaseDisplayName, testCaseScope),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testResourceName, "display_name"),
 					resource.TestCheckResourceAttrSet(testResourceName, "id"),
@@ -40,13 +40,13 @@ func TestNSXTDataSourceIpAddressBlockBasic(t *testing.T) {
 	})
 }
 
-func testAccNSXTDSIpAddressBlockConfigTemplate(testCaseNsxID string, testCaseDisplayName string, testCaseContext string) string {
+func testAccNSXTDSIpAddressBlockConfigTemplate(testCaseNsxID string, testCaseDisplayName string, testCaseScope string) string {
 	return fmt.Sprintf(`
   data "nsxt_vpc_ip_address_block" "testIpAddressBlock" {
 		nsx_id				 = "%s"
     display_name   = "%s"
-		context_info {
-			context = "%s"
+		context {
+			scope = "%s"
 		}
-}`, testCaseNsxID, testCaseDisplayName, testCaseContext)
+}`, testCaseNsxID, testCaseDisplayName, testCaseScope)
 }

@@ -14,18 +14,18 @@ import (
 
 func getDataSourceCommonSchema(additionalSchemaItems map[string]*schema.Schema) map[string]*schema.Schema {
 	baseSchema := map[string]*schema.Schema{
-		"context_info": {
+		"context": {
 			Type:        schema.TypeList,
 			Description: "Datasource context information",
 			Required:    true,
 			MaxItems:    1,
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
-					"context": {
+					"scope": {
 						Type:         schema.TypeString,
 						Required:     true,
 						ValidateFunc: validation.StringInSlice([]string{"vpc", "project", "infra"}, false),
-						Description:  "The context in which the object exists or spans out of. It can be any one of vpc, project or infra.",
+						Description:  "The scope in which the object exists or spans out of. It can be any one of vpc, project or infra.",
 					},
 					"domain": {
 						Type:        schema.TypeString,

@@ -21,8 +21,8 @@ This data source is used to to get nsxt_vpc_ip_address_block objects.
 
 ```hcl
 data "nsxt_vpc_ip_address_block" "foo_ip_address_block" {
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
     }
   display_name = "ip_address_block-Test"
 }
@@ -32,8 +32,8 @@ data "nsxt_vpc_ip_address_block" "foo_ip_address_block" {
 
 * `display_name` - (Optional) Search IpAddressBlock by its display_name.
 * `nsx_id` - (Optional) Search IpAddressBlock by its NSX ID.
-* `context_info` - (Optional) Provide context information for IpAddressBlock.
-  * `context` - (Optional) Provide context for searching the IpAddressBlock. It can be any one of vpc, project or infra. Defaulted to vpc if not provided.
+* `context` - (Required) Provide context information for IpAddressBlock.
+  * `scope` - (Required) Provide scope for searching the IpAddressBlock. It can be any one of vpc, project or infra. Defaulted to vpc if not provided.
 
 ## Attributes Reference
 

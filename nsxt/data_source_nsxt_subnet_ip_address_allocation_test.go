@@ -51,8 +51,8 @@ const testAccNSXTDSIpAddressAllocationConfig = `
 
 data "nsxt_vpc_subnet_ip_address_allocation" "testIpAddressAllocation" {
   display_name = nsxt_vpc_subnet_ip_address_allocation.testIpAddressAllocation.display_name
-  context_info {
-    context = "vpc"
+  context {
+    scope = "vpc"
   }
 }
 `
