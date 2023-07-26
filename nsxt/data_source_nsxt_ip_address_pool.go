@@ -15,18 +15,18 @@ import (
 	"log"
 )
 
-func dataSourceNsxtSharedProjectInfraIpAddressBlock() *schema.Resource {
+func dataSourceNsxtVpcIpAddressPool() *schema.Resource {
 	additionalSchemaItems := map[string]*schema.Schema{} // Define any additional schema items specific to the data source
 
 	return &schema.Resource{
-		Read:   dataSourceNsxtSharedProjectInfraIpAddressBlockRead,
+		Read:   dataSourceNsxtVpcIpAddressPoolRead,
 		Schema: getDataSourceCommonSchema(additionalSchemaItems),
 	}
 }
 
-func dataSourceNsxtSharedProjectInfraIpAddressBlockRead(d *schema.ResourceData, meta interface{}) error {
-	s := dataSourceNsxtSharedProjectInfraIpAddressBlock()
-	err := DatasourceRead(d, meta, "ProjectInfraIpAddressBlock", s)
+func dataSourceNsxtVpcIpAddressPoolRead(d *schema.ResourceData, meta interface{}) error {
+	s := dataSourceNsxtVpcIpAddressPool()
+	err := DatasourceRead(d, meta, "IpAddressPool", s)
 	if err != nil {
 		log.Printf("[ERROR] in reading object %v\n", err)
 	}

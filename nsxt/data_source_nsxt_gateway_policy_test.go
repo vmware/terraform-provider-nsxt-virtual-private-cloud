@@ -62,5 +62,8 @@ tags {
 
 data "nsxt_vpc_gateway_policy" "testGatewayPolicy" {
   display_name = nsxt_vpc_gateway_policy.testGatewayPolicy.display_name
+  context_info {
+    context = "vpc"
+  }
 }
 `

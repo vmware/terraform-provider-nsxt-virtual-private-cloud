@@ -18,17 +18,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestNSXTDataSourceProjectInfraGroupBasic(t *testing.T) {
-	testCaseNsxID := os.Getenv("NSXT_PROJECT_INFRA_TEST_GROUP_ID")
-	testCaseDisplayName := os.Getenv("NSXT_PROJECT_INFRA_TEST_GROUP_NAME")
-	testResourceName := "data.nsxt_shared_project_infra_group.testProjectInfraGroup"
+func TestNSXTDataSourceIpAddressPoolBasic(t *testing.T) {
+	testCaseNsxID := os.Getenv("NSXT_TEST_IP_ADDRESS_POOL_ID")
+	testCaseDisplayName := os.Getenv("NSXT_TEST_IP_ADDRESS_POOL_NAME")
+	testCaseContext := os.Getenv("NSXT_TEST_IP_ADDRESS_POOL_CONTEXT")
+	testResourceName := "data.nsxt_vpc_ip_address_pool.testIpAddressPool"
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNSXTDSProjectInfraGroupConfigTemplate(testCaseNsxID, testCaseDisplayName),
+				Config: testAccNSXTDSIpAddressPoolConfigTemplate(testCaseNsxID, testCaseDisplayName, testCaseContext),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testResourceName, "display_name"),
 					resource.TestCheckResourceAttrSet(testResourceName, "id"),
@@ -39,10 +40,13 @@ func TestNSXTDataSourceProjectInfraGroupBasic(t *testing.T) {
 	})
 }
 
-func testAccNSXTDSProjectInfraGroupConfigTemplate(testCaseNsxID string, testCaseDisplayName string) string {
+func testAccNSXTDSIpAddressPoolConfigTemplate(testCaseNsxID string, testCaseDisplayName string, testCaseContext string) string {
 	return fmt.Sprintf(`
-  data "nsxt_shared_project_infra_group" "testProjectInfraGroup" {
+  data "nsxt_vpc_ip_address_pool" "testIpAddressPool" {
 		nsx_id				 = "%s"
     display_name   = "%s"
-}`, testCaseNsxID, testCaseDisplayName)
+		context_info {
+			context = "%s"
+		}
+}`, testCaseNsxID, testCaseDisplayName, testCaseContext)
 }

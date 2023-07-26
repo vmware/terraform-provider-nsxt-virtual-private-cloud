@@ -181,18 +181,19 @@ func setAttrsInDatasourceSchema(mapObject interface{}, d *schema.ResourceData, o
 func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s *schema.Resource) error {
 	var obj interface{}
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
+	var contextInfoMap map[string]interface{}
+	var context string
+	var domain string
+	contextInfo := d.Get("context_info").([]interface{})
+	if len(contextInfo) > 0 {
+		contextInfoMap = contextInfo[0].(map[string]interface{})
+	}
+	context = contextInfoMap["context"].(string)
+	domain = contextInfoMap["domain"].(string)
+
 	displayName := d.Get("display_name").(string)
 	nsxID := d.Get("nsx_id").(string)
-	isInfraObject := false
-	isProjectInfra := false
 	var uri string
-	if strings.HasPrefix(objType, "ProjectInfra") {
-		objType = strings.TrimPrefix(objType, "ProjectInfra")
-		isProjectInfra = true
-	} else if strings.HasPrefix(objType, "Infra") {
-		objType = strings.TrimPrefix(objType, "Infra")
-		isInfraObject = true
-	}
 	// Some objTypes (should be resource_type value) are differently worded in .yaml, hence correcting them for usage in Search query
 	switch objType {
 	case "SecurityPolicyRule":
@@ -217,12 +218,18 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 			uri += "%20AND%20parent_path:%22" + parentPath + "%22"
 		}
 	}
-	if isProjectInfra {
+	if context == "project" {
 		// If it is project/infra object, search in context of project
 		uri += "&context=projects:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID
-	} else if !isInfraObject && !isProjectInfra {
-		// If not infra and project/infra object, search in context of VPC
+	} else if context == "vpc" {
+		// Search in context of Vpc
 		uri += "&context=vpcs:" + "/orgs/" + nsxtClient.Config.OrgID + "/projects/" + nsxtClient.Config.ProjectID + "/vpcs/" + nsxtClient.Config.VpcID
+	} else {
+		// No context for infra based Search, include domain info
+		if objType == "Group" {
+			domainPolicyPath := "/infra/domains/" + domain
+			uri += "%20AND%20parent_path:%22" + domainPolicyPath + "%22"
+		}
 	}
 	err := nsxtClient.NsxtSession.Get(uri, &obj)
 	if err != nil {
@@ -296,7 +303,7 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 				}
 			}
 		} else {
-			return fmt.Errorf("either multiple records found for %s with display_name '%s', or object is not shared with Project", objType, displayName)
+			return fmt.Errorf("either multiple records found for this %s, or the %s is not shared with Project", objType, objType)
 		}
 	}
 	return err

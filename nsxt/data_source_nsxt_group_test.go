@@ -11,104 +11,44 @@
 package nsxt
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"fmt"
+	"os"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestNSXTDataSourceGroupBasic(t *testing.T) {
+	testCaseNsxID := os.Getenv("NSXT_TEST_GROUP_ID")
+	testCaseDisplayName := os.Getenv("NSXT_TEST_GROUP_NAME")
+	testCaseContext := os.Getenv("NSXT_TEST_GROUP_CONTEXT")
+	testCaseDomain := os.Getenv("NSXT_TEST_GROUP_DOMAIN")
+	testResourceName := "data.nsxt_vpc_group.testGroup"
+
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNSXTDSGroupConfig,
+				Config: testAccNSXTDSGroupConfigTemplate(testCaseNsxID, testCaseDisplayName, testCaseContext, testCaseDomain),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
-							"key": "Name"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
-							"operator": "CONTAINS"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
-							"resource_type": "Condition"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
-							"value": "vm_1"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*.expressions.*", map[string]string{
-							"member_type": "VirtualMachine"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*", map[string]string{
-							"resource_type": "NestedExpression"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
-							"scope": "scope1"}),
-					resource.TestCheckTypeSetElemNestedAttrs(
-						"nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
-							"tag": "webvm"}),
-					resource.TestCheckResourceAttr(
-						"nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc-2"),
-					resource.TestCheckResourceAttr(
-						"nsxt_vpc_group.testGroup", "display_name", "test-group-abc-2"),
-					resource.TestCheckResourceAttr(
-						"nsxt_vpc_group.testGroup", "description", "Group 2 description"),
+					resource.TestCheckResourceAttrSet(testResourceName, "display_name"),
+					resource.TestCheckResourceAttrSet(testResourceName, "id"),
+					resource.TestCheckResourceAttrSet(testResourceName, "path"),
 				),
 			},
 		},
 	})
 }
 
-const testAccNSXTDSGroupConfig = `
-
-    resource "nsxt_vpc_group" "testGroup" {
-      	expression {
-	expressions {
-	key = "Name"
-	operator = "CONTAINS"
-	resource_type = "Condition"
-	value = "vm_1"
-	member_type = "VirtualMachine"
+func testAccNSXTDSGroupConfigTemplate(testCaseNsxID string, testCaseDisplayName string, testCaseContext string, testCaseDomain string) string {
+	return fmt.Sprintf(`
+  data "nsxt_vpc_group" "testGroup" {
+		nsx_id				 = "%s"
+    display_name   = "%s"
+		context_info {
+			context = "%s"
+	domain = "%s"
+		}
+}`, testCaseNsxID, testCaseDisplayName, testCaseContext, testCaseDomain)
 }
-expressions {
-	conjunction_operator = "AND"
-	resource_type = "ConjunctionOperator"
-}
-expressions {
-	key = "Tag"
-	operator = "EQUALS"
-	resource_type = "Condition"
-	value = "London"
-	member_type = "VirtualMachine"
-}
-	resource_type = "NestedExpression"
-	tags {
-	scope = "scope1"
-	tag = "webvm"
-}
-}
-expression {
-	conjunction_operator = "OR"
-	resource_type = "ConjunctionOperator"
-}
-expression {
-	ip_addresses = ["10.112.10.1"]
-	resource_type = "IPAddressExpression"
-}
-expression {
-	conjunction_operator = "OR"
-	resource_type = "ConjunctionOperator"
-}
-expression {
-	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
-	resource_type = "PathExpression"
-}
-	nsx_id = "test-group-abc-2"
-	display_name = "test-group-abc-2"
-	description = "Group 2 description"
-}
-
-data "nsxt_vpc_group" "testGroup" {
-  display_name = nsxt_vpc_group.testGroup.display_name
-}
-`

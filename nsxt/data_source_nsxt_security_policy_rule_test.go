@@ -108,5 +108,8 @@ expression {
 
 data "nsxt_vpc_security_policy_rule" "testSecurityPolicyRule" {
   display_name = nsxt_vpc_security_policy_rule.testSecurityPolicyRule.display_name
+  context_info {
+    context = "vpc"
+  }
 }
 `

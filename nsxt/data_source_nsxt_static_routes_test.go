@@ -66,5 +66,8 @@ next_hops {
 
 data "nsxt_vpc_static_routes" "testStaticRoutes" {
   display_name = nsxt_vpc_static_routes.testStaticRoutes.display_name
+  context_info {
+    context = "vpc"
+  }
 }
 `

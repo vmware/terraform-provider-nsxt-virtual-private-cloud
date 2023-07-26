@@ -18,17 +18,18 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestNSXTDataSourceInfraGroupBasic(t *testing.T) {
-	testCaseNsxID := os.Getenv("NSXT_INFRA_TEST_GROUP_ID")
-	testCaseDisplayName := os.Getenv("NSXT_INFRA_TEST_GROUP_NAME")
-	testResourceName := "data.nsxt_shared_infra_group.testInfraGroup"
+func TestNSXTDataSourcePolicyContextProfileBasic(t *testing.T) {
+	testCaseNsxID := os.Getenv("NSXT_TEST_CONTEXT_PROFILE_ID")
+	testCaseDisplayName := os.Getenv("NSXT_TEST_CONTEXT_PROFILE_NAME")
+	testCaseContext := os.Getenv("NSXT_TEST_CONTEXT_PROFILE_CONTEXT")
+	testResourceName := "data.nsxt_vpc_policy_context_profile.testPolicyContextProfile"
 
 	resource.ParallelTest(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccNSXTDSInfraGroupConfigTemplate(testCaseNsxID, testCaseDisplayName),
+				Config: testAccNSXTDSPolicyContextProfileConfigTemplate(testCaseNsxID, testCaseDisplayName, testCaseContext),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testResourceName, "display_name"),
 					resource.TestCheckResourceAttrSet(testResourceName, "id"),
@@ -39,10 +40,13 @@ func TestNSXTDataSourceInfraGroupBasic(t *testing.T) {
 	})
 }
 
-func testAccNSXTDSInfraGroupConfigTemplate(testCaseNsxID string, testCaseDisplayName string) string {
+func testAccNSXTDSPolicyContextProfileConfigTemplate(testCaseNsxID string, testCaseDisplayName string, testCaseContext string) string {
 	return fmt.Sprintf(`
-  data "nsxt_shared_infra_group" "testInfraGroup" {
+  data "nsxt_vpc_policy_context_profile" "testPolicyContextProfile" {
 		nsx_id				 = "%s"
     display_name   = "%s"
-}`, testCaseNsxID, testCaseDisplayName)
+		context_info {
+			context = "%s"
+		}
+}`, testCaseNsxID, testCaseDisplayName, testCaseContext)
 }

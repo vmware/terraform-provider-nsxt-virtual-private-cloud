@@ -67,5 +67,8 @@ address_bindings {
 
 data "nsxt_vpc_subnet_port" "testVpcSubnetPort" {
   display_name = nsxt_vpc_subnet_port.testVpcSubnetPort.display_name
+  context_info {
+    context = "vpc"
+  }
 }
 `

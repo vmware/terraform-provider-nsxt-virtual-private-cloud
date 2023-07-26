@@ -64,5 +64,8 @@ const testAccNSXTDSPolicyVpcNatRuleConfig = `
 
 data "nsxt_policy_vpc_nat_rule" "testPolicyVpcNatRule" {
   display_name = nsxt_policy_vpc_nat_rule.testPolicyVpcNatRule.display_name
+  context_info {
+    context = "vpc"
+  }
 }
 `

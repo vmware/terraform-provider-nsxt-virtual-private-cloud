@@ -15,18 +15,18 @@ import (
 	"log"
 )
 
-func dataSourceNsxtSharedInfraPolicyContextProfile() *schema.Resource {
+func dataSourceNsxtVpcService() *schema.Resource {
 	additionalSchemaItems := map[string]*schema.Schema{} // Define any additional schema items specific to the data source
 
 	return &schema.Resource{
-		Read:   dataSourceNsxtSharedInfraPolicyContextProfileRead,
+		Read:   dataSourceNsxtVpcServiceRead,
 		Schema: getDataSourceCommonSchema(additionalSchemaItems),
 	}
 }
 
-func dataSourceNsxtSharedInfraPolicyContextProfileRead(d *schema.ResourceData, meta interface{}) error {
-	s := dataSourceNsxtSharedInfraPolicyContextProfile()
-	err := DatasourceRead(d, meta, "InfraPolicyContextProfile", s)
+func dataSourceNsxtVpcServiceRead(d *schema.ResourceData, meta interface{}) error {
+	s := dataSourceNsxtVpcService()
+	err := DatasourceRead(d, meta, "Service", s)
 	if err != nil {
 		log.Printf("[ERROR] in reading object %v\n", err)
 	}

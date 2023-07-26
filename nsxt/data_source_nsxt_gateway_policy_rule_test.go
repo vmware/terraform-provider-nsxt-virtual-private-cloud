@@ -95,9 +95,9 @@ expression {
 	paths = ["/orgs/default/projects/Dev_project/vpcs/dev_vpc/groups/default"]
 	resource_type = "PathExpression"
 }
-	nsx_id = "test-group-abc-3"
-	display_name = "test-group-abc-3"
-	description = "Group 3 description"
+	nsx_id = "test-group-abc-2"
+	display_name = "test-group-abc-2"
+	description = "Group 2 description"
 }
     resource "nsxt_vpc_gateway_policy" "testGatewayPolicy" {
       	nsx_id = "test-gatewaypolicy-abc-2"
@@ -115,6 +115,9 @@ tags {
 }
 
 data "nsxt_vpc_gateway_policy_rule" "testGatewayPolicyRule" {
-  parent_path = nsxt_vpc_gateway_policy_rule.testGatewayPolicyRule.parent_path
+  display_name = nsxt_vpc_gateway_policy_rule.testGatewayPolicyRule.display_name
+  context_info {
+    context = "vpc"
+  }
 }
 `
