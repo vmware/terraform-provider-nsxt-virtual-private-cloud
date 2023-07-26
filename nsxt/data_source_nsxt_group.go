@@ -18,12 +18,6 @@ import (
 func dataSourceNsxtVpcGroup() *schema.Resource {
 	additionalSchemaItems := map[string]*schema.Schema{} // Define any additional schema items specific to the data source
 
-	additionalSchemaItems["parent_path"] = &schema.Schema{
-		Type:     schema.TypeString,
-		Optional: true,
-		Computed: true,
-	}
-
 	return &schema.Resource{
 		Read:   dataSourceNsxtVpcGroupRead,
 		Schema: getDataSourceCommonSchema(additionalSchemaItems),
