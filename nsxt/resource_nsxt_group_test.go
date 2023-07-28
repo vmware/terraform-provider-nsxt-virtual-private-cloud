@@ -42,13 +42,13 @@ func TestNSXTGroupBasic(t *testing.T) {
 						"member_type": "VirtualMachine"}),
 					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "expression.*", map[string]string{
 						"resource_type": "NestedExpression"}),
-					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
-						"scope": "scope1"}),
-					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
-						"tag": "webvm"}),
 					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc-2"),
 					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "display_name", "test-group-abc-2"),
 					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "description", "Group 2 description"),
+					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "tags.*", map[string]string{
+						"scope": "scope1"}),
+					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "tags.*", map[string]string{
+						"tag": "webvm"}),
 				),
 			},
 			{
@@ -76,12 +76,12 @@ func TestNSXTGroupBasic(t *testing.T) {
 						"member_type": "VirtualMachine"}),
 					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "expression.*", map[string]string{
 						"resource_type": "NestedExpression"}),
-					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
-						"scope": "scope1"}),
-					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "expression.*.tags.*", map[string]string{
-						"tag": "webvm"}),
 					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "nsx_id", "test-group-abc-2"),
 					resource.TestCheckResourceAttr("nsxt_vpc_group.testGroup", "display_name", "test-group-abc-updated-2"),
+					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "tags.*", map[string]string{
+						"scope": "scope1"}),
+					resource.TestCheckTypeSetElemNestedAttrs("nsxt_vpc_group.testGroup", "tags.*", map[string]string{
+						"tag": "webvm"}),
 				),
 			},
 			{
@@ -168,10 +168,6 @@ expressions {
 	member_type = "VirtualMachine"
 }
 	resource_type = "NestedExpression"
-	tags {
-	scope = "scope1"
-	tag = "webvm"
-}
 }
 expression {
 	conjunction_operator = "OR"
@@ -192,6 +188,10 @@ expression {
 	nsx_id = "test-group-abc-2"
 	display_name = "test-group-abc-2"
 	description = "Group 2 description"
+	tags {
+	scope = "scope1"
+	tag = "webvm"
+}
 }
 `
 
@@ -225,10 +225,6 @@ expressions {
 	member_type = "VirtualMachine"
 }
 	resource_type = "NestedExpression"
-	tags {
-	scope = "scope1"
-	tag = "webvm"
-}
 }
 expression {
 	conjunction_operator = "OR"
@@ -248,6 +244,10 @@ expression {
 }
 	nsx_id = "test-group-abc-2"
 	display_name = "test-group-abc-updated-2"
+	tags {
+	scope = "scope1"
+	tag = "webvm"
+}
 }
 `
 const testAccNSXTGroupUpdate2Config = `

@@ -524,7 +524,7 @@ func resourcePolicyAttributesSchema() *schema.Resource {
 			"custom_url_partial_match": {
 				Type:     schema.TypeBool,
 				Optional: true,
-				Default:  true,
+				Computed: true,
 			},
 			"attribute_source": {
 				Type:         schema.TypeString,

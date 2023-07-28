@@ -449,8 +449,16 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 			for _, item := range listValue {
 				if item != nil {
 					if terraformDataMap != nil {
-						if itemResource, isResource := item.(*schema.Schema); isResource {
-							itemData, err := APIDataToSchema(item, make(map[string]interface{}), itemResource.Elem.(*schema.Resource).Schema)
+						if itemSchema, isSchema := item.(*schema.Schema); isSchema {
+							itemData, err := APIDataToSchema(item, make(map[string]interface{}), map[string]*schema.Schema{
+								"schema": itemSchema,
+							})
+							if err != nil {
+								return nil, err
+							}
+							listData = append(listData, itemData)
+						} else if itemResource, isResource := item.(*schema.Resource); isResource {
+							itemData, err := APIDataToSchema(item, make(map[string]interface{}), itemResource.Schema)
 							if err != nil {
 								return nil, err
 							}
@@ -471,13 +479,27 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 						}
 					} else {
 						// process terraformDataData
-						itemData, err := APIDataToSchema(item, make(map[string]interface{}), fieldSchema.Elem.(*schema.Resource).Schema)
-						if err != nil {
-							return nil, err
+						switch fieldSchema.Elem.(type) {
+						case string, int, float64, bool:
+							listData = append(listData, fieldSchema.Elem)
+						case *schema.Schema:
+							schemaItem := fieldSchema.Elem.(*schema.Schema)
+							itemData, err := APIDataToSchema(item, make(map[string]interface{}), map[string]*schema.Schema{
+								"schema": schemaItem,
+							})
+							if err != nil {
+								return nil, err
+							}
+							listData = append(listData, itemData)
+						case *schema.Resource:
+							resourceItem := fieldSchema.Elem.(*schema.Resource)
+							itemData, err := APIDataToSchema(item, make(map[string]interface{}), resourceItem.Schema)
+							if err != nil {
+								return nil, err
+							}
+							listData = append(listData, itemData)
 						}
-						listData = append(listData, itemData)
 					}
-
 				}
 			}
 			if terraformDataMap != nil {

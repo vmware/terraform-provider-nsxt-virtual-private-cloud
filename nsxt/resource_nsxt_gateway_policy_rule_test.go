@@ -135,10 +135,6 @@ expressions {
 	member_type = "VirtualMachine"
 }
 	resource_type = "NestedExpression"
-	tags {
-	scope = "scope1"
-	tag = "webvm"
-}
 }
 expression {
 	conjunction_operator = "OR"
@@ -159,6 +155,10 @@ expression {
 	nsx_id = "test-group-abc-3"
 	display_name = "test-group-abc-3"
 	description = "Group 3 description"
+	tags {
+	scope = "scope1"
+	tag = "webvm"
+}
 }
     resource "nsxt_vpc_gateway_policy" "testGatewayPolicy" {
       	nsx_id = "test-gatewaypolicy-abc-2"
