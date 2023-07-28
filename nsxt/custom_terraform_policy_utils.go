@@ -299,7 +299,7 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 					}
 				}
 				if !perfectMatchFound {
-					return fmt.Errorf("no record found for %s with display_name '%s' in scope %s", objType, displayName, scope)
+					return fmt.Errorf("no record found for %s with id '%s', display_name '%s' in scope '%s'", objType, nsxID, displayName, scope)
 				}
 			}
 		} else {
@@ -354,7 +354,7 @@ func DatasourceReadForVM(d *schema.ResourceData, meta interface{}, objType strin
 				}
 			}
 		} else {
-			return fmt.Errorf("either multiple records found for %s with display_name '%s', or object is not shared with Project", objType, displayName)
+			return fmt.Errorf("either multiple records found for %s with external_id '%s', display_name '%s', or object is not shared with Project", objType, externalID, displayName)
 		}
 	}
 	return err

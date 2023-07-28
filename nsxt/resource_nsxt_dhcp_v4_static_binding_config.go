@@ -60,7 +60,7 @@ func resourceDhcpV4StaticBindingConfigSchema() map[string]*schema.Schema {
 			Required: true,
 		},
 		"tags": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),

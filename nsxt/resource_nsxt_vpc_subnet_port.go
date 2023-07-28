@@ -62,7 +62,7 @@ func resourceVpcSubnetPortSchema() map[string]*schema.Schema {
 			Elem:     resourceSegmentExtraConfigSchema(),
 		},
 		"tags": {
-			Type:     schema.TypeSet,
+			Type:     schema.TypeList,
 			Optional: true,
 			MaxItems: 30,
 			Elem:     resourceTagSchema(),
