@@ -549,9 +549,9 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 				}
 			}
 			if terraformDataMap != nil {
-				terraformDataMap[key] = schema.NewSet(CommonHash, setData)
+				terraformDataMap[key] = setData
 			} else {
-				terraformDataData.Set(key, schema.NewSet(CommonHash, setData))
+				terraformDataData.Set(key, setData)
 			}
 		}
 	case schema.TypeMap:
