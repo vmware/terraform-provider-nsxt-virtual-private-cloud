@@ -824,7 +824,7 @@ func resourceIPAddressExpressionSchema() *schema.Resource {
 				Type:     schema.TypeList,
 				Required: true,
 				MinItems: 1,
-				MaxItems: 4000,
+				MaxItems: 6000,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"path": {
