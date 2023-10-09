@@ -1,6 +1,6 @@
 # Contributing to terraform-provider-for-vmware-nsxt-virtual-private-cloud
 
-The terraform-provider-for-vmware-nsxt-virtual-private-cloud project team welcomes contributions from the community. If you wish to contribute code and you have not signed our contributor license agreement (CLA), our bot will update the issue when you open a Pull Request. For any questions about the CLA process, please refer to our [FAQ](https://cla.vmware.com/faq).
+The terraform-provider-for-vmware-nsxt-virtual-private-cloud project team welcomes contributions from the community. If you wish to contribute code and you have not signed our Developer Certificate of Origin (DCO), our bot will update the issue when you open a Pull Request. For any questions about the DCO process, please refer to our [DCO](https://cla.vmware.com/dco).
 
 ## Contribution Flow
 
