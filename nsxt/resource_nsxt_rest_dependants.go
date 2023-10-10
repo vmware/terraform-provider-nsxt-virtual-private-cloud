@@ -145,55 +145,15 @@ func resourceServiceSchema() *schema.Resource {
 	}
 }
 
-func resourceSegmentDhcpV6ConfigSchema() *schema.Resource {
+func resourceSubnetAdvancedConfigSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"server_address": {
-				Type:     schema.TypeString,
+			"static_ip_allocation": {
+				Type:     schema.TypeSet,
+				MaxItems: 1,
 				Optional: true,
 				Computed: true,
-			},
-			"resource_type": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"domain_names": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Computed: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
-			"dns_servers": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Computed: true,
-				MaxItems: 2,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
-			"sntp_servers": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Computed: true,
-				MaxItems: 2,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-			},
-			"preferred_time": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
-			},
-			"lease_time": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  86400,
-			},
-			"excluded_ranges": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Computed: true,
-				MinItems: 0,
-				MaxItems: 128,
-				Elem:     &schema.Schema{Type: schema.TypeString},
+				Elem:     resourceStaticIpAllocationSchema(),
 			},
 			"path": {
 				Type:     schema.TypeString,
@@ -1189,6 +1149,82 @@ func resourceVirtualMachineSchema() *schema.Resource {
 	}
 }
 
+func resourceVirtualNetworkInterfaceSchema() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"device_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"lport_attachment_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"display_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"description": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"device_key": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"external_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"host_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"owner_vm_id": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"vm_local_id_on_host": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"mac_address": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"resource_type": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"ip_address_info": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem:     resourceIpAddressInfoSchema(),
+			},
+			"scope": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem:     resourceDiscoveredResourceScopeSchema(),
+			},
+			"tags": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 30,
+				Elem:     resourceTagSchema(),
+			},
+			"path": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+		},
+	}
+}
+
 func resourceExcludedMembersListSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -1367,6 +1403,64 @@ func resourceIGMPTypeServiceEntrySchema() *schema.Resource {
 	}
 }
 
+func resourceSegmentDhcpV6ConfigSchema() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"server_address": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
+			"resource_type": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"domain_names": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"dns_servers": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				MaxItems: 2,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"sntp_servers": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				MaxItems: 2,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"preferred_time": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+			},
+			"lease_time": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  86400,
+			},
+			"excluded_ranges": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				MinItems: 0,
+				MaxItems: 128,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"path": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+		},
+	}
+}
+
 func resourceVpcSubnetDhcpConfigSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -1518,73 +1612,13 @@ func resourceExpressionSchema() *schema.Resource {
 	}
 }
 
-func resourceVirtualNetworkInterfaceSchema() *schema.Resource {
+func resourceStaticIpAllocationSchema() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"device_name": {
-				Type:     schema.TypeString,
+			"enabled": {
+				Type:     schema.TypeBool,
 				Optional: true,
-				Computed: true,
-			},
-			"lport_attachment_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"display_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"device_key": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"external_id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"host_id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"owner_vm_id": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"vm_local_id_on_host": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"mac_address": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"resource_type": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"ip_address_info": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Computed: true,
-				Elem:     resourceIpAddressInfoSchema(),
-			},
-			"scope": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Computed: true,
-				Elem:     resourceDiscoveredResourceScopeSchema(),
-			},
-			"tags": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 30,
-				Elem:     resourceTagSchema(),
+				Default:  false,
 			},
 			"path": {
 				Type:     schema.TypeString,

@@ -26,6 +26,12 @@ func resourceVpcSubnetSchema() map[string]*schema.Schema {
 			Optional: true,
 			Computed: true,
 		},
+		"advanced_config": {
+			Type:     schema.TypeSet,
+			MaxItems: 1,
+			Optional: true,
+			Elem:     resourceSubnetAdvancedConfigSchema(),
+		},
 		"dhcp_config": {
 			Type:     schema.TypeSet,
 			MaxItems: 1,
