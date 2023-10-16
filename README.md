@@ -127,6 +127,9 @@ Minimum environment variable :
 $ export NSXT_MANAGER_HOST="10.191.155.100"
 $ export NSXT_USERNAME="admin"
 $ export NSXT_PASSWORD="r6.Or#F_z_.F"
+$ export NSXT_ORG="org-1"
+$ export NSXT_PROJECT="custom-project-1"
+$ export NSXT_VPC="vpc-1"
 $ export NSXT_ALLOW_UNVERIFIED_SSL=true
 ```
 
@@ -153,11 +156,11 @@ to run.
 
 The following versions of NSX are supported:
 
- * NSX-T 1.0.0
+ * NSX-T 4.1.2
 
 # Support
 
-The NSX policy Terraform provider is now VMware supported as well as community supported. For bugs and feature requests please open a Github Issue and label it appropriately or contact VMware support.
+The NSX Virtual Private Cloud Terraform provider is now VMware supported as well as community supported. For bugs and feature requests please open a Github Issue and label it appropriately or contact VMware support.
 
 # License
 
