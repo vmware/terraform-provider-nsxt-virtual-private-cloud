@@ -69,7 +69,7 @@ configuration:
 terraform {
   required_providers {
     nsxt = {
-      source = "vmware/nsxt-vpc"
+      source  = "vmware/nsxt-vpc"
       version = "1.0.0"
     }
   }
@@ -88,12 +88,11 @@ provider "nsxt" {
   password             = "Admin!23Admin"
   org                  = "default"
   project              = "Dev_project"
-	vpc                  = "dev_vpc"
+  vpc                  = "dev_vpc"
   allow_unverified_ssl = true
 }
 
 ```
-
 
 ### Example of Setting Environment Variables
 
@@ -116,24 +115,22 @@ provider "nsxt" {
   allow_unverified_ssl  = true
   org                   = "default"
   project               = "Dev_project"
-	vpc                   = "dev_vpc"
+  vpc                   = "dev_vpc"
 }
-
 ```
 
 ### Example with Certificate Authority Certificate
 
-```hcl
+```
 provider "nsxt" {
   host        = "10.160.94.11"
   username    = "admin"
   password    = "qwerty"
   org         = "default"
   project     = "Dev_project"
-	vpc         = "dev_vpc"
+  vpc         = "dev_vpc"
   ca_file     = "myca.pem"
 }
-
 ```
 
 ## Argument Reference
@@ -147,14 +144,14 @@ The following arguments are used to configure the VMware NSX-T VPC Provider:
   also be specified with the `NSXT_USERNAME` environment variable.
 * `password` - (Required) The password for the NSX-T manager user. Can also be
   specified with the `NSXT_PASSWORD` environment variable.
-* `org` - (Required) Organisation identifier. Can also 
+* `org` - (Required) Organisation identifier. Can also
   be specified with the `NSXT_ORG` environment variable.
 * `project` - (Required) Identifier for the project under the organisation.
   Can also be specified with the `NSXT_PROJECT` environment variable.
 * `vpc` - (Required) Identifier for the VPC under the project of the organisation.
   Can also be specified with the `NSXT_VPC` environment variable.
 * `connection_timeout` - (Optional) Maximum time in milliseconds for connection to
-  wait for a TLS handshake. Zero means no timeout. Default: `60` 
+  wait for a TLS handshake. Zero means no timeout. Default: `60`
   Can also be specified with the `NSXT_CONNECTON_TIMEOUT` environment variable.
 * `max_retries` - (Optional) The maximum number of retires before failing an API
   request. Default: `4` Can also be specified with the `NSXT_MAX_RETRIES`
@@ -190,7 +187,7 @@ VpcSubnetDhcpStaticBinding, VpcStaticRoutes, VpcSubnetBridgeProfile, Tag-operati
 This typically allows VPC admin to create and manage VPC topologies. The resources
 and data sources have _vpc_ in their name. All these resources
 and data sources are fully documented on the NSX-T Terraform Provider
-page:•https://registry.terraform.io/providers/vmware/nsxt-vpc/latest/docs For more details on the
+page:•<https://registry.terraform.io/providers/vmware/nsxt-vpc/latest/docs> For more details on the
 NSX-T Policy API usage, please look at NSX-T documentation.
 
 ### Logical Networking and Security Example Usage
@@ -203,7 +200,7 @@ VPC, Security policy, and security policy rule.
 This file allows you to define some variables that can be reused in multiple
 .tf files.
 
-```hcl
+```
 variable "nsxt_manager" {}
 variable "nsxt_username" {}
 variable "nsxt_password" {}
@@ -211,12 +208,13 @@ variable "nsxt_org" {}
 variable "nsxt_project" {}
 variable "nsxt_vpc" {}
 ```
+
 #### Example terraform.tfvars File
 
 This file allows you to set some variables that can be reused in multiple .tf
 files.
 
-```hcl
+```
 nsxt_manager  = "192.168.110.41"
 
 nsxt_username = "admin"
@@ -230,11 +228,9 @@ nsxt_project  = "project-prod"
 nsxt_vpc      = "vpc-prod"
 ```
 
-
 #### Example nsx.tf file
 
-```hcl
-
+```
 ################################################################################
 #
 # This configuration file is an example of creating a securitypolicy,
@@ -253,7 +249,6 @@ nsxt_vpc      = "vpc-prod"
 #   - VPC
 #
 ################################################################################
-
 
 #
 # The first step is to configure the VMware NSX provider to connect to the NSX
@@ -290,62 +285,62 @@ data "nsxt_shared_infra_ip_address_block" "infraIpAddressBlock" {
 # In this part of the example, we are creating the SecurityPolicy and a Rule on the VPC.
 # In Rule, since we need group policy path for its properties, we have created group and referred to it in Rule.
 #
-  resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
-	nsx_id = "securitypolicy-test"
-	display_name = "SecurityPolicy-test"
-	description = "SecurityPolicy description"
+
+resource "nsxt_vpc_security_policy" "testSecurityPolicy" {
+  nsx_id       = "securitypolicy-test"
+  display_name = "SecurityPolicy-test"
+  description  = "SecurityPolicy description"
 }
 
 resource "nsxt_vpc_security_policy_rule" "testSecurityPolicyRule" {
-  nsx_id = "test-rule-abc"
-	parent_path = nsxt_vpc_security_policy.testSecurityPolicy.path
-  display_name = "Security policy rule - test"
-	description = "Rule description"
-	action = "ALLOW"
-  source_groups = [nsxt_vpc_group.testGroup.path]
-	destination_groups = [nsxt_vpc_group.testGroup.path]
-	services = ["ANY"]
+  nsx_id              = "test-rule-abc"
+  parent_path         = nsxt_vpc_security_policy.testSecurityPolicy.path
+  display_name        = "Security policy rule - test"
+  description         = "Rule description"
+  action              = "ALLOW"
+  source_groups       = [nsxt_vpc_group.testGroup.path]
+  destination_groups  = [nsxt_vpc_group.testGroup.path]
+  services            = ["ANY"]
 }
 
 resource "nsxt_vpc_group" "testGroup" {
-	nsx_id = "test-group-abc"
-	display_name = "test-group-abc"
-	description = "Group description"
-	expression {
+  nsx_id        = "test-group-abc"
+  display_name  = "test-group-abc"
+  description   = "Group description"
+  expression {
     expressions {
-      key = "Name"
-      operator = "CONTAINS"
+      key           = "Name"
+      operator      = "CONTAINS"
       resource_type = "Condition"
-      value = "vm_1"
-      member_type = "VirtualMachine"
+      value         = "vm_1"
+      member_type   = "VirtualMachine"
     }
     expressions {
       conjunction_operator = "AND"
-      resource_type = "ConjunctionOperator"
+      resource_type        = "ConjunctionOperator"
     }
     expressions {
-      key = "Tag"
-      operator = "EQUALS"
+      key           = "Tag"
+      operator      = "EQUALS"
       resource_type = "Condition"
-      value = "London"
-      member_type = "VirtualMachine"
+      value         = "London"
+      member_type   = "VirtualMachine"
     }
     resource_type = "NestedExpression"
     tags {
       scope = "scope1"
-      tag = "webvm"
+      tag   = "webvm"
     }
   }
   expression {
     conjunction_operator = "OR"
-    resource_type = "ConjunctionOperator"
+    resource_type        = "ConjunctionOperator"
   }
   expression {
-    ip_addresses = ["10.112.10.1"]
+    ip_addresses  = ["10.112.10.1"]
     resource_type = "IPAddressExpression"
   }
 }
-
 ```
 
 ## Feature Requests, Bug Reports, and Contributing

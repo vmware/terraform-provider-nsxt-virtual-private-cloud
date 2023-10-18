@@ -18,16 +18,16 @@ description: |-
 The VpcSubnet resource allows the creation and management of Nsxt VpcSubnet
 
 ## Example Usage
-```hcl
-resource "nsxt_vpc_subnet" "test-vpcsubnet" {
-    	display_name = "Subnet 1"
-	description = "This is test VpcSubnet"
-	ip_addresses = ["10.112.2.0/24"]
-	nsx_id = "test-VpcSubnet-abc"
-	ipv4_subnet_size = 64
-	access_mode = "Private"
 
-  }
+```
+resource "nsxt_vpc_subnet" "test-vpcsubnet" {
+  display_name = "Subnet 1"
+  description = "This is test VpcSubnet"
+  ip_addresses = ["10.112.2.0/24"]
+  nsx_id = "test-VpcSubnet-abc"
+  ipv4_subnet_size = 64
+  access_mode = "Private"
+}
 ```
 
 ## Argument Reference

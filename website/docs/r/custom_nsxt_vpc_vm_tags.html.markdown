@@ -16,20 +16,22 @@ description: |-
 This resource allows the creation and management of tags on VMs in scope of VPC.
 
 ## Example Usage
+
 ```hcl
 resource "nsxt_vpc_vm_tags" "test-vpc-vm-tags" {
   virtual_machine_id = "1e10a422-ad92-4642-b56d-47971848cc3d"
   tags {
     scope = "os"
-    tag = "windows"
+    tag   = "windows"
   }
 }
 ```
+
 or you can provide reference to the VM using its datasource
 
 ```hcl
 data "nsxt_policy_vpc_vm" "foo_vpc_vm" {
-  external_id = "vm-f9cf6b3e-a411-436f-95e2-2982ba2b217b"
+  external_id  = "vm-f9cf6b3e-a411-436f-95e2-2982ba2b217b"
   display_name = "Dev-VM-Test"
 }
 
@@ -37,7 +39,7 @@ resource "nsxt_vpc_vm_tags" "test-vpc-vm-tags" {
   virtual_machine_id = nsxt_policy_vpc_vm.foo_vpc_vm.external_id
   tags {
     scope = "os"
-    tag = "windows"
+    tag   = "windows"
   }
 }
 ```

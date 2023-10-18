@@ -18,24 +18,24 @@ description: |-
 The StaticRoutes resource allows the creation and management of Nsxt StaticRoutes
 
 ## Example Usage
-```hcl
-resource "nsxt_vpc_static_routes" "test-staticroutes" {
-    	nsx_id = "test-StaticRoutes-abc"
-	next_hops {
-	ip_address = "41.1.1.1"
-	admin_distance = 1
-}
-next_hops {
-	ip_address = "42.1.1.1"
-	admin_distance = 2
-}
-next_hops {
-	ip_address = "43.1.2.3"
-	admin_distance = 3
-}
-	network = "45.1.1.0/24"
 
+```
+resource "nsxt_vpc_static_routes" "test-staticroutes" {
+  nsx_id = "test-StaticRoutes-abc"
+  next_hops {
+    ip_address = "41.1.1.1"
+    admin_distance = 1
   }
+  next_hops {
+    ip_address = "42.1.1.1"
+    admin_distance = 2
+  }
+  next_hops {
+    ip_address = "43.1.2.3"
+    admin_distance = 3
+  }
+  network = "45.1.1.0/24"
+}
 ```
 
 ## Argument Reference

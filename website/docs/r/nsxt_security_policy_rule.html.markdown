@@ -18,22 +18,22 @@ description: |-
 The SecurityPolicyRule resource allows the creation and management of Nsxt SecurityPolicyRule
 
 ## Example Usage
-```hcl
-resource "nsxt_vpc_security_policy_rule" "test-securitypolicyrule" {
-    	display_name = "rule-1"
-	description = "VPC Policy Rule1 patch operation"
-	parent_path = nsxt_vpc_parentResource.resource_name.path
-	notes = "This is sample Policy Rule to allow HTTPS traffic between default and prod-policy"
-	destination = ["/orgs/org1/projects/project1/vpcs/vpc-1/groups/group1"]
-	logged = true
-	disabled = false
-	source = ["/orgs/org1/projects/project1/vpcs/vpc-1/groups/group1"]
-	nsx_id = "test-Rule-abc"
-	services = ["ANY"]
-	action = "ALLOW"
-	sequence_number = 1
 
-  }
+```
+resource "nsxt_vpc_security_policy_rule" "test-securitypolicyrule" {
+  display_name = "rule-1"
+  description = "VPC Policy Rule1 patch operation"
+  parent_path = nsxt_vpc_parentResource.resource_name.path
+  notes = "This is sample Policy Rule to allow HTTPS traffic between default and prod-policy"
+  destination = ["/orgs/org1/projects/project1/vpcs/vpc-1/groups/group1"]
+  logged = true
+  disabled = false
+  source = ["/orgs/org1/projects/project1/vpcs/vpc-1/groups/group1"]
+  nsx_id = "test-Rule-abc"
+  services = ["ANY"]
+  action = "ALLOW"
+  sequence_number = 1
+}
 ```
 
 ## Argument Reference
@@ -128,7 +128,6 @@ In order to specify all groups, use the constant "ANY". This
 is case insensitive. If "ANY" is used, it should be the ONLY element
 in the group array. Error will be thrown if ANY is used in conjunction
 with other values.
-
 
 ## Attributes Reference
 

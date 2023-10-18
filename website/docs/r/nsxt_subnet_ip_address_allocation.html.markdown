@@ -18,13 +18,13 @@ description: |-
 The IpAddressAllocation resource allows the creation and management of Nsxt IpAddressAllocation
 
 ## Example Usage
-```hcl
-resource "nsxt_vpc_subnet_ip_address_allocation" "test-ipaddressallocation" {
-    	parent_path = nsxt_vpc_parentResource.resource_name.path
-	nsx_id = "test-IpAddressAllocation-abc"
-	allocation_ip = "192.168.0.6"
 
-  }
+```
+resource "nsxt_vpc_subnet_ip_address_allocation" "test-ipaddressallocation" {
+  parent_path = nsxt_vpc_parentResource.resource_name.path
+  nsx_id = "test-IpAddressAllocation-abc"
+  allocation_ip = "192.168.0.6"
+}
 ```
 
 ## Argument Reference

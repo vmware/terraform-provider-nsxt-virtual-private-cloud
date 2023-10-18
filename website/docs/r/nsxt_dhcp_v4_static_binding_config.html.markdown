@@ -18,29 +18,29 @@ description: |-
 The DhcpV4StaticBindingConfig resource allows the creation and management of Nsxt DhcpV4StaticBindingConfig
 
 ## Example Usage
+
 ```hcl
 resource "nsxt_vpc_dhcp_v4_static_binding_config" "test-dhcpv4staticbindingconfig" {
-    	gateway_address = "10.1.1.1"
-	parent_path = nsxt_vpc_parentResource.resource_name.path
-	nsx_id = "test-DhcpStaticBindingConfig-abc"
-	host_name = "vm1.vmware.com"
-	mac_address = "11:22:33:44:55:67"
-	ip_address = "30.30.30.175"
-	options {
-		option121 {
-			static_routes {
-	next_hop = "2.2.2.2"
-	network = "10.22.12.1/23"
-}
-static_routes {
-	next_hop = "0.0.0.0"
-	network = "129.0.0.1/32"
-}
-		}
-	}
-	resource_type = "DhcpV4StaticBindingConfig"
-
+  gateway_address = "10.1.1.1"
+  parent_path     = nsxt_vpc_parentResource.resource_name.path
+  nsx_id          = "test-DhcpStaticBindingConfig-abc"
+  host_name       = "vm1.vmware.com"
+  mac_address     = "11:22:33:44:55:67"
+  ip_address      = "30.30.30.175"
+  options {
+    option121 {
+      static_routes {
+        next_hop = "2.2.2.2"
+        network  = "10.22.12.1/23"
+      }
+      static_routes {
+        next_hop = "0.0.0.0"
+        network  = "129.0.0.1/32"
+      }
+    }
   }
+  resource_type = "DhcpV4StaticBindingConfig"
+}
 ```
 
 ## Argument Reference

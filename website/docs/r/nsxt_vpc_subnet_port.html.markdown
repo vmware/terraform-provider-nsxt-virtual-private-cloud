@@ -18,20 +18,20 @@ description: |-
 The VpcSubnetPort resource allows the creation and management of Nsxt VpcSubnetPort
 
 ## Example Usage
-```hcl
-resource "nsxt_vpc_subnet_port" "test-vpcsubnetport" {
-    	address_bindings {
-	ip_address = "1.1.1.1"
-	mac_address = "aa:bb:cc:dd:ee:ff"
-}
-address_bindings {
-	ip_address = "1.1.1.2"
-	mac_address = "aa:bb:cc:dd:ee:f1"
-}
-	nsx_id = "test-VpcSubnetPort-abc"
-	parent_path = nsxt_vpc_parentResource.resource_name.path
 
+```
+resource "nsxt_vpc_subnet_port" "test-vpcsubnetport" {
+  address_bindings {
+    ip_address = "1.1.1.1"
+    mac_address = "aa:bb:cc:dd:ee:ff"
   }
+  address_bindings {
+    ip_address = "1.1.1.2"
+    mac_address = "aa:bb:cc:dd:ee:f1"
+  }
+  nsx_id = "test-VpcSubnetPort-abc"
+  parent_path = nsxt_vpc_parentResource.resource_name.path
+}
 ```
 
 ## Argument Reference
