@@ -1,5 +1,6 @@
 TEST?=$$(go list ./...)
 GOFMT_FILES?=$$(find . -name '*.go')
+WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=nsxt
 GIT_COMMIT=$$(git rev-list -1 HEAD)
 
@@ -8,6 +9,7 @@ default: build
 tools:
 	GO111MODULE=on go install -mod=mod github.com/client9/misspell/cmd/misspell
 	GO111MODULE=on go install -mod=mod github.com/golangci/golangci-lint/cmd/golangci-lint
+	GO111MODULE=on go install -mod=mod github.com/katbyte/terrafmt
 
 build: fmtcheck
 	go install -ldflags "-X github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt.GitCommit=$(GIT_COMMIT)"
@@ -53,10 +55,19 @@ website-lint:
 	    echo "Unexpected mispelling found in website files."; \
 	    echo "To automatically fix the misspelling, run 'make website-lint-fix' and commit the changes."; \
 	    exit 1)
+	@terrafmt diff ./website --check --pattern '*.markdown' --quiet || (echo; \
+	    echo "Unexpected differences in website HCL formatting."; \
+	    echo "To see the full differences, run: terrafmt diff ./website --pattern '*.markdown'"; \
+	    echo "To automatically fix the formatting, run 'make website-lint-fix' and commit the changes."; \
+	    exit 1)
 
 website-lint-fix:
 	@echo "==> Applying automatic website linter fixes..."
 	@misspell -w -source=text website/
+	@terrafmt fmt ./website --pattern '*.markdown'
+
+website-list-category:
+	@find . -name *.markdown | xargs grep subcategory | awk  -F '"' '{print $$2}' | sort | uniq
 
 .PHONY: build test testacc vet fmt fmtcheck errcheck test-compile website-lint website-lint-fix tools
 

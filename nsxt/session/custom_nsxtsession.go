@@ -315,14 +315,14 @@ func (nsxtsess *NsxtSession) GetEnforcementPoint() string {
 }
 
 // SetTLSConfig - Use this for NewNsxtSession option argument for setting TLS in session
-func SetTLSConfig(tlsconfig tls.Config) func(*NsxtSession) error {
+func SetTLSConfig(tlsconfig *tls.Config) func(*NsxtSession) error {
 	return func(sess *NsxtSession) error {
 		return sess.setTLSConfig(tlsconfig)
 	}
 }
 
-func (nsxtsess *NsxtSession) setTLSConfig(tlsconfig tls.Config) error {
-	nsxtsess.tlsConfig = &tlsconfig
+func (nsxtsess *NsxtSession) setTLSConfig(tlsconfig *tls.Config) error {
+	nsxtsess.tlsConfig = tlsconfig
 	return nil
 }
 

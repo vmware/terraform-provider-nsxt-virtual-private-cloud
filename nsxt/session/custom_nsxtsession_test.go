@@ -21,7 +21,6 @@ func testNsxtSession(t *testing.T, nsxtsess *NsxtSession) {
 		t.Error("Group GET failed: ", errInGet)
 		return
 	}
-	resp := res.(map[string]interface{})
 
 	// create a group
 	group := make(map[string]interface{})
@@ -38,7 +37,7 @@ func testNsxtSession(t *testing.T, nsxtsess *NsxtSession) {
 		t.Error("Group GET after PATCH failed: ", err)
 		return
 	}
-	resp = res.(map[string]interface{})
+	resp := res.(map[string]interface{})
 	log.Printf("[DEBUG] Response for GET after PATCH *******: %+v", resp)
 	if resp["display_name"] != "testgroupviasession" {
 		t.Error("Expected group not fetched")

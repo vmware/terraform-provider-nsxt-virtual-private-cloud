@@ -18,8 +18,10 @@ import (
 	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 )
 
-/* Function to create and update NSXT resources. If the resource does not exist it will try to
-create it. In case it is present then it updates the resource. */
+/*
+Function to create and update NSXT resources. If the resource does not exist it will try to
+create it. In case it is present then it updates the resource.
+*/
 func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string, s map[string]*schema.Schema,
 	opts ...bool) error {
 	log.Printf("[DEBUG] start of APICreateOrUpdate")
@@ -78,7 +80,9 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 	}
 }
 
-/* Funtion for reading the current state of the resource in NSX.
+/*
+	Function for reading the current state of the resource in NSX.
+
 Called during multiple phases in lifecycle-
 1. Initial Resource Creation: When Terraform creates a new resource for the first time, the Read function is called to fetch the initial state of the resource. This state is then stored in the Terraform state file.
 2. Refresh Operation: During a refresh operation, Terraform calls the Read function to retrieve the current state of the resource from NSX. This allows Terraform to compare the current state with the desired state defined in the Terraform configuration and determine if any updates are required.
@@ -390,7 +394,7 @@ func convertToSchemaMap(dataMap map[string]interface{}) map[string]*schema.Schem
 }
 
 /* Populate data from JSON to terraform schema properties. Check for dataType, chec whether property is present in tf schema, if present, then populate. */
-func populateTerraformData(key string, value interface{}, fieldSchema *schema.Schema, terraformDataMap map[string]interface{}, terraformDataData *schema.ResourceData, schema_s map[string]*schema.Schema) (interface{}, error) {
+func populateTerraformData(key string, value interface{}, fieldSchema *schema.Schema, terraformDataMap map[string]interface{}, terraformDataData *schema.ResourceData, schema_s map[string]*schema.Schema) error {
 	switch fieldSchema.Type {
 	case schema.TypeString:
 		strValue, ok := value.(string)
@@ -401,7 +405,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 				terraformDataData.Set(key, strValue)
 			}
 		} else {
-			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+			return fmt.Errorf("invalid data type for field %s: %T", key, value)
 		}
 	case schema.TypeInt:
 		intValue, ok := value.(int)
@@ -418,7 +422,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 				terraformDataData.Set(key, int(floatValue))
 			}
 		} else {
-			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+			return fmt.Errorf("invalid data type for field %s: %T", key, value)
 		}
 	case schema.TypeFloat:
 		floatValue, ok := value.(float64)
@@ -429,7 +433,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 				terraformDataData.Set(key, floatValue)
 			}
 		} else {
-			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+			return fmt.Errorf("invalid data type for field %s: %T", key, value)
 		}
 	case schema.TypeBool:
 		boolValue, ok := value.(bool)
@@ -440,7 +444,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 				terraformDataData.Set(key, boolValue)
 			}
 		} else {
-			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+			return fmt.Errorf("invalid data type for field %s: %T", key, value)
 		}
 	case schema.TypeList:
 		listValue, ok := value.([]interface{})
@@ -454,13 +458,13 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 								"schema": itemSchema,
 							})
 							if err != nil {
-								return nil, err
+								return err
 							}
 							listData = append(listData, itemData)
 						} else if itemResource, isResource := item.(*schema.Resource); isResource {
 							itemData, err := APIDataToSchema(item, make(map[string]interface{}), itemResource.Schema)
 							if err != nil {
-								return nil, err
+								return err
 							}
 							listData = append(listData, itemData)
 						} else {
@@ -470,11 +474,11 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 							case map[string]interface{}:
 								itemData, err := APIDataToSchema(item, make(map[string]interface{}), schema_s)
 								if err != nil {
-									return nil, err
+									return err
 								}
 								listData = append(listData, itemData)
 							default:
-								return nil, fmt.Errorf("invalid data type for field %s: %v", key, item)
+								return fmt.Errorf("invalid data type for field %s: %v", key, item)
 							}
 						}
 					} else {
@@ -488,14 +492,14 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 								"schema": schemaItem,
 							})
 							if err != nil {
-								return nil, err
+								return err
 							}
 							listData = append(listData, itemData)
 						case *schema.Resource:
 							resourceItem := fieldSchema.Elem.(*schema.Resource)
 							itemData, err := APIDataToSchema(item, make(map[string]interface{}), resourceItem.Schema)
 							if err != nil {
-								return nil, err
+								return err
 							}
 							listData = append(listData, itemData)
 						}
@@ -508,7 +512,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 				terraformDataData.Set(key, listData)
 			}
 		} else {
-			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+			return fmt.Errorf("invalid data type for field %s: %T", key, value)
 		}
 	case schema.TypeSet:
 		setValue, ok := value.([]interface{})
@@ -524,7 +528,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 						// Handle the map type item here, recursively call the APIDataToSchema function on the map item
 						itemData, err := APIDataToSchema(item, make(map[string]interface{}), mapSchemaItem)
 						if err != nil {
-							return nil, err
+							return err
 						}
 						setData = append(setData, itemData)
 					case *schema.Schema:
@@ -533,18 +537,18 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 							"schema": schemaItem,
 						})
 						if err != nil {
-							return nil, err
+							return err
 						}
 						setData = append(setData, itemData)
 					case *schema.Resource:
 						resourceItem := item.(*schema.Resource)
 						itemData, err := APIDataToSchema(item, make(map[string]interface{}), resourceItem.Schema)
 						if err != nil {
-							return nil, err
+							return err
 						}
 						setData = append(setData, itemData)
 					default:
-						return nil, fmt.Errorf("invalid data type for field %s: %T, expected primitive type or map or *schema.Schema or *schema.Resource", key, item)
+						return fmt.Errorf("invalid data type for field %s: %T, expected primitive type or map or *schema.Schema or *schema.Resource", key, item)
 					}
 				}
 			}
@@ -559,7 +563,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 		if ok {
 			mapData, err := APIDataToSchema(mapValue, make(map[string]interface{}), fieldSchema.Elem.(*schema.Schema).Elem.(*schema.Resource).Schema)
 			if err != nil {
-				return nil, err
+				return err
 			}
 			if terraformDataMap != nil {
 				terraformDataMap[key] = mapData
@@ -567,17 +571,20 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 				terraformDataData.Set(key, mapData)
 			}
 		} else {
-			return nil, fmt.Errorf("invalid data type for field %s: %T", key, value)
+			return fmt.Errorf("invalid data type for field %s: %T", key, value)
 		}
 	default:
-		return nil, fmt.Errorf("unsupported schema type for field %s: %s", key, fieldSchema.Type)
+		return fmt.Errorf("unsupported schema type for field %s: %s", key, fieldSchema.Type)
 	}
-	return nil, nil
+	return nil
 }
 
-/* It takes the NSXT JSON data and fills in the terraform data during API read.
+/*
+	It takes the NSXT JSON data and fills in the terraform data during API read.
+
 It takes input as the top level schema and it uses that to properly create the corresponding terraform resource data
-It also checks whether a given nsxt key is defined in the schema before attempting to fill the data. */
+It also checks whether a given nsxt key is defined in the schema before attempting to fill the data.
+*/
 func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s map[string]*schema.Schema) (interface{}, error) {
 	jsonDataMap, ok := jsonData.(map[string]interface{})
 	if !ok {
@@ -590,7 +597,10 @@ func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s m
 		for key, value := range jsonDataMap {
 			if fieldSchema, exists := schema_s[key]; exists {
 				// Because there is no state during import operation
-				populateTerraformData(key, value, fieldSchema, terraformDataMap, nil, schema_s)
+				err := populateTerraformData(key, value, fieldSchema, terraformDataMap, nil, schema_s)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 		return terraformDataMap, nil
@@ -600,7 +610,10 @@ func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s m
 		for key, value := range jsonDataMap {
 			// Process the key if its present in terraform schema. We don't want all properties from API response, only want the ones in tf resource schema
 			if fieldSchema, exists := schema_s[key]; exists {
-				populateTerraformData(key, value, fieldSchema, nil, terraformDataData, schema_s)
+				err := populateTerraformData(key, value, fieldSchema, nil, terraformDataData, schema_s)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 		return terraformDataData, nil
@@ -614,8 +627,11 @@ func CommonHash(v interface{}) int {
 	return schema.HashString("nsxt")
 }
 
-/* Function that takes the terraform plan data and schema and converts it into NSXT JSON
-It recursively resolves the data type of the terraform schema and converts scalar to scalar, Set to dictionary and list to list. */
+/*
+	Function that takes the terraform plan data and schema and converts it into NSXT JSON
+
+It recursively resolves the data type of the terraform schema and converts scalar to scalar, Set to dictionary and list to list.
+*/
 func SchemaToNsxtData(d interface{}, s interface{}) (interface{}, error) {
 	switch dType := d.(type) {
 	default:
