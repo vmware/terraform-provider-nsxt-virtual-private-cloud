@@ -1,11 +1,11 @@
 module github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud
 
-go 1.20
+go 1.19
 
 require github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
 
 require (
-	github.com/agext/levenshtein v1.2.2 // indirect
+	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.15.0 // indirect
