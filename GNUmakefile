@@ -7,9 +7,9 @@ GIT_COMMIT=$$(git rev-list -1 HEAD)
 default: build
 
 tools:
-	GO111MODULE=on go install -mod=mod github.com/client9/misspell/cmd/misspell
-	GO111MODULE=on go install -mod=mod github.com/golangci/golangci-lint/cmd/golangci-lint
-	GO111MODULE=on go install -mod=mod github.com/katbyte/terrafmt
+	GO111MODULE=on go install github.com/client9/misspell/cmd/misspell@latest
+	GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	GO111MODULE=on go install github.com/katbyte/terrafmt@latest
 
 build: fmtcheck
 	go install -ldflags "-X github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt.GitCommit=$(GIT_COMMIT)"
