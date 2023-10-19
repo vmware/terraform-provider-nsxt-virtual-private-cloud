@@ -77,6 +77,8 @@ func (err Error) Error() string {
 }
 
 // NsxtSession maintains a session to the specified Nsxt manager
+
+//nolint:revive
 type NsxtSession struct {
 	// host specifies the hostname or IP address of the Nsxt Manager
 	host string

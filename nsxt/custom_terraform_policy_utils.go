@@ -28,8 +28,10 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 	var robj interface{}
 	obj := d
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
+	var data interface{}
+	var err error
 
-	if data, err := SchemaToNsxtData(obj, s); err == nil {
+	if data, err = SchemaToNsxtData(obj, s); err == nil {
 		resourceID := d.Id()
 		// calculate the policy path of resource
 		path := ComputePolicyPath(d, objType, false, nsxtClient, false)
@@ -58,8 +60,8 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 				if dataMap["action"] == nil {
 					dataMap["action"] = "ALLOW"
 				}
-				keys_with_any_default_value := []string{"source_groups", "destination_groups", "services", "scope"}
-				for _, key := range keys_with_any_default_value {
+				keysWithAnyDefaultValue := []string{"source_groups", "destination_groups", "services", "scope"}
+				for _, key := range keysWithAnyDefaultValue {
 					if dataMap[key] == nil {
 						dataMap[key] = []interface{}{"ANY"}
 					}
@@ -74,10 +76,9 @@ func APICreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string,
 			}
 		}
 		return err
-	} else {
-		log.Printf("[ERROR] APICreateOrUpdate: Error %v", err)
-		return err
 	}
+	log.Printf("[ERROR] APICreateOrUpdate: Error %v", err)
+	return err
 }
 
 /*
@@ -182,6 +183,8 @@ func setAttrsInDatasourceSchema(mapObject interface{}, d *schema.ResourceData, o
 }
 
 // Function to do READ on datasource, using id, display_name, parent_path
+
+//nolint:revive
 func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s *schema.Resource) error {
 	var obj interface{}
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
@@ -209,8 +212,8 @@ func DatasourceRead(d *schema.ResourceData, meta interface{}, objType string, s 
 	// Get the object from NSX using hidden full text search API
 	uri = nsxtClient.Config.BasePath + "/search?query=resource_type:" + objType
 	if nsxID != "" {
-		encodedNsxId := url.QueryEscape(nsxID)
-		uri += "%20AND%20id:" + encodedNsxId
+		encodedNsxID := url.QueryEscape(nsxID)
+		uri += "%20AND%20id:" + encodedNsxID
 	}
 	if displayName != "" {
 		encodedDisplayName := url.QueryEscape(displayName)
@@ -394,7 +397,8 @@ func convertToSchemaMap(dataMap map[string]interface{}) map[string]*schema.Schem
 }
 
 /* Populate data from JSON to terraform schema properties. Check for dataType, chec whether property is present in tf schema, if present, then populate. */
-func populateTerraformData(key string, value interface{}, fieldSchema *schema.Schema, terraformDataMap map[string]interface{}, terraformDataData *schema.ResourceData, schema_s map[string]*schema.Schema) error {
+//nolint:typecheck,gosimple
+func populateTerraformData(key string, value interface{}, fieldSchema *schema.Schema, terraformDataMap map[string]interface{}, terraformDataData *schema.ResourceData, schemaS map[string]*schema.Schema) error {
 	switch fieldSchema.Type {
 	case schema.TypeString:
 		strValue, ok := value.(string)
@@ -472,7 +476,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 							case string, int, float64, bool:
 								listData = append(listData, item)
 							case map[string]interface{}:
-								itemData, err := APIDataToSchema(item, make(map[string]interface{}), schema_s)
+								itemData, err := APIDataToSchema(item, make(map[string]interface{}), schemaS)
 								if err != nil {
 									return err
 								}
@@ -585,7 +589,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 It takes input as the top level schema and it uses that to properly create the corresponding terraform resource data
 It also checks whether a given nsxt key is defined in the schema before attempting to fill the data.
 */
-func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s map[string]*schema.Schema) (interface{}, error) {
+func APIDataToSchema(jsonData interface{}, terraformData interface{}, schemaS map[string]*schema.Schema) (interface{}, error) {
 	jsonDataMap, ok := jsonData.(map[string]interface{})
 	if !ok {
 		return nil, fmt.Errorf("invalid JSON data type: %T", jsonData)
@@ -595,9 +599,9 @@ func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s m
 	case map[string]interface{}:
 		terraformDataMap := v
 		for key, value := range jsonDataMap {
-			if fieldSchema, exists := schema_s[key]; exists {
+			if fieldSchema, exists := schemaS[key]; exists {
 				// Because there is no state during import operation
-				err := populateTerraformData(key, value, fieldSchema, terraformDataMap, nil, schema_s)
+				err := populateTerraformData(key, value, fieldSchema, terraformDataMap, nil, schemaS)
 				if err != nil {
 					return nil, err
 				}
@@ -609,8 +613,8 @@ func APIDataToSchema(jsonData interface{}, terraformData interface{}, schema_s m
 		terraformDataData := v
 		for key, value := range jsonDataMap {
 			// Process the key if its present in terraform schema. We don't want all properties from API response, only want the ones in tf resource schema
-			if fieldSchema, exists := schema_s[key]; exists {
-				err := populateTerraformData(key, value, fieldSchema, nil, terraformDataData, schema_s)
+			if fieldSchema, exists := schemaS[key]; exists {
+				err := populateTerraformData(key, value, fieldSchema, nil, terraformDataData, schemaS)
 				if err != nil {
 					return nil, err
 				}
@@ -628,10 +632,10 @@ func CommonHash(v interface{}) int {
 }
 
 /*
-	Function that takes the terraform plan data and schema and converts it into NSXT JSON
-
+Function that takes the terraform plan data and schema and converts it into NSXT JSON
 It recursively resolves the data type of the terraform schema and converts scalar to scalar, Set to dictionary and list to list.
 */
+//nolint:typecheck
 func SchemaToNsxtData(d interface{}, s interface{}) (interface{}, error) {
 	switch dType := d.(type) {
 	default:
@@ -726,6 +730,8 @@ func SchemaToNsxtData(d interface{}, s interface{}) (interface{}, error) {
 }
 
 // Function to import an existing entity on NSXT into terraform management, so we can manage it using terraform.
+
+//nolint:typecheck
 func ResourceImporter(d *schema.ResourceData, meta interface{}, objType string, s map[string]*schema.Schema, path string) ([]*schema.ResourceData, error) {
 	log.Printf("[DEBUG] ResourceImporter objType %v using policy path %v\n", objType, d.Id())
 	nsxtClient := meta.(*nsxtclient.NsxtClient)
@@ -756,6 +762,8 @@ func ResourceImporter(d *schema.ResourceData, meta interface{}, objType string, 
 }
 
 // Calculate policy path for different resources in the provider
+
+//nolint:typecheck
 func ComputePolicyPath(d *schema.ResourceData, objType string, isReadRequest bool, nsxtClient *nsxtclient.NsxtClient, isListingRequest bool) string {
 	var url string
 	var orgID string
@@ -850,6 +858,8 @@ func ComputePolicyPath(d *schema.ResourceData, objType string, isReadRequest boo
 }
 
 // It sets default values in the terraform resources to avoid diffs for scalars.
+
+//nolint:typecheck
 func SetDefaultsInAPIRes(apiRes interface{}, dLocal interface{}, s map[string]*schema.Schema) (interface{}, error) {
 	if apiRes == nil {
 		log.Printf("[ERROR] SetDefaultsInAPIRes got nil for %v", s)
