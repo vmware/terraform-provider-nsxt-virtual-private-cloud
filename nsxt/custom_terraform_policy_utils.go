@@ -487,25 +487,30 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 						}
 					} else {
 						// process terraformDataData
-						switch fieldSchema.Elem.(type) {
+						switch item.(type) {
 						case string, int, float64, bool:
-							listData = append(listData, fieldSchema.Elem)
-						case *schema.Schema:
-							schemaItem := fieldSchema.Elem.(*schema.Schema)
-							itemData, err := APIDataToSchema(item, make(map[string]interface{}), map[string]*schema.Schema{
-								"schema": schemaItem,
-							})
-							if err != nil {
-								return err
+							listData = append(listData, item)
+						default:
+							switch fieldSchema.Elem.(type) {
+							case string, int, float64, bool:
+								listData = append(listData, fieldSchema.Elem)
+							case *schema.Schema:
+								schemaItem := fieldSchema.Elem.(*schema.Schema)
+								itemData, err := APIDataToSchema(item, make(map[string]interface{}), map[string]*schema.Schema{
+									"schema": schemaItem,
+								})
+								if err != nil {
+									return err
+								}
+								listData = append(listData, itemData)
+							case *schema.Resource:
+								resourceItem := fieldSchema.Elem.(*schema.Resource)
+								itemData, err := APIDataToSchema(item, make(map[string]interface{}), resourceItem.Schema)
+								if err != nil {
+									return err
+								}
+								listData = append(listData, itemData)
 							}
-							listData = append(listData, itemData)
-						case *schema.Resource:
-							resourceItem := fieldSchema.Elem.(*schema.Resource)
-							itemData, err := APIDataToSchema(item, make(map[string]interface{}), resourceItem.Schema)
-							if err != nil {
-								return err
-							}
-							listData = append(listData, itemData)
 						}
 					}
 				}
@@ -584,8 +589,7 @@ func populateTerraformData(key string, value interface{}, fieldSchema *schema.Sc
 }
 
 /*
-	It takes the NSXT JSON data and fills in the terraform data during API read.
-
+It takes the NSXT JSON data and fills in the terraform data during API read.
 It takes input as the top level schema and it uses that to properly create the corresponding terraform resource data
 It also checks whether a given nsxt key is defined in the schema before attempting to fill the data.
 */
