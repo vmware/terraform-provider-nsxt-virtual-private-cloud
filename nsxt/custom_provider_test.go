@@ -16,8 +16,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	nsxtclient "github.com/vmware/terraform-provider-nsxt-virtual-private-cloud/nsxt/clients"
-	nsxtsession "github.com/vmware/terraform-provider-nsxt-virtual-private-cloud/nsxt/session"
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
+	nsxtsession "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/session"
 )
 
 var testAccProviders map[string]*schema.Provider

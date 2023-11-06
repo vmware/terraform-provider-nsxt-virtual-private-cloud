@@ -16,7 +16,7 @@ import (
 	"fmt"
 	"log"
 
-	nsxtclient "github.com/vmware/terraform-provider-nsxt-virtual-private-cloud/nsxt/clients"
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )

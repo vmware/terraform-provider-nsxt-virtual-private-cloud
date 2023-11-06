@@ -1,4 +1,4 @@
-module github.com/vmware/terraform-provider-nsxt-virtual-private-cloud
+module github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud
 
 go 1.19
 

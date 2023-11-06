@@ -16,8 +16,8 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	nsxtclient "github.com/vmware/terraform-provider-nsxt-virtual-private-cloud/nsxt/clients"
-	nsxtsession "github.com/vmware/terraform-provider-nsxt-virtual-private-cloud/nsxt/session"
+	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
+	nsxtsession "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/session"
 )
 
 var defaultRetryOnStatusCodes = []int{400, 409, 429, 500, 503, 504, 603}

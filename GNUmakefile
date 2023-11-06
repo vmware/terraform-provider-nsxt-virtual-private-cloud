@@ -12,7 +12,7 @@ tools:
 	GO111MODULE=on go install -mod=mod github.com/katbyte/terrafmt
 
 build: fmtcheck
-	go install -ldflags "-X github.com/vmware/terraform-provider-nsxt-virtual-private-cloud/nsxt.GitCommit=$(GIT_COMMIT)"
+	go install -ldflags "-X github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt.GitCommit=$(GIT_COMMIT)"
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1
