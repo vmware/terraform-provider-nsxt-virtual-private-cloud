@@ -1,6 +1,6 @@
-# Contributing to terraform-provider-for-vmware-nsxt-virtual-private-cloud
+# Contributing to terraform-provider-nsxt-virtual-private-cloud
 
-The terraform-provider-for-vmware-nsxt-virtual-private-cloud project team welcomes contributions from the community. If you wish to contribute code and you have not signed our Developer Certificate of Origin (DCO), our bot will update the issue when you open a Pull Request. For any questions about the DCO process, please refer to our [DCO](https://cla.vmware.com/dco).
+The terraform-provider-nsxt-virtual-private-cloud project team welcomes contributions from the community. If you wish to contribute code and you have not signed our Developer Certificate of Origin (DCO), our bot will update the issue when you open a Pull Request. For any questions about the DCO process, please refer to our [DCO](https://cla.vmware.com/dco).
 
 ## Contribution Flow
 
@@ -15,7 +15,7 @@ This is a rough outline of what a contributor's workflow looks like:
 Example:
 
 ``` shell
-git remote add upstream https://github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud.git
+git remote add upstream https://github.com/vmware/terraform-provider-nsxt-virtual-private-cloud.git
 git checkout -b my-new-feature main
 git commit -a
 git push origin my-new-feature
