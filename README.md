@@ -1,6 +1,6 @@
-# terraform-provider-for-vmware-nsxt-virtual-private-cloud
+# terraform-provider-nsxt-virtual-private-cloud
 
-This is the repository for the Terraform NSX-T VPC Provider, which one can use with
+This is the repository for VMware's NSX-T Virtual Private Cloud Terraform Provider, which one can use with
 Terraform to work with [VMware NSX-T][vmware-nsxt].
 
 [vmware-nsxt]: https://www.vmware.com/products/nsx.html
@@ -69,12 +69,12 @@ version of the provider (see [the section above](#using-the-provider)).
 ## Cloning the Project
 
 First, you will want to clone the repository to
-`$GOPATH/src/github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud`:
+`$GOPATH/src/github.com/vmware/terraform-provider-nsxt-virtual-private-cloud`:
 
 ```sh
 mkdir -p $GOPATH/src/github.com/vmware
 cd $GOPATH/src/github.com/vmware
-git clone https://github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud.git
+git clone https://github.com/vmware/terraform-provider-nsxt-virtual-private-cloud.git
 ```
 
 ## Building and Installing the Provider
@@ -83,11 +83,11 @@ Recommended golang version is go1.18 onwards.
 After the clone has been completed, you can enter the provider directory and build the provider.
 
 ```sh
-cd $GOPATH/src/github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud
+cd $GOPATH/src/github.com/vmware/terraform-provider-nsxt-virtual-private-cloud
 make
 ```
 
-After the build is complete, copy the provider executable `terraform-provider-for-vmware-nsxt-virtual-private-cloud` into location specified in your provider installation configuration. Make sure to delete provider lock files that might exist in your working directory due to prior provider usage. Run `terraform init`.
+After the build is complete, copy the provider executable `terraform-provider-nsxt-virtual-private-cloud` into location specified in your provider installation configuration. Make sure to delete provider lock files that might exist in your working directory due to prior provider usage. Run `terraform init`.
 For developing, consider using [dev overrides configuration][dev-overrides]. Please note that `terraform init` should not be used with dev overrides.
 
 [dev-overrides]: https://www.terraform.io/docs/cli/config/config-file.html#development-overrides-for-provider-developers
@@ -166,4 +166,4 @@ The NSX Virtual Private Cloud Terraform provider is now VMware supported as well
 
 Copyright © 2022-2023 VMware, Inc. All Rights Reserved.
 
-The NSX VPC Terraform provider is available under [MPL2.0 license](https://github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/blob/main/LICENSE).
+The NSX VPC Terraform provider is available under [MPL2.0 license](https://github.com/vmware/terraform-provider-nsxt-virtual-private-cloud/blob/main/LICENSE).

@@ -11,7 +11,7 @@
 package nsxt
 
 import (
-	nsxtclient "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/clients"
+	nsxtclient "github.com/vmware/terraform-provider-nsxt-virtual-private-cloud/nsxt/clients"
 	"log"
 	"strings"
 

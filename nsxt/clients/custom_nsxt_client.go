@@ -12,7 +12,7 @@ import (
 	"crypto/x509"
 	"io/ioutil"
 
-	nsxtsession "github.com/vmware/terraform-provider-for-vmware-nsxt-virtual-private-cloud/nsxt/session"
+	nsxtsession "github.com/vmware/terraform-provider-nsxt-virtual-private-cloud/nsxt/session"
 )
 
 type Configuration struct {
