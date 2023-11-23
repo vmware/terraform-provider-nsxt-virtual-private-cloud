@@ -1,0 +1,1 @@
+Request: Remove provider "for-vmware-nsxt-virtual-private-cloud" from terraform registry, as there is already one hosted with name "nsxt-virtual-private-cloud". Registry Link: https://registry.terraform.io/providers/vmware/for-vmware-nsxt-virtual-private-cloud/latest Request by: skomal@vmware.com
