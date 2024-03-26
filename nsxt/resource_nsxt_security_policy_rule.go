@@ -5,7 +5,7 @@
  * ========================================================================
  */
 
-// Auto generated code. DO NOT EDIT.
+// Auto generated code. DO NOT EDIT. KIRAN
 
 // nolint
 package nsxt
@@ -29,6 +29,7 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 		"tag": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"disabled": {
 			Type:     schema.TypeBool,
@@ -62,6 +63,7 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 		"notes": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"_revision": {
 			Type:     schema.TypeInt,
@@ -106,6 +108,7 @@ func resourceSecurityPolicyRuleSchema() map[string]*schema.Schema {
 		"service_entries": {
 			Type:     schema.TypeList,
 			Optional: true,
+			Computed: true,
 			MaxItems: 128,
 			Elem:     resourceServiceEntryCustomSchema(),
 		},

@@ -18,16 +18,16 @@ description: |-
 The VpcSubnet resource allows the creation and management of Nsxt VpcSubnet
 
 ## Example Usage
-
-```
+```hcl
 resource "nsxt_vpc_subnet" "test-vpcsubnet" {
-  display_name = "Subnet 1"
-  description = "This is test VpcSubnet"
-  ip_addresses = ["10.112.2.0/24"]
-  nsx_id = "test-VpcSubnet-abc"
-  ipv4_subnet_size = 64
-  access_mode = "Private"
-}
+    	display_name = "Subnet 1"
+	description = "This is test VpcSubnet"
+	ip_addresses = ["10.112.2.0/24"]
+	nsx_id = "test-VpcSubnet-abc"
+	ipv4_subnet_size = 64
+	access_mode = "Private"
+
+  }
 ```
 
 ## Argument Reference
@@ -37,10 +37,8 @@ The following arguments are supported:
 * `nsx_id` - (Required) The NSX ID of this resource. This ID will be used to create the resource.
 * `resource_type` - (Optional) The type of this resource.
 * `advanced_config` - (Optional) VPC Subnet Advanced Configuration
-  VPC Subnet advanced configuration. This field is supported only for VPC Subnets on NSX local manager.
 
-  * `static_ip_allocation` - (Optional) Static IP allocation for VPC Subnet ports with VIF attachement.
-  Static IP allocation configuration for VPC Subnet ports with VIF attachement. Not supported when DUAL ip_address_type is used in parent VPC.
+  * `static_ip_allocation` - (Optional) 
     * `enabled` - (Optional) Enable ip and mac addresse allocation for VPC Subnet ports from static ip pool. To enable this,
 dhcp pool shall be empty and static ip pool shall own all available ip addresses.
 

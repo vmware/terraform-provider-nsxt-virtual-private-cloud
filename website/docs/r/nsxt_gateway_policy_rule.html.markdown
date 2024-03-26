@@ -18,18 +18,18 @@ description: |-
 The GatewayPolicyRule resource allows the creation and management of Nsxt GatewayPolicyRule
 
 ## Example Usage
-
-```
+```hcl
 resource "nsxt_vpc_gateway_policy_rule" "test-gatewaypolicyrule" {
-  parent_path = nsxt_vpc_parentResource.resource_name.path
-  profiles = ["ANY"]
-  services = ["ANY"]
-  nsx_id = "test-Rule-abc"
-  destination_groups = ["ANY"]
-  action = "DROP"
-  sequence_number = 1
-  source_groups = ["ANY"]
-}
+    	parent_path = nsxt_vpc_parentResource.resource_name.path
+	profiles = ["ANY"]
+	services = ["ANY"]
+	nsx_id = "test-Rule-abc"
+	destination_groups = ["ANY"]
+	action = "DROP"
+	sequence_number = 1
+	source_groups = ["ANY"]
+
+  }
 ```
 
 ## Argument Reference
@@ -124,6 +124,7 @@ In order to specify all groups, use the constant "ANY". This
 is case insensitive. If "ANY" is used, it should be the ONLY element
 in the group array. Error will be thrown if ANY is used in conjunction
 with other values.
+
 
 ## Attributes Reference
 

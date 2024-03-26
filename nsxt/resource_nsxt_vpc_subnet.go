@@ -5,7 +5,7 @@
  * ========================================================================
  */
 
-// Auto generated code. DO NOT EDIT.
+// Auto generated code. DO NOT EDIT. KIRAN
 
 // nolint
 package nsxt
@@ -30,12 +30,14 @@ func resourceVpcSubnetSchema() map[string]*schema.Schema {
 			Type:     schema.TypeSet,
 			MaxItems: 1,
 			Optional: true,
+			Computed: true,
 			Elem:     resourceSubnetAdvancedConfigSchema(),
 		},
 		"dhcp_config": {
 			Type:     schema.TypeSet,
 			MaxItems: 1,
 			Optional: true,
+			Computed: true,
 			Elem:     resourceVpcSubnetDhcpConfigSchema(),
 		},
 		"display_name": {
@@ -65,6 +67,7 @@ func resourceVpcSubnetSchema() map[string]*schema.Schema {
 		"ip_addresses": {
 			Type:     schema.TypeList,
 			Optional: true,
+			Computed: true,
 			MaxItems: 2,
 			Elem:     &schema.Schema{Type: schema.TypeString},
 		},

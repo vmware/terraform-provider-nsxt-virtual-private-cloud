@@ -18,13 +18,13 @@ description: |-
 The VpcIpAddressAllocation resource allows the creation and management of Nsxt VpcIpAddressAllocation
 
 ## Example Usage
-
-```
+```hcl
 resource "nsxt_vpc_ip_address_allocation" "test-vpcipaddressallocation" {
-  nsx_id = "test-VpcIpAddressAllocation-abc"
-  allocation_ip = "192.168.0.6"
-  ip_address_block_visibility = "EXTERNAL"
-}
+    	nsx_id = "test-VpcIpAddressAllocation-abc"
+	allocation_ip = "192.168.0.6"
+	ip_address_block_visibility = "EXTERNAL"
+
+  }
 ```
 
 ## Argument Reference

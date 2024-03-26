@@ -18,14 +18,14 @@ description: |-
 The SecurityPolicy resource allows the creation and management of Nsxt SecurityPolicy
 
 ## Example Usage
-
-```
+```hcl
 resource "nsxt_vpc_security_policy" "test-securitypolicy" {
-  nsx_id = "test-SecurityPolicy-abc"
-  display_name = "Test Policy"
-  description = "This is Test VPC policy patch operation"
-  sequence_number = 1
-}
+    	nsx_id = "test-SecurityPolicy-abc"
+	display_name = "Test Policy"
+	description = "This is Test VPC policy patch operation"
+	sequence_number = 1
+
+  }
 ```
 
 ## Argument Reference
@@ -163,6 +163,7 @@ policy.
 
   * `logging_enabled` - (Optional) Flag to enable packet logging. Default is deactivated.
   * `application_connectivity_strategy` - (Required) App connectivity strategies
+
 
 ## Attributes Reference
 

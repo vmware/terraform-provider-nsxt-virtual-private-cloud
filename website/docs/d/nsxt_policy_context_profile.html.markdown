@@ -23,7 +23,7 @@ This data source is used to to get nsxt_vpc_policy_context_profile objects.
 data "nsxt_vpc_policy_context_profile" "foo_policy_context_profile" {
   context {
     scope = "vpc"
-  }
+    }
   display_name = "policy_context_profile-Test"
 }
 ```

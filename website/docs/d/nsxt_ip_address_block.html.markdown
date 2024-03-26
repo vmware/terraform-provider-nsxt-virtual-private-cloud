@@ -23,7 +23,7 @@ This data source is used to to get nsxt_vpc_ip_address_block objects.
 data "nsxt_vpc_ip_address_block" "foo_ip_address_block" {
   context {
     scope = "vpc"
-  }
+    }
   display_name = "ip_address_block-Test"
 }
 ```

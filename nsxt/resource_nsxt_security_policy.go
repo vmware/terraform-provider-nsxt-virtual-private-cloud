@@ -5,7 +5,7 @@
  * ========================================================================
  */
 
-// Auto generated code. DO NOT EDIT.
+// Auto generated code. DO NOT EDIT. KIRAN
 
 // nolint
 package nsxt
@@ -29,6 +29,7 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 		"comments": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"tcp_strict": {
 			Type:     schema.TypeBool,
@@ -38,6 +39,7 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 		"scheduler_path": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
 		"stateful": {
 			Type:     schema.TypeBool,
@@ -71,6 +73,7 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice([]string{"ALLOWLIST", "DENYLIST", "ALLOWLIST_ENABLE_LOGGING", "DENYLIST_ENABLE_LOGGING", "NONE"}, false),
+			Computed:     true,
 		},
 		"logging_enabled": {
 			Type:       schema.TypeBool,
@@ -82,6 +85,7 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 			Type:         schema.TypeString,
 			Optional:     true,
 			ValidateFunc: validation.StringInSlice([]string{"WHITELIST", "BLACKLIST", "WHITELIST_ENABLE_LOGGING", "BLACKLIST_ENABLE_LOGGING", "NONE"}, false),
+			Computed:     true,
 			Deprecated:   "This is a deprecated property. Please refer the documentation for details, and refrain from use as this will be removed in future versions.",
 		},
 		"sequence_number": {
@@ -104,6 +108,7 @@ func resourceSecurityPolicySchema() map[string]*schema.Schema {
 		"application_connectivity_strategy": {
 			Type:     schema.TypeList,
 			Optional: true,
+			Computed: true,
 			MaxItems: 3,
 			Elem:     resourceApplicationConnectivityStrategySchema(),
 		},

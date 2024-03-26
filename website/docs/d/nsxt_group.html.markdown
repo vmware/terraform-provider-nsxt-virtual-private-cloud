@@ -22,9 +22,9 @@ This data source is used to to get nsxt_vpc_group objects.
 ```hcl
 data "nsxt_vpc_group" "foo_group" {
   context {
-    scope  = "vpc"
-    domain = "default"
-  }
+    scope = "vpc"
+      domain = "default"
+    }
   display_name = "group-Test"
 }
 ```

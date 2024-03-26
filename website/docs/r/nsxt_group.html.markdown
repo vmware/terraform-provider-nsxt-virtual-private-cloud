@@ -18,54 +18,54 @@ description: |-
 The Group resource allows the creation and management of Nsxt Group
 
 ## Example Usage
-
-```
+```hcl
 resource "nsxt_vpc_group" "test-group" {
- expression {
-  expressions {
-    key           = "Name"
-    operator      = "CONTAINS"
-    resource_type = "Condition"
-    value         = "vm_1"
-    member_type   = "VirtualMachine"
-  }
-  expressions {
-    conjunction_operator = "AND"
-    resource_type        = "ConjunctionOperator"
-  }
-  expressions {
-    key           = "Tag"
-    operator      = "EQUALS"
-    resource_type = "Condition"
-    value         = "London"
-    member_type   = "VirtualMachine"
-  }
-  resource_type = "NestedExpression"
-  tags {
-    scope = "scope1"
-    tag   = "webvm"
-  }
- }
- expression {
-    conjunction_operator = "OR"
-    resource_type        = "ConjunctionOperator"
- }
- expression {
-    ip_addresses  = ["10.112.10.1"]
-    resource_type = "IPAddressExpression"
- }
- expression {
-    conjunction_operator = "OR"
-    resource_type        = "ConjunctionOperator"
- }
- expression {
-    paths         = ["/orgs/default/projects/project-1/vpcs/vpc-1/groups/default"]
-    resource_type = "PathExpression"
- }
-  nsx_id       = "test-Group-abc"
-  display_name = "test-group-abc"
-  description  = "Group description"
+    	expression {
+	expressions {
+	key = "Name"
+	operator = "CONTAINS"
+	resource_type = "Condition"
+	value = "vm_1"
+	member_type = "VirtualMachine"
 }
+expressions {
+	conjunction_operator = "AND"
+	resource_type = "ConjunctionOperator"
+}
+expressions {
+	key = "Tag"
+	operator = "EQUALS"
+	resource_type = "Condition"
+	value = "London"
+	member_type = "VirtualMachine"
+}
+	resource_type = "NestedExpression"
+	tags {
+	scope = "scope1"
+	tag = "webvm"
+}
+}
+expression {
+	conjunction_operator = "OR"
+	resource_type = "ConjunctionOperator"
+}
+expression {
+	ip_addresses = ["10.112.10.1"]
+	resource_type = "IPAddressExpression"
+}
+expression {
+	conjunction_operator = "OR"
+	resource_type = "ConjunctionOperator"
+}
+expression {
+	paths = ["/orgs/default/projects/project-1/vpcs/vpc-1/groups/default"]
+	resource_type = "PathExpression"
+}
+	nsx_id = "test-Group-abc"
+	display_name = "test-group-abc"
+	description = "Group description"
+
+  }
 ```
 
 ## Argument Reference

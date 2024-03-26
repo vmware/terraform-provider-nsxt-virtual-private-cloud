@@ -18,20 +18,20 @@ description: |-
 The PolicyVpcNatRule resource allows the creation and management of Nsxt PolicyVpcNatRule
 
 ## Example Usage
-
-```
+```hcl
 resource "nsxt_policy_vpc_nat_rule" "test-policyvpcnatrule" {
-  translated_network = "192.168.1.1"
-  display_name = "MyNATRuleDemo"
-  description = "Example of a NAT rule"
-  enabled = true
-  parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/nat/USER"
-  nsx_id = "test-PolicyVpcNatRule-abc"
-  action = "DNAT"
-  logging = false
-  destination_network = "10.117.5.19"
-  sequence_number = 10
-}
+    	translated_network = "192.168.1.1"
+	display_name = "MyNATRuleDemo"
+	description = "Example of a NAT rule"
+	enabled = true
+	parent_path = "/orgs/default/projects/Dev_project/vpcs/dev_vpc/nat/USER"
+	nsx_id = "test-PolicyVpcNatRule-abc"
+	action = "DNAT"
+	logging = false
+	destination_network = "10.117.5.19"
+	sequence_number = 10
+
+  }
 ```
 
 ## Argument Reference

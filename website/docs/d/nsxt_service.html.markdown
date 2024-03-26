@@ -23,7 +23,7 @@ This data source is used to to get nsxt_vpc_service objects.
 data "nsxt_vpc_service" "foo_service" {
   context {
     scope = "vpc"
-  }
+    }
   display_name = "service-Test"
 }
 ```
